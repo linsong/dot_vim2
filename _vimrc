@@ -39,25 +39,25 @@ set incsearch       " do incremental searching
 
 set wildmenu
 set mouse-=a " enable mouse
-set ignorecase " set search ignorecase 
+set ignorecase " set search ignorecase
 
-" when If both ignorecase and smartcase are set, Vim will ignore the case 
-" of the search only if the search pattern is all in lower-case. But if 
-" there are any upper-case characters in the search pattern, Vim will 
-" assume you really want to do a case-sensitive search and will do 
+" when If both ignorecase and smartcase are set, Vim will ignore the case
+" of the search only if the search pattern is all in lower-case. But if
+" there are any upper-case characters in the search pattern, Vim will
+" assume you really want to do a case-sensitive search and will do
 " its matching accordingly
 set smartcase
 
 set sessionoptions+=unix,slash
 
-" set tabstop value and shift width 
+" set tabstop value and shift width
 set ts=2
 set sw=2
 set expandtab
 set smarttab
 
 "setting about indent
-" autoindent is not very convenient especially when editing mail text, 
+" autoindent is not very convenient especially when editing mail text,
 " use filetype indent script instead
 set noautoindent
 
@@ -65,12 +65,12 @@ set noautoindent
 "  > You're probably setting 'smartindent' in your .vimrc.  'smartindent'
 "  > is worse than cindent for C/C++/Java, and much worse than filetype
 "  > indent scripts for other languages; I'd definitely recommend against
-"  > using it. 
+"  > using it.
 set nosmartindent
 
 " always want at least two lines of context visible around the cursor at
 " all times
-" the drawback is: H/L will not arrive the real top/bottom of the buffer 
+" the drawback is: H/L will not arrive the real top/bottom of the buffer
 "set scrolloff=2
 
 "setting about old window resizing behavior when open a new window
@@ -84,7 +84,7 @@ set noequalalways
 
 "set statusline=%<%f\ [%{&ff}]%{StatusInfo()}\ %h%m%r%=%-14.(%l,%c%V%)\ %P
 
-" setting for completion 
+" setting for completion
 if v:version >= 700
     :set completeopt=longest,menuone
 endif
@@ -100,8 +100,8 @@ endif
 " In shell scripts, there should be no spaces around "=".
 " progname=/usr/local/txserver
 " to open files in a shell script with gf command:
-" TODO: this setting should only work when we are editing a shell 
-" script, but for now, just leave it here and see how it works 
+" TODO: this setting should only work when we are editing a shell
+" script, but for now, just leave it here and see how it works
 :set isfname -==
 
 " save screen estate as much as possible
@@ -109,7 +109,7 @@ endif
 
 :set nobackup writebackup
 
-" set tags 
+" set tags
 :set tags+=../tags,../../tags,ftags,../*.tags
 
 :set number
@@ -165,15 +165,15 @@ endif
     xnoremap p "_dp
     xnoremap P "_dP
 
-    " when leave insert mode by pressing <ESC>, turn off 
+    " when leave insert mode by pressing <ESC>, turn off
     " the input method, but for now it does not work for SCIM :(
     :inoremap <silent> <ESC> <ESC>:set iminsert=0<CR>
 
     " remap builtin shift command
     :xnoremap < <gv
-    :xnoremap > >gv 
+    :xnoremap > >gv
 
-    " general key maps 
+    " general key maps
     "### got following tip from http://www.vim.org/tips/tip.php?tip_id=1
     " Search for selected text in visual mode with */#
     " effect: overrides unnamed register
@@ -224,7 +224,7 @@ endif
 
     nnoremap <silent> ,<space>    :nohlsearch<CR>
 
-    " mappings for quickfix mode 
+    " mappings for quickfix mode
     nnoremap <xF4>   :cnext \| norm zz<CR>
     nnoremap <S-xF4> :cprev \| norm zz<CR>
     nnoremap <C-F4>   :cnfile <CR>
@@ -238,7 +238,7 @@ endif
     "else
         ":nmap ,s :source $HOME/.vimrc<CR>
     "endif
-    ":nmap ,v :e $HOME/.vimrc<CR> 
+    ":nmap ,v :e $HOME/.vimrc<CR>
 
     " Make navigate tabs easier
     :nnoremap <silent> <M-.> gt
@@ -247,7 +247,7 @@ endif
     :nnoremap <silent> <M-q> :tabclose<CR>
 
     :nnoremap <silent> <M->> :if tabpagenr() == tabpagenr("$")\|tabm 0\|else\|exe "tabm ".tabpagenr()\|endif<CR>
-    :nnoremap <silent> <M-<> :if tabpagenr() == 1\|exe "tabm ".tabpagenr("$")\|else\|exe "tabm ".(tabpagenr()-2)\|endif<CR> 
+    :nnoremap <silent> <M-<> :if tabpagenr() == 1\|exe "tabm ".tabpagenr("$")\|else\|exe "tabm ".(tabpagenr()-2)\|endif<CR>
 
     if has("xterm_clipboard")
        nmap <S-Insert> :set paste<CR>"+p:set nopaste<CR>
@@ -255,7 +255,7 @@ endif
     endif
 
     nnoremap <space> @=((foldclosed(line('.')) < 0) ? 'zc' : 'zo')<CR>
-    
+
     nmap <leader>ff :RedoFoldOnRegex<CR>
     nmap <leader>fu :FoldEndFolding<CR>
 
@@ -274,7 +274,7 @@ endif
     :nmap gy yy:call CopyToLastEditPos()<CR>
 
     :nmap ,o :only<CR>
-        
+
     " I want to exchange the meaning of following shortcuts:
     :noremap <C-]> g<C-]>
     :noremap g<C-]> <C-]>
@@ -292,8 +292,8 @@ endif
         :map <silent> <D-9> :tabnext 9<CR>
         :map <silent> <D-0> :tabnext 10<CR>
         :nnoremap <silent> <D->> :if tabpagenr() == tabpagenr("$")\|tabm 0\|else\|exe "tabm ".tabpagenr()\|endif<CR>
-        :nnoremap <silent> <D-<> :if tabpagenr() == 1\|exe "tabm ".tabpagenr("$")\|else\|exe "tabm ".(tabpagenr()-2)\|endif<CR> 
-    endif 
+        :nnoremap <silent> <D-<> :if tabpagenr() == 1\|exe "tabm ".tabpagenr("$")\|else\|exe "tabm ".(tabpagenr()-2)\|endif<CR>
+    endif
 
     :map <silent> ,1 :tabnext 1<CR>
     :map <silent> ,2 :tabnext 2<CR>
@@ -328,7 +328,7 @@ endif
     " Last and next jump should center too.
     "nnoremap <C-o> <C-o>zz
     "nnoremap <C-i> <C-i>zz
-  
+
     " use two windows to view a long file
     " from vim tip wiki: http://vim.wikia.com/wiki/View_text_file_in_two_columns
     :noremap <silent> <leader>vs :<C-u>let @z=&so<CR>:set so=0 noscb<CR>:bo vs<CR>Ljzt:setl scb<CR><C-w>p:setl scb<CR>:let &so=@z<CR>
@@ -338,14 +338,14 @@ endif
 
     nnoremap <silent> <f5> :w <bar> make<CR>
     imap <silent> <f5> <Esc>:w<CR>:make<CR>i
-    
+
     map <silent> <leader>ss :syntax sync fromstart<CR>
 
 "## }}}1
 
-"## Mappings for vim keycodes {{{1 
-    " mappings for keycodes 
-    " for more details about keycode mapping, read 
+"## Mappings for vim keycodes {{{1
+    " mappings for keycodes
+    " for more details about keycode mapping, read
     "     http://groups.yahoo.com/group/vim/message/69148
     "     http://groups.yahoo.com/group/vim/message/66451
     "     http://groups.yahoo.com/group/vim/message/66414
@@ -384,7 +384,7 @@ endif
         set <F24>=O1;5S
         set <F25>=O1;6S
         set <F26>=OF
-        
+
         nmap <F13> <C-F2>
         nmap <F14> <S-F2>
         imap <F15> <S-Del> " this map does not work, don't know why
@@ -399,11 +399,11 @@ endif
         map <F25> <C-S-F4>
         map <F26> <end>
       endif
-    endif 
+    endif
     "if !has("gui_running")
         ":set term=builtin_ansi
     "endif
-    
+
     if has('clipboard')
       :nmap ,cp :let @*=expand('%:p')<CR>
       :nmap ,cpd :let @*=expand('%:p:h')<CR>
@@ -463,7 +463,7 @@ endif
         let pp = line(".") - 2
         let nextblank = getline(p) =~ "^\\s*$"
         let nextnextblank = getline(pp) =~ "^\\s*$"
-        while p > 0 && !(nextblank && nextnextblank) && ( nextblank || indent(p) >= i ) 
+        while p > 0 && !(nextblank && nextnextblank) && ( nextblank || indent(p) >= i )
             -
             let p = line(".") - 1
             let pp = line(".") - 2
@@ -481,7 +481,7 @@ endif
         let pp = line(".") + 2
         let nextblank = getline(p) =~ "^\\s*$"
         let nextnextblank = getline(pp) =~ "^\\s*$"
-        while p <=lastline && !(nextblank && nextnextblank) && ( nextblank || indent(p) >= i ) 
+        while p <=lastline && !(nextblank && nextnextblank) && ( nextblank || indent(p) >= i )
             +
             let p = line(".") + 1
             let pp = line(".") + 2
@@ -511,7 +511,7 @@ endif
 
         let p = line(".") - 1
         let nextblank = getline(p) =~ "^\\s*$"
-        while p > 0 && ( nextblank || indent(p) >= i ) 
+        while p > 0 && ( nextblank || indent(p) >= i )
             -
             let p = line(".") - 1
             let nextblank = getline(p) =~ "^\\s*$"
@@ -525,7 +525,7 @@ endif
 
         let p = line(".") + 1
         let nextblank = getline(p) =~ "^\\s*$"
-        while p <=lastline && ( nextblank || indent(p) >= i ) 
+        while p <=lastline && ( nextblank || indent(p) >= i )
             +
             let p = line(".") + 1
             let nextblank = getline(p) =~ "^\\s*$"
@@ -588,7 +588,7 @@ endif
     inoremap <F6> <Esc>:call LessMode()<CR>
     " }}}2
 "}}}1
-    
+
 "## Platform dependent Setting {{{1
     let $VIMCFG = '$HOME/.vim'
     "set clipboard=unnamed " for pbcopy and pbpast to work on macosx
@@ -613,15 +613,15 @@ endif
         "setting about word complete
         :set complete+=k$VIM/vimfiles/dictionary/*
 
-        " run any program and open any files in windows just like the exporler 
-        :nmap <LEADER>go :silent !c:/WINDOWS/COMMAND/start <cWORD><CR> 
+        " run any program and open any files in windows just like the exporler
+        :nmap <LEADER>go :silent !c:/WINDOWS/COMMAND/start <cWORD><CR>
         :vmap <LEADER>go y:silent !c:/WINDOWS/COMMAND/start <C-R>"<CR>
 
         " let vim to use ctags to generate tags file"
         let Tlist_Ctags_Cmd = 'C:\unzipped\ctags\ctags552\ctags.exe'
 
         " grep use the UnixUtils that port to Win32 by GNU,this can be imply by set
-        " path environment,so the following is useless 
+        " path environment,so the following is useless
         "
         "    if (expand('$VIM/vimtools') != '')
         "       let Grep_Path = expand('$VIM/vimtools/grep')
@@ -650,35 +650,35 @@ endif
         " set guifont=Source\ Code\ Pro:h18
         " set guifont=Anonymous\ Pro:h18
         set guifont=DejaVu\ Sans\ Mono\ for\ Powerline:h18
-        let Grep_Xargs_Options = '-0' 
+        let Grep_Xargs_Options = '-0'
         " macosx specific settings end}}}2
     else  " linux like platform specific setting {{{2
         " put some untested or untrusted plugin into .vim-experiment folder,
-        " don't mess up .vim 
+        " don't mess up .vim
         "set runtimepath+=~/.vim-experiment
         "setting about word complete
         :set complete+=U,k/usr/dict/*,k$VIM/vimfiles/dictionary/*
         ":set complete+=k/usr/dict/*,k$VIM/vimfiles/dictionary/*
-        
-        " set grep program 
+
+        " set grep program
         ":set grepprg=grep\ -n
         :set grepprg=/opt/local/bin/grep\ -n
 
 
         " extends manpageview to support reading pydoc in vim
-        " manpageview is very extensible especially for man like 
+        " manpageview is very extensible especially for man like
         " doc utilities(perldoc, pydoc etc)
         let g:manpageview_pgm_py = "/opt/local/bin/pydoc"
 
-    " linux setting end 
+    " linux setting end
     endif "}}}2
 
     "### console mode setting {{{2
     "TODO: need to set wildmode, for more details, :help 'wildmode'
-    " use menu in console mode 
+    " use menu in console mode
     if !has("gui_running")
       "### color scheme settings {{{3
-      " to enable 256 colors, you need to put following lines into .vimrc.local file 
+      " to enable 256 colors, you need to put following lines into .vimrc.local file
       :set t_Co=256 " enable 256 colors refs: http://vim.wikia.com/wiki/256_colors_in_vim
       """ NOTE: to make 256 colors work in GNU screen, screen need to be
       """       configured with ./configure --enable-colors256
@@ -695,7 +695,7 @@ endif
 
       " don't clear vim text in terminal when exit
       :set t_ti= t_te=
-    endif 
+    endif
     "### }}}2
 "## }}}1
 
@@ -721,12 +721,12 @@ if has("autocmd")
         \ endif
 
         " turn off the bell and visual flash
-        autocmd VimEnter * set vb t_vb= 
+        autocmd VimEnter * set vb t_vb=
 
         " automate save the latest work to a session
         " for now, I don't always need this
         ":au VimEnter * source ~/Session.vim
-        ":au VimLeave * mksession! 
+        ":au VimLeave * mksession!
 
         " display the status line in different ways based on the current
         " editing mode
@@ -737,11 +737,11 @@ if has("autocmd")
 
         " highlight current word under cursor
         "autocmd CursorMoved * silent! exe printf('match IncSearch /\<%s\>/', expand('<cword>'))
-        
+
     augroup END
 
-    " settings related to specified file type. but checkings for file type 
-    " should be put into ~/.vim/ftdetect/mine.vim 
+    " settings related to specified file type. but checkings for file type
+    " should be put into ~/.vim/ftdetect/mine.vim
     augroup ft_augroup
         au!
         :au BufRead /etc/network/interfaces :set syntax=interfaces
@@ -755,9 +755,9 @@ if has("autocmd")
 
         :au BufEnter *.lzx :call FoldOnRegex('^\s*<\w\+', 0)
         ":au BufEnter *.py  :call FoldOnRegex('^\s*\(\<def\>\|\<class\>\)', 0)
-        
+
         " remove trailing whitespace automatically
-        :au BufWritePre *.py :%s/\s\+$//e 
+        :au BufWritePre *.py :%s/\s\+$//e
 
         " autocmd for read MS Word document
         " Vim Tip 790 - view word documents in Vim (good for diff'ing)
@@ -766,7 +766,7 @@ if has("autocmd")
         :autocmd BufReadPost *.doc %!antiword "%"
 
         " read pdf in vim
-        if has('unix')  
+        if has('unix')
             :au BufReadPre *.pdf set ro
             :au BufReadPost *.pdf silent %!pdftotext -nopgbrk "%" - | fmt -csw78
         elseif has('win32')
@@ -799,7 +799,7 @@ if has("autocmd")
       augroup END
     endif
     "}}}2
-    
+
     "}}}2
 
 endif " has("autocmd")
@@ -814,7 +814,7 @@ endif " has("autocmd")
 
 "## }}}1
 
-"## Commands & Functions {{{1 
+"## Commands & Functions {{{1
 
     "### String Object defination {{{2
         " customized string object from http://vim.sourceforge.net/tips/tip.php?tip_id=901
@@ -857,7 +857,7 @@ endif " has("autocmd")
         elseif &ft == 'ri'
             exe "Man " . manpagetopic . ".ri"
         else
-            exe "Man " . manpagetopic 
+            exe "Man " . manpagetopic
         endif
     endfunction
 
@@ -882,19 +882,19 @@ endif " has("autocmd")
 
     " ### define abbreviation only works under command line, a very smart function {{{2
     " this function comes from a comment of tip http://vim.sourceforge.net/tips/tip.php?tip_id=1285
-        function! CommandCabbr( abbreviation, expansion ) 
-            execute 'cabbr ' .  a:abbreviation . ' <c-r>=getcmdpos() == 1 && getcmdtype() == ":" ? "' . a:expansion . '" : "' . a:abbreviation . '"<CR>' 
-        endfunction 
+        function! CommandCabbr( abbreviation, expansion )
+            execute 'cabbr ' .  a:abbreviation . ' <c-r>=getcmdpos() == 1 && getcmdtype() == ":" ? "' . a:expansion . '" : "' . a:abbreviation . '"<CR>'
+        endfunction
         com!  -nargs=+ CommandCabbr call CommandCabbr( <f-args> )
         " Use it itself to define a simpler abbreviation for itself...
         CommandCabbr ccab CommandCabbr
     " }}}2
-    
-    "### command to diff the modified file with original file {{{2 
+
+    "### command to diff the modified file with original file {{{2
         command! DiffOrig vert new | set bt=nofile | r # | 0d_ | diffthis |
              \ wincmd p | diffthis
     " }}}2
-   
+
     "### function that will fold file based on specified regex pattern {{{2
         function! FoldOnRegex(...)
             if a:0 >= 1
@@ -906,7 +906,7 @@ endif " has("autocmd")
 
             let do_fold = 0
             if a:0 == 2 && force_to_fold == 1
-                let do_fold = 1     
+                let do_fold = 1
             elseif exists("b:FoldRegex") == 0
                 let do_fold = 1
             endif
@@ -937,7 +937,7 @@ endif " has("autocmd")
         :noremap ,ll :LimitOnRegex <C-R>=expand("<cword>")<CR>
         :vnoremap ,ll :call LimitOnRegex(GetVisualSelectionEscaped("enV"), -1)<CR>
     " }}}2
-    
+
 "## }}}1
 
     "## Plugin related settings {{{1
@@ -976,7 +976,7 @@ endif " has("autocmd")
     "nmap <Leader>vu VCSUpdate
     "nmap <Leader>vv VCSVimDiff
 
-    " only for cvs 
+    " only for cvs
     "nmap <Leader>ve CVSEdit
     "nmap <Leader>vi CVSEditors
     "nmap <Leader>vt CVSUnedit
@@ -1004,7 +1004,7 @@ endif " has("autocmd")
     "map ,gg :Grep<CR>
     "map ,gf :Fgrep<CR>
     "### }}}2
-    
+
     "### settings for ag.vim {{{2
     let g:agprg="ag --nocolor --nogroup --column --smart-case "
     map ,gr yiw:Ag "<CR>
@@ -1014,7 +1014,7 @@ endif " has("autocmd")
     "### setting for a.vim {{{2
     let g:alternateNoDefaultAlternate = 1
 
-    " " for objective-c 
+    " " for objective-c
     " let g:alternateExtensions_m = 'h'
     " if exists('g:alternateExtensions_h')
     "   let g:alternateExtensions_h = g:alternateExtensions_h . ',m'
@@ -1028,8 +1028,8 @@ endif " has("autocmd")
     "### }}}2
 
     "### setting for python editing {{{2
-        " setting about python 
-        " Now I use python.vim      
+        " setting about python
+        " Now I use python.vim
         " other python vim script are pylint, python_match,python_box etc,I will try
         " them later :)
 
@@ -1039,14 +1039,14 @@ endif " has("autocmd")
     "### }}}2
 
     "### setting for yankring.vim {{{2
-    :let g:yankring_n_keys = "yy dd yw dw ye de yE dE yiw diw yaw daw y$ d$ ygg dgg yG dG D Y ya\' ya\" yi\' yi\""         
+    :let g:yankring_n_keys = "yy dd yw dw ye de yE dE yiw diw yaw daw y$ d$ ygg dgg yG dG D Y ya\' ya\" yi\' yi\""
     " we don't the default map of yangring since it uses <C-N> and <C-P> and
     " those are mapped to completion normally
     let g:yankring_replace_n_pkey = ''
     let g:yankring_replace_n_nkey = ''
     let g:yankring_map_dot = 0
     let g:yankring_max_element_length = 1024
-    nmap ,y :YRGetElem <CR>                                              
+    nmap ,y :YRGetElem <CR>
     imap <F4> <C-o>:YRGetElem <CR>
     "### }}}2
 
@@ -1061,14 +1061,14 @@ endif " has("autocmd")
     "### }}}2
 
     "### setting for imaps.vim {{{2
-    " example: 
+    " example:
     "  call IMAP("bit`", "\\begin{itemize}\<cr>\\item \<cr>\\end{itemize}<++>", "")
     " You can use the <C-r> command to insert dynamic elements such as dates.
     "   call IMAP ('date`', "\<c-r>=strftime('%b %d %Y')\<cr>", '')
     " read the docs of imaps.vim to get more details
-    "let g:disable_imap = 1 
+    "let g:disable_imap = 1
     "imap <C-g>   <plug>IMAP_JumpForward
-    "### }}}2   
+    "### }}}2
 
     "### setting for netrw.vim {{{2
     " set what kind of files we will ignore
@@ -1086,10 +1086,10 @@ endif " has("autocmd")
     let g:netrw_retmap        = 0
     let g:netrw_silent        = 1
     let g:netrw_special_syntax= 1
-    "### }}}2   
+    "### }}}2
 
     "### setting for NERD_comments.vim {{{2
-    "make NERD_comments silent 
+    "make NERD_comments silent
     let g:NERDMenuMode=0
     :nnoremap <silent> ,ct :call NERDComment('n', 'toggle')<CR>
     :vnoremap <silent> ,ct :call NERDComment('x', 'toggle')<CR>
@@ -1099,38 +1099,38 @@ endif " has("autocmd")
     :vnoremap <silent> ,cu <ESC>:call NERDComment('x', 'uncomment')<CR>
     :nnoremap <silent> ,cy <ESC>:call NERDComment('n', 'yank')<CR>
     :vnoremap <silent> ,cy <ESC>:call NERDComment('x', 'yank')<CR>
-    "### }}}2   
+    "### }}}2
 
     ""### setting for MRU.vim {{{2
     "let MRU_Max_Entries = 150
     "let MRU_Exclude_Files = '^/tmp/.*\|^/var/tmp/.*'
     "map <silent> ,m :MRU<CR>
-    ""### }}}2   
+    ""### }}}2
 
     "### setting for project.vim {{{2
     let g:proj_flags = "mstb"
     "### }}}2
-   
+
     "### setting for flagit.vim {{{2
     let icons_path = $HOME."/.vim/signs/"
     let g:Fi_Flags = { "arrow" : [icons_path."go-next.png", "> ", 1, "texthl=Title"],
-    			\ "function" : [icons_path."emblem-system.png", "+ ", 0, "texthl=Comment"],
-    			\ "warning" : [icons_path."dialog-warning.png", "! ", 0, "texthl=WarningMsg"],
-    			\ "error" : [icons_path."dialog-error.png", "XX", "true", "texthl=ErrorMsg linehl=ErrorMsg"],
-    			\ "step" : [icons_path."start-here.png", "..", "true", ""] }
+          \ "function" : [icons_path."emblem-system.png", "+ ", 0, "texthl=Comment"],
+          \ "warning" : [icons_path."dialog-warning.png", "! ", 0, "texthl=WarningMsg"],
+          \ "error" : [icons_path."dialog-error.png", "XX", "true", "texthl=ErrorMsg linehl=ErrorMsg"],
+          \ "step" : [icons_path."start-here.png", "..", "true", ""] }
     let g:Fi_OnlyText = 0
     let g:Fi_ShowMenu = 0
     "### }}}2
-    
+
     "### setting for pyljvim.vim {{{2
     let g:pyljpost_path = $HOME."/.vim/tools/pyljpost.py"
-    let g:pyljpost_templates_path = $HOME . "/.pyljpost/templates" 
+    let g:pyljpost_templates_path = $HOME . "/.pyljpost/templates"
     let g:pyljpost_encoding = &encoding
     let g:pyljpost_username = "vincent_wang"
     "let g:pyljpost_password = ""
     "}}}2
-   
-    "### setting for lookupfile.vim {{{2 
+
+    "### setting for lookupfile.vim {{{2
     let g:LookupFile_TagExpr = '"./filenametags"'
     "}}}2
 
@@ -1139,31 +1139,31 @@ endif " has("autocmd")
     "}}}2
 
     "### setting for exo-codereview.vim {{{2
-    let g:codereview_username = "Vincent" 
+    let g:codereview_username = "Vincent"
     let g:svn_base_url = "https://nordicbet.dev.exoweb.net/svn/trunk/src"
     let g:svn_workcopy_path = '/home/vincent/work/trunk/src'
     "}}}2
-    
+
     "### setting for Decho.vim {{{2
     "let g:dechomode = 4
     "}}}2
-    
+
     "### setting for SQLUtilities.vim {{{2
      let g:sqlutil_keyword_case = '\U'
     "}}}2
-    
+
     "### setting for tagselect.vim {{{2
      let g:no_tagselect_maps = 1
     "}}}2
-   
+
     "### setting for toggle_words.vim {{{2
      " let g:toggle_words_dict = {'*': [['white', 'black'], ['add', 'remove'], ['read', 'write'], ['hide', 'show'], ['before', 'after'], ['up', 'down'], ['open', 'close'], ['right', 'left'], ['long', 'short'], ['big', 'small'], ['post', 'get']], 'python': [['if', 'elif', 'else']]}
      " nmap ,t :ToggleWord<CR>
      " vmap ,t <ESC>:ToggleWord<CR>
     "}}}2
-     
+
     "###  setting for Switch  {{{2
-    let g:switch_custom_definitions = 
+    let g:switch_custom_definitions =
       \ [
       \  ['white', 'black'],
       \  ['add', 'remove'],
@@ -1175,7 +1175,7 @@ endif " has("autocmd")
       \  ['right', 'left'],
       \  ['long', 'short'],
       \  ['big', 'small'],
-      \  ['post', 'get'], 
+      \  ['post', 'get'],
       \   {
       \     '\<[a-z0-9]\+_\k\+\>': {
       \       '_\(.\)': '\U\1'
@@ -1188,24 +1188,24 @@ endif " has("autocmd")
      noremap ,t :Switch<CR>
      vnoremap ,t <ESC>:Switch<CR>
     "}}}2
-    
+
     "### setting for vimExplorer.vim {{{2
      let g:VEConf_showHiddenFiles = 0 " don't show dot files by default
      let g:VEConf_usingGnome = 1 "use Gnome desktop system. TODO: add support for Mac OSX
 
      " override some file mode hot keys
      "let g:VEConf_fileHotkey = {}
-     " switch itemClicked and openPreview hotkeys 
+     " switch itemClicked and openPreview hotkeys
      "let g:VEConf_fileHotkey.itemClicked = 'u'
      "let g:VEConf_fileHotkey.openPreview = '<cr>'
     "}}}2
-    
+
     "### setting for fuzzyfinder.vim {{{2
     " by default mru command and mru file modes are disabled
     "let g:fuf_modesDisable = [ 'mrufile', 'mrucmd', 'coveragefile', 'help']
     let g:fuf_modesDisable = [ 'mrufile', 'mrucmd', 'help']
 
-    let g:fuf_abbrevMap = 
+    let g:fuf_abbrevMap =
                 \    { "^,a" : [$PROJECT_DIR, "~/workspace/auction"],
                 \      "^,w" : ["~/workspace/zhiyong/web"],
                 \      "^,v" : map(filter(split(&runtimepath, ','), 'v:val !~ "after$"'), 'v:val . ''/**/'''),
@@ -1217,7 +1217,7 @@ endif " has("autocmd")
           "\   '^vr:' : map(filter(split(&runtimepath, ','), 'v:val !~ "after$"'), 'v:val . ''/**/'''),
           "\   '^m0:' : [ '/mnt/d/0/', '/mnt/j/0/' ],
           "\ }
-          
+
     let g:fuf_mrufile_maxItem = 300
     let g:fuf_mrucmd_maxItem = 400
 
@@ -1228,7 +1228,7 @@ endif " has("autocmd")
 
     let g:fuf_promptHighlight = 'FileMode'
 
-    " customize mode's prompts 
+    " customize mode's prompts
     let g:fuf_buffer_prompt = '[Buffer]'
     let g:fuf_file_prompt = '[File]'
     let g:fuf_dir_prompt = '[Dir]'
@@ -1297,21 +1297,21 @@ endif " has("autocmd")
 
     " FuzzyFinderTag is really useful especially after we process the tags
     " file, for example generate a tags file for files, that will minic the
-    " behavior of TextMate easily. So give it a seperate shortcut 
-    :noremap ,s  :FufTag<CR> 
+    " behavior of TextMate easily. So give it a seperate shortcut
+    :noremap ,s  :FufTag<CR>
 
     let g:fuf_previewHeight = 0
     "}}}2
-    
+
     "### setting for view_diff.vim {{{2
     "let g:vd_svn_repo_prefix = 'https://nordicbet.dev.exoweb.net/svn/trunk/src'
     "}}}2
-    
+
     "### settings for utl.vim {{{2
     let g:nordicbet_trac_base_url = 'https://nordictrac.dev.exoweb.net/trac'
     let g:Font_Size = 2
     "}}}2
-    
+
     "### settings for dbext.vim {{{2
     let g:dbext_default_profile_pg_vincent = 'type=PGSQL:user=vincent:dbname=NBET_vincent:host=localhost'
     let g:dbext_default_profile_pg_vincent_testdb = 'type=PGSQL:user=vincent:dbname=TESTDB_vincent:host=localhost'
@@ -1324,7 +1324,7 @@ endif " has("autocmd")
     let g:dbext_default_always_prompt_for_variables = 1
     "let g:dbext_default_display_cmd_line = 1
     "}}}2
-    
+
     "### settings for blogger.vim {{{2
     let g:Gmail_Account = 'linsong.qizi@gmail.com'
     let g:Blog_URI = 'http://vincent-wang.blogspot.com'
@@ -1338,29 +1338,29 @@ endif " has("autocmd")
     "### settings for supertab.vim {{{2
     let g:SuperTabLongestHighlight = 1
     "}}}2
-    
+
     "### settings for acp.vim {{{2
     map ,ace :AcpEnable<CR>
     map ,acd :AcpDisable<CR>
     let g:AutoComplPop_NotEnableAtStartup = 0
     let g:acp_behaviorKeywordLength = 3
     "}}}2
-    
+
     "### settings for rcsvers.vim {{{2
     "TODO: need add more options
     let g:rvExcludeExpression = '\c\.pyc\|\c\.pyo\|\c\.bmp'
     "}}}2
-    
+
     "### settting for blockdiff.vim {{{2
     vmap ,d1 :call BlockDiff_GetBlock1()<CR>
     vmap ,d2 :call BlockDiff_GetBlock2()<CR>
     "}}}2
-    
+
     "### settings for mark.vim {{{2
-    let g:mwHistAdd = "/@" 
-    let g:mwAutoLoadMarks = 0 
+    let g:mwHistAdd = "/@"
+    let g:mwAutoLoadMarks = 0
     let g:mwAutoSaveMarks = 0
-    nmap <Plug>IgnoreMarkSearchNext <Plug>MarkSearchNext 
+    nmap <Plug>IgnoreMarkSearchNext <Plug>MarkSearchNext
     nmap <Plug>IgnoreMarkSearchPrev <Plug>MarkSearchPrev
 
     "highlight def MarkWord7   ctermfg=Cyan      ctermbg=Black  guifg=#8CCBEA    guibg=Black
@@ -1381,7 +1381,7 @@ endif " has("autocmd")
       let g:mwDefaultHighlightingPalette = 'extended'
     endif
     "}}}2
-    
+
     "### settings for RltvNmbr.vim {{{2
     map ,r :RN<CR>
     "}}}2
@@ -1392,24 +1392,24 @@ endif " has("autocmd")
     let marvim_store_key = ',ms'
     "let marvim_register = 'q'
     "}}}2
-   
-    "### settings for NERDTree {{{2 
+
+    "### settings for NERDTree {{{2
     let NERDTreeShowBookmarks=1
     "}}}2
-    
+
     "### settings for vimim {{{2
     let g:vimim_i_ctrl6 = 1
 
     " enable microsoft double pinyin
     let g:vimim_double_pinyin_microsoft = 1
     "}}}2
-    
+
     "### settings for EasyGrep.vim {{{2
     let g:EasyGrepMode = 2
     let g:EasyGrepCommand = 1
     let g:EasyGrepRecursive = 1
     "}}}2
-    
+
     "### settings for crefvim {{{2
     vnoremap <silent> <unique> ,cr <Plug>CRV_CRefVimVisual
     nnoremap <silent> <unique> ,cr <Plug>CRV_CRefVimNormal
@@ -1421,7 +1421,7 @@ endif " has("autocmd")
     let g:C_Ctrl_j   = 'off'
     let g:C_Root = '&Plugin.&C\/C\+\+.'
     "}}}2
-    
+
     "### settings for bash.vim {{{2
     let g:BASH_Root = "&Plugin.B&ash."
     "}}}2
@@ -1445,9 +1445,9 @@ endif " has("autocmd")
     "}}}2
 
     "### settings for UltiSnips.vim {{{2
-    let g:UltiSnipsExpandTrigger="<tab>" 
-    let g:UltiSnipsJumpForwardTrigger="<tab>" 
-    let g:UltiSnipsJumpBackwardTrigger="<s-tab>" 
+    let g:UltiSnipsExpandTrigger="<tab>"
+    let g:UltiSnipsJumpForwardTrigger="<tab>"
+    let g:UltiSnipsJumpBackwardTrigger="<s-tab>"
 
     command! ResetUltiSnip :py UltiSnips_Manager.reset()
     "}}}2
@@ -1455,7 +1455,7 @@ endif " has("autocmd")
     "### settings for redocommand {{{2
     let g:redocommand_no_short_command = 1
     "}}}2
-  
+
     "### settings for git-vim {{{2
     let g:git_no_map_default = 1
     nnoremap ,gd :GitDiff<Enter>
@@ -1473,7 +1473,7 @@ endif " has("autocmd")
     let twitvim_api_root = "http://168.143.162.100"
     let twitvim_browser_cmd = "open"
     "}}}2
-    
+
     "### settings for syntastic {{{2
     let g:syntastic_enable_signs = 1
     let g:syntastic_auto_loc_list = 0
@@ -1486,11 +1486,11 @@ endif " has("autocmd")
     let blogit_unformat="html2text.py"
     let blogit_format="rmarkdown.rb"
     "}}}2
-  
+
     "### vimcommander {{{2
-	  :noremap <silent> ;vc                     :cal VimCommanderToggle()<CR>
+    :noremap <silent> ;vc                     :cal VimCommanderToggle()<CR>
     "}}}2
-    
+
     "### screen {{{2
     " let g:ScreenImpl = 'Tmux'
     "let g:ScreenImpl = 'GnuScreen'
@@ -1537,15 +1537,15 @@ endif " has("autocmd")
 
     let g:xptemplate_strict = 1
 
-    let g:xptemplate_bundle = "cpp_*" 
+    let g:xptemplate_bundle = "cpp_*"
 
     set runtimepath+=~/.vim/personal/
     "}}}2
-     
+
     "### reload scrit {{{2
     let g:reload_on_write = 0 "disable reload by default, use :ReloadScript manually
     "}}}2
-    
+
     "### EasyMotion {{{2
     let g:EasyMotion_leader_key = ';'
     let g:EasyMotion_smartcase = 1
@@ -1562,7 +1562,7 @@ endif " has("autocmd")
     "### Ack {{{2
     let g:ackprg="ack -H --nocolor --nogroup --column"
     "}}}2
-    
+
     "### sparkup {{{2
     let g:sparkupNextMapping = '<c-r>'
     "}}}2
@@ -1584,7 +1584,7 @@ endif " has("autocmd")
     "### powerline {{{2
     "let g:Powerline_symbols = 'fancy'
     "}}}2
-    
+
     "### ctrlp {{{2
     let g:ctrlp_map = '<c-p>'
     noremap ,fb :CtrlPBuffer<CR>
@@ -1612,7 +1612,7 @@ endif " has("autocmd")
       "\ }
     let g:ctrlp_extensions = ['buffertag', 'dir', 'bookmarkdir'] " ['dir', 'tag', 'rtscript', 'changes']
     let g:ctrlp_prompt_mappings = { 'PrtCurLeft()': ['<left>', '<c-^>'], 'PrtBS()': ['<bs>', '<c-]>', '<c-h>'] }
-    
+
     " PyMatcher for CtrlP, PyMatcher can improve CtrlP's performance a lot
     if !has('python')
         echo 'In order to use pymatcher plugin, you need +python compiled vim'
@@ -1626,7 +1626,7 @@ endif " has("autocmd")
     " Do not clear filenames cache, to improve CtrlP startup
     " You can manualy clear it by <F5>
     let g:ctrlp_clear_cache_on_exit = 0
-    
+
     let g:ctrlp_max_files = 0
 
     " If ag is available use it as filename list generator instead of 'find'
@@ -1639,25 +1639,25 @@ endif " has("autocmd")
     "}}}2
 
     "### rainbow {{{2
-		let g:rainbow_active = 0
+    let g:rainbow_active = 0
     map ;r :silent! RainbowToggle <CR>
     "map ;r :silent! RainbowParenthesesToggle <CR>
     "}}}2
-    
+
     "### localvimrc {{{2
     let g:localvimrc_persistent = 1
     let g:localvimrc_whitelist = '' . $HOME . '/workspace/.*'
     let g:localvimrc_sandbox = 0
     "}}}2
-    
+
     "### vim-PinyinSearch {{{2
     let g:PinyinSearch_Dict = '' . $HOME . '/.vim/bundle/vim-PinyinSearch/PinyinSearch.dict'
     "}}}2
 
     "### vim-seek {{{2
-    "let g:seek_enable_jumps = 1 
+    "let g:seek_enable_jumps = 1
     "}}}2
-    
+
     "### unite {{{2
     nnoremap    [unite]   <Nop>
     nmap    ] [unite]
@@ -1696,10 +1696,10 @@ endif " has("autocmd")
       let g:unite_source_grep_recursive_opt = ''
     endif
     "}}}2
-    
-    "### vimfiler {{{2 
-		let g:vimfiler_quick_look_command = 'qlmanage -p'
-	  let g:vimfiler_as_default_explorer = 1
+
+    "### vimfiler {{{2
+    let g:vimfiler_quick_look_command = 'qlmanage -p'
+    let g:vimfiler_as_default_explorer = 1
 
     "NeoBundleLazy 'Shougo/vimfiler', {
     "      \ 'depends' : 'Shougo/unite.vim',
@@ -1728,34 +1728,34 @@ endif " has("autocmd")
         \ 'auth_type': 'basic',
         \ }
     "}}}2
-    
+
     "### EasyAlign {{{2
     vnoremap <silent> <Enter> :EasyAlign<cr>
     "}}}2
-    
+
     "### Dash {{{2
     let g:dash_map = {
       \ 'cpp' : 'qt4'
       \ }
     :nmap <silent> ,k <Plug>DashSearch
     "}}}2
-    
+
     "### IndentLine {{{2
     " let g:indentLine_char= '︙'
     let g:indentLine_color_term = 239
     let g:indentLine_color_gui = '#A4E57E'
     "}}}2
-    
+
     "### AirLine {{{2
-    if has('macunix') 
+    if has('macunix')
       let g:airline_powerline_fonts = 1
     endif
     "}}}2
-    
+
 "## }}}1
 
-"## Xterm colors defination {{{1 
-  if !has("gui_running") && $TERM == "xterm" 
+"## Xterm colors defination {{{1
+  if !has("gui_running") && $TERM == "xterm"
     hi x016_Grey0                ctermfg=16  guifg=#000000
     hi x017_NavyBlue             ctermfg=17  guifg=#00005f
     hi x018_DarkBlue             ctermfg=18  guifg=#000087
@@ -2000,7 +2000,7 @@ endif
     "
 "## }}}1
 
-"## Experiments {{{1 
+"## Experiments {{{1
 
 "" TODO: need to be extended for more languages and replace selected lines
 "python << EOL
@@ -2010,22 +2010,22 @@ endif
 "EOL
 "map H :py EvaluateCurrentRange()<CR>
 
-function! TabMessage(cmd) 
-  redir => message 
-  silent execute a:cmd 
-  redir END 
-  tabnew 
-  silent put=message 
-  set nomodified 
-endfunction 
-command! -nargs=+ -complete=command TabMessage call TabMessage(<q-args>) 
+function! TabMessage(cmd)
+  redir => message
+  silent execute a:cmd
+  redir END
+  tabnew
+  silent put=message
+  set nomodified
+endfunction
+command! -nargs=+ -complete=command TabMessage call TabMessage(<q-args>)
 "## }}}1
 
 "## Color Scheme {{{1
   :colorscheme jellybeans
 " }}}1
 
-"## MacVim Related {{{1 
+"## MacVim Related {{{1
 if has("gui_macvim")
   set fuoptions=maxvert,maxhorz,background:Normal
   set lines=39 columns=157
