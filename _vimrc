@@ -78,6 +78,10 @@ set winfixheight
 " not let all windows keep the same height/width
 set noequalalways
 
+:set path+=./**,../,../*,../..,../../*,$HOME/.vim/*
+
+:set hidden
+
 "set statusline=%<%f\ [%{&ff}]%{StatusInfo()}\ %h%m%r%=%-14.(%l,%c%V%)\ %P
 
 " setting for completion 
