@@ -223,6 +223,7 @@ endif
     nmap + 5<C-W>>
 
     nnoremap <silent> ,<space>    :nohlsearch<CR>
+    " nnoremap <silent> <C-l> :<C-u>nohlsearch<CR><C-l>
 
     " mappings for quickfix mode
     nnoremap <xF4>   :cnext \| norm zz<CR>
@@ -333,7 +334,8 @@ endif
     " from vim tip wiki: http://vim.wikia.com/wiki/View_text_file_in_two_columns
     :noremap <silent> <leader>vs :<C-u>let @z=&so<CR>:set so=0 noscb<CR>:bo vs<CR>Ljzt:setl scb<CR><C-w>p:setl scb<CR>:let &so=@z<CR>
 
-    nnoremap <silent> ;;  :silent! %s/\s\+$//g <bar> w<CR>
+    " nnoremap <silent> ;;  :silent! %s/\s\+$//g <bar> w<CR>
+    nnoremap <silent> ;;  :w<CR>
     nnoremap <silent> ,,  :wa<CR>
 
     nnoremap <silent> <f5> :w <bar> make<CR>
@@ -1007,6 +1009,7 @@ endif " has("autocmd")
 
     "### settings for ag.vim {{{2
     let g:agprg="ag --nocolor --nogroup --column --smart-case "
+    let g:ag_mapping_message=0
     map ,gr yiw:Ag "<CR>
     vmap ,gr y:Ag "<CR>
     "}}}2
@@ -1735,7 +1738,7 @@ endif " has("autocmd")
 
     "### Dash {{{2
     let g:dash_map = {
-      \ 'cpp' : 'qt4'
+      \ 'cpp' : 'qt'
       \ }
     :nmap <silent> ,k <Plug>DashSearch
     "}}}2
@@ -1750,6 +1753,18 @@ endif " has("autocmd")
     if has('macunix')
       let g:airline_powerline_fonts = 1
     endif
+    let g:airline#extensions#whitespace#enabled = 0
+    let g:airline#extensions#tagbar#enabled = 0
+    let g:airline#extensions#hunks#enabled = 0
+    let g:airline#extensions#eclim#enabled = 0
+    if !exists('g:airline_symbols')
+      let g:airline_symbols = {}
+    endif
+    let g:airline_symbols.linenr = '|'
+    "}}}2
+    
+    "### Colorize {{{2
+    let g:colorizer_startup = 0
     "}}}2
 
 "## }}}1
