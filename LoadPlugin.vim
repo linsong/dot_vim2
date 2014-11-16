@@ -14,7 +14,7 @@ Plug 'tomtom/tcomment_vim'
 Plug 'Yggdroot/indentLine'
 Plug 'majutsushi/tagbar'
 Plug 'scratch.vim', {'on': 'Scratch'}
-Plug 'AndrewRadev/switch.vim', {'on': 'Switch'}
+Plug 'AndrewRadev/switch.vim'
 " }}}1
 
 " ColorSchemes {{{1
@@ -41,6 +41,9 @@ Plug 'chrisbra/NrrwRgn'
 Plug 'sk1418/Join', {'on': 'Join'}
 Plug 'sessionman.vim', {'on': ['SessionOpen', 'SessionOpenLast', 'SessionClose', 'SessionSave', 'SessionSaveAs', 'SessionShowLast']}
 Plug 'MattesGroeger/vim-bookmarks', {'on': 'BookmarkToggle'}
+Plug 'kana/vim-textobj-user'
+Plug 'lilydjwg/colorizer'
+Plug 'tpope/vim-afterimage'
 "}}}1
 
 " Utils {{{1
@@ -48,9 +51,9 @@ Plug 'kana/vim-fakeclip'
 Plug 'a.vim'
 Plug 'localvimrc'
 Plug 'epeli/slimux', {'on': 'SlimuxShellRun'} " related to tmux 
-Plug 'mhinz/vim-startify'
+Plug 'mhinz/vim-startify', {'on': 'Startify'}
 Plug 'rizzatti/funcoo.vim' " for Dash
-Plug 'rizzatti/dash.vim', {'on': 'Dash'} " for Dash
+Plug 'rizzatti/dash.vim'
 
 Plug 'vim-scripts/rainbow_csv.vim', {
   \ 'on': 'RainbowDelim',
