@@ -17,8 +17,8 @@ XPT QAction " create new QAction instance
 QAction(`icon^, `tr...{{^tr("`cursor^")`}}^, `this^);
 `cursor^
 
-XPT tr " create a tr string
-tr("`^")`^
+XPT tr wrap=local_string " create a tr string
+tr("`local_string^")`^
 
 XPT #include " include a header 
 #include <`QtGui^/`cursor^>
@@ -55,7 +55,7 @@ class `classname^ : public `QObject^
     Q_OBJECT
 public: 
     explicit `classname^(`QObject^ * parent=NULL);
-    ~`classname^();
+    virtual ~`classname^();
 
 signals:
 
