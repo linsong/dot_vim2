@@ -1766,6 +1766,10 @@ endif " has("autocmd")
     "### Colorize {{{2
     let g:colorizer_startup = 0
     "}}}2
+    
+    "### ScreenShot {{{2
+    let g:ScreenShot = {'Credits': 0}
+    "}}}2
 
 "## }}}1
 
