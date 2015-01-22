@@ -68,6 +68,7 @@ Plug 'renamer.vim', {'on': 'Renamer'}
 Plug 'vimGTD', {'for': 'gtd'}
 Plug 'skwp/greplace.vim', {'on': 'Gsearch'}
 Plug 'ViewOutput', {'on': 'VO'}
+Plug 't9md/vim-choosewin'
 
 " ScreenShot.vim enables you make screenshot of your VIM session as HTML code. 
 Plug 'ScreenShot', {'on': ['ScreenShot', 'Text2Html', 'Diff2Html']}

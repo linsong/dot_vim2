@@ -27,7 +27,7 @@ endif
 " set guifont=-misc-fixed-medium-r-normal--14-130-75-75-c-70-iso8859-1
 "
 
-colorscheme codeschool
+" colorscheme codeschool
 "set colorscheme randomly
 "if ((strftime("%H") < 17 && strftime("%H") > 7))
   "let g:colorscheme_list = ['sienna', 'oceanlight', 'autumnleaf']
@@ -60,11 +60,11 @@ endif
 ":source PATH_OF_PLUGINS/mark.vim
 "after that. Otherwise, you won't see the colors.
 "Unfortunately, it seems that .gvimrc runs after plugin scripts. So if you set any color settings in .gvimrc, you have to add one line to the end of .gvimrc to source mark.vim. 
-if has('win32')
-	:source $VIMCFG\plugin\mark.vim
-else
-	:source $VIMCFG/plugin/mark.vim
-endif
+"if has('win32')
+"	:source $VIMCFG\plugin\mark.vim
+"else
+"	:source $VIMCFG/plugin/mark.vim
+"endif
 
 " following config to make gvim startup faster
 set guiheadroom=0
@@ -80,7 +80,7 @@ set guioptions-=b
 set showtabline=0
 
 " following setting may cause macvim hangs after startup? 
-macmenu Edit.Find.Find\.\.\. key=<nop> " free up <Cmd-F> for fullscreen
+"macmenu Edit.Find.Find\.\.\. key=<nop> " free up <Cmd-F> for fullscreen
 macmenu Window.Toggle\ Full\ Screen\ Mode key=<D-f>
 "set fullscreen
 

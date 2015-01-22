@@ -1770,7 +1770,17 @@ endif " has("autocmd")
     "### ScreenShot {{{2
     let g:ScreenShot = {'Credits': 0}
     "}}}2
+    
+    "### fzf {{{2
+    "installed by brew 
+    set rtp+=/usr/local/Cellar/fzf/0.8.8
+    "}}}2
 
+    "### choosewin {{{2
+    nmap <c-w>- <Plug>(choosewin)
+    let g:choosewin_overlay_enable = 1
+    set rtp+=/usr/local/Cellar/fzf/0.8.8
+    "}}}2
 "## }}}1
 
 "## Xterm colors defination {{{1
