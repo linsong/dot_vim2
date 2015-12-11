@@ -217,10 +217,10 @@ endif
     cnoremap <C-X> <Del>
 
     " key maps will make increase/decrease the width/height of window easier
-    nmap - <C-W>-
-    nmap = <C-W>+
-    nmap _ 5<C-W><
-    nmap + 5<C-W>>
+    nnoremap - <C-W>-
+    nnoremap = <C-W>+
+    nnoremap _ 5<C-W><
+    nnoremap + 5<C-W>>
 
     nnoremap <silent> ,<space>    :nohlsearch<CR>
     " nnoremap <silent> <C-l> :<C-u>nohlsearch<CR><C-l>
@@ -260,7 +260,7 @@ endif
     nmap <leader>ff :RedoFoldOnRegex<CR>
     nmap <leader>fu :FoldEndFolding<CR>
 
-    nmap <leader>wf :WinFullScreen <CR>
+    " nmap <leader>wf :WinFullScreen <CR>
 
     " it can copy texts to last edited place continuously
     function! CopyToLastEditPos()
@@ -342,6 +342,12 @@ endif
     imap <silent> <f5> <Esc>:w<CR>:make<CR>i
 
     map <silent> <leader>ss :syntax sync fromstart<CR>
+    
+    if has('nvim')
+      tnoremap <Esc> <C-\><C-n>
+    endif
+
+    nnoremap <expr> gp '`[' . strpart(getregtype(), 0, 1) . '`]'
 
 "## }}}1
 
@@ -739,6 +745,8 @@ if has("autocmd")
 
         " highlight current word under cursor
         "autocmd CursorMoved * silent! exe printf('match IncSearch /\<%s\>/', expand('<cword>'))
+        
+        autocmd filetype crontab setlocal nobackup nowritebackup
 
     augroup END
 
@@ -1008,10 +1016,11 @@ endif " has("autocmd")
     "### }}}2
 
     "### settings for ag.vim {{{2
-    let g:agprg="ag --nocolor --nogroup --column --smart-case "
-    let g:ag_mapping_message=0
-    map ,gr yiw:Ag "<CR>
-    vmap ,gr y:Ag "<CR>
+    "disabled, use Grepper plugin instead 
+    "let g:ag_prg="ag --nocolor --nogroup --column --smart-case "
+    "let g:ag_mapping_message=0
+    "map ,gr yiw:Ag "<CR>
+    "vmap ,gr y:Ag "<CR>
     "}}}2
 
     "### setting for a.vim {{{2
@@ -1604,7 +1613,7 @@ endif " has("autocmd")
 
     let g:ctrlp_custom_ignore = {
       \ 'dir':  '\.git$\|\.hg$\|\.svn$\|\.cache$\|build$\|\.moc$\|\.obj$',
-      \ 'file': '\.exe$\|\.so$\|\.dll$\|\.pyc$\|\.swp$\|\.swc$\|\.swf$\|\.swo$\|tags$\|\.DS_Store$\|\.log$\|\.png$\|\.jpg$\|\.bmp$\|\.o$\|\.obj$\|moc_.*$',
+      \ 'file': '\.exe$\|\.so$\|\.dll$\|\.pyc$\|\.swp$\|\.swc$\|\.swf$\|\.swo$\|tags$\|\.DS_Store$\|\.log$\|\.png$\|\.jpg$\|\.bmp$\|\.o$\|\.obj$\|moc_.*$\|\.plist$',
       \ }
     "let g:ctrlp_user_command = {
       "\ 'types': {
@@ -1719,6 +1728,8 @@ endif " has("autocmd")
 
     "### YouCompleteMe {{{2
     let g:ycm_confirm_extra_conf = 0
+    let g:ycm_key_list_select_completion = ['<TAB>', '<Down>', 'C-j']
+    let g:ycm_key_list_previous_completion = ['<S-TAB>', '<Up>', 'C-k']
     "}}}2
 
     "### Vitra {{{2
@@ -1773,14 +1784,36 @@ endif " has("autocmd")
     
     "### fzf {{{2
     "installed by brew 
-    set rtp+=/usr/local/Cellar/fzf/0.8.8
+    set rtp+=/usr/local/Cellar/fzf/0.9.11
     "}}}2
 
     "### choosewin {{{2
     nmap <c-w>- <Plug>(choosewin)
     let g:choosewin_overlay_enable = 1
-    set rtp+=/usr/local/Cellar/fzf/0.8.8
     "}}}2
+    
+    "### xmledit {{{2
+    let g:xmledit_enable_html = 1
+    "}}}2
+    
+    "### visualmark {{{2
+    nnoremap <silent> ,n :call Vm_goto_next_sign()<cr>
+    nnoremap <silent> ,p :call Vm_goto_prev_sign()<cr>
+    "}}}2
+    
+    "### ZoomWin {{{2
+    nnoremap <silent> <leader>wf :MaximizerToggle<cr>
+    "}}}2
+    
+    "### Grepper {{{2
+    command! -nargs=* -complete=file GG Grepper! -tool git -open -switch -query <args>
+    command! -nargs=* -complete=file Ag Grepper! -tool ag -open -switch -jump -query <args>
+    command! -nargs=* -complete=file Pt Grepper! -tool pt -open -switch -jump -query <args>
+    
+    nmap ,gr  <plug>(GrepperOperator)
+    xmap ,gr  <plug>(GrepperOperator)
+    "}}}2
+    
 "## }}}1
 
 "## Xterm colors defination {{{1
