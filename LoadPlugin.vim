@@ -16,6 +16,7 @@ Plug 'majutsushi/tagbar'
 Plug 'scratch.vim', {'on': 'Scratch'}
 Plug 'AndrewRadev/switch.vim'
 " Plug 'Valloric/YouCompleteMe'
+Plug 'scrooloose/nerdtree'
 " }}}1
 
 " ColorSchemes {{{1
@@ -84,7 +85,7 @@ Plug 'bling/vim-airline'
 " choose one of below three plugins 
 Plug 'szw/vim-maximizer'
 " Plug 'vim-scripts/ZoomWin', {'on': 'ZoomWin'}
-" Plug 'chrisbra/NrrwRgn'
+Plug 'chrisbra/NrrwRgn'
 "}}}1
 
 " Ruby Vundles {{{1

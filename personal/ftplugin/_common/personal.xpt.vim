@@ -10,6 +10,15 @@ XPTemplate priority=personal
 " XPTvar $author       you have not yet set $author variable
 " XPTvar $email        you have not yet set $email variable
 
+XPT header " php file header
+<?php 
+// vim: ts=2 sw=2
+`cursor^
+?>
+
+XPT l18n wrap=text
+<?php echo L('`text^') ?>`cursor^
+
 XPT yoursnippet " tips here
 bla bla
 

@@ -1806,12 +1806,18 @@ endif " has("autocmd")
     "}}}2
     
     "### Grepper {{{2
-    command! -nargs=* -complete=file GG Grepper! -tool git -open -switch -query <args>
-    command! -nargs=* -complete=file Ag Grepper! -tool ag -open -switch -jump -query <args>
-    command! -nargs=* -complete=file Pt Grepper! -tool pt -open -switch -jump -query <args>
+    command! -nargs=* -complete=file GG Grepper -tool git -open -switch -query <args>
+    command! -nargs=* -complete=file Ag Grepper -tool ag -open -switch -jump -query <args>
+    command! -nargs=* -complete=file Pt Grepper -tool pt -open -switch -jump -query <args>
     
-    nmap ,gr  <plug>(GrepperOperator)
-    xmap ,gr  <plug>(GrepperOperator)
+    " nmap ,gr  <plug>(GrepperOperator)
+    " xmap ,gr  <plug>(GrepperOperator)
+    nmap ,gr  yiw:Grepper -tool ag -open -switch -query "<cr>
+    xmap ,gr  y:Grepper -tool ag -open -switch -query "<cr>
+    "}}}2
+    
+    "### CamelCaseMotion {{{2
+    call camelcasemotion#CreateMotionMappings(',')
     "}}}2
     
 "## }}}1
