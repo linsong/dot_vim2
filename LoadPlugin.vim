@@ -26,6 +26,7 @@ Plug 'croaky/vim-colors-github'
 Plug 'mbbill/desertEx'
 Plug 'vim-scripts/synic.vim'
 Plug 'nanotech/jellybeans.vim'
+Plug 'nice/sweater'
 " }}}1
 
 " Advanced Editing {{{1
@@ -50,6 +51,10 @@ Plug 'lilydjwg/colorizer'
 Plug 'vim-scripts/Visual-Mark'
 Plug 'terryma/vim-expand-region'
 " Plug 'terryma/vim-multiple-cursors'
+
+Plug 'haya14busa/incsearch.vim'
+Plug 'haya14busa/incsearch-easymotion.vim'
+Plug 'haya14busa/incsearch-fuzzy.vim'
 "}}}1
 
 " Utils {{{1

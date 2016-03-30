@@ -162,8 +162,8 @@ endif
 
     " This is an alternative that also works in block mode, but the deleted
     " text is lost and it only works for putting the current register.
-    xnoremap p "_dp
-    xnoremap P "_dP
+    xnoremap p "_d"0p
+    xnoremap P "_d"0P
 
     " when leave insert mode by pressing <ESC>, turn off
     " the input method, but for now it does not work for SCIM :(
@@ -1569,6 +1569,30 @@ endif " has("autocmd")
 
     map ;l <Plug>(easymotion-lineforward)
     map ;h <Plug>(easymotion-linebackward)
+    
+    nmap ;l <Plug>(easymotion-overwin-line)
+
+		function! s:incsearch_config_easymotion(...) abort
+			return extend(copy({
+			\   'modules': [incsearch#config#easymotion#module({'overwin': 1})],
+			\   'keymap': {"\<CR>": '<Over>(easymotion)'},
+			\   'is_expr': 0,
+			\   'is_stay': 1
+			\ }), get(a:, 1, {}))
+		endfunction
+    noremap <silent><expr> /  incsearch#go(<SID>incsearch_config_easymotion())
+
+		" incsearch.vim x fuzzy x vim-easymotion
+		function! s:config_easyfuzzymotion(...) abort
+			return extend(copy({
+			\   'converters': [incsearch#config#fuzzy#converter()],
+			\   'modules': [incsearch#config#easymotion#module({'overwin': 1})],
+			\   'keymap': {"\<CR>": '<Over>(easymotion)'},
+			\   'is_expr': 0,
+			\   'is_stay': 1
+			\ }), get(a:, 1, {}))
+		endfunction
+		noremap <silent><expr> <Space>/ incsearch#go(<SID>config_easyfuzzymotion())
     "}}}2
 
     "### Ack {{{2
