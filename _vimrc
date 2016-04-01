@@ -1635,17 +1635,21 @@ endif " has("autocmd")
     let g:ctrlp_working_path_mode = 0
     let g:ctrlp_cache_dir = $HOME.'/.cache/ctrlp'
 
+    " after change custom_ignore or user_command, need to clear ctrlp's cache 
     let g:ctrlp_custom_ignore = {
       \ 'dir':  '\.git$\|\.hg$\|\.svn$\|\.cache$\|build$\|\.moc$\|\.obj$',
       \ 'file': '\.exe$\|\.so$\|\.dll$\|\.pyc$\|\.swp$\|\.swc$\|\.swf$\|\.swo$\|tags$\|\.DS_Store$\|\.log$\|\.png$\|\.jpg$\|\.bmp$\|\.o$\|\.obj$\|moc_.*$\|\.plist$',
       \ }
-    "let g:ctrlp_user_command = {
-      "\ 'types': {
-        "\ 1: ['.git/', 'cd %s && git ls-files'],
-        "\ 2: ['.hg/', 'hg --cwd %s locate -I .'],
-        "\ },
-      "\ 'fallback': 'find %s -type f'
-      "\ }
+    " let g:ctrlp_user_command = {
+    "   \ 'types': {
+    "     \ 1: ['.git/', 'cd %s && git ls-files'],
+    "     \ 2: ['.hg/', 'hg --cwd %s locate -I .'],
+    "     \ },
+    "   \ 'fallback': 'cd %s && ag --nocolor --nogroup -l'
+    "   \ }
+    
+    " will ignore entries in .agignore file
+    let g:ctrlp_user_command = 'cd %s && ag --nocolor --nogroup -l'
     let g:ctrlp_extensions = ['buffertag', 'dir', 'bookmarkdir'] " ['dir', 'tag', 'rtscript', 'changes']
     let g:ctrlp_prompt_mappings = { 'PrtCurLeft()': ['<left>', '<c-^>'], 'PrtBS()': ['<bs>', '<c-]>', '<c-h>'] }
 
