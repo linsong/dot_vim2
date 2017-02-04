@@ -15,7 +15,7 @@ Plug 'Yggdroot/indentLine'
 Plug 'majutsushi/tagbar'
 Plug 'scratch.vim', {'on': 'Scratch'}
 Plug 'AndrewRadev/switch.vim'
-" Plug 'Valloric/YouCompleteMe'
+Plug 'Valloric/YouCompleteMe'
 Plug 'scrooloose/nerdtree'
 " }}}1
 
@@ -37,6 +37,8 @@ Plug 'AutoComplPop'
 Plug 'rking/ag.vim', {'on': 'Ag'}
 Plug 'mhinz/vim-grepper'
 Plug 'drmingdrmer/xptemplate'
+"Plug 'SirVer/ultisnips'
+"Plug 'honza/vim-snippets'
 Plug 'junegunn/vim-easy-align', {'on': 'EasyAlign'}
 Plug 'LargeFile'
 Plug 'tpope/vim-abolish', {'on': 'Subvert'}

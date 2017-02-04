@@ -1349,6 +1349,12 @@ endif " has("autocmd")
 
     "### settings for supertab.vim {{{2
     let g:SuperTabLongestHighlight = 1
+    
+    " following setting will set YouCompleteMe as default completion type
+    " refer to: http://stackoverflow.com/questions/14896327/ultisnips-and-youcompleteme
+    let g:SuperTabDefaultCompletionType = '<c-n>'
+
+    " let g:SuperTabMappingBackward = '<nop>' " disable backward mapping
     "}}}2
 
     "### settings for acp.vim {{{2
@@ -1460,6 +1466,8 @@ endif " has("autocmd")
     let g:UltiSnipsExpandTrigger="<tab>"
     let g:UltiSnipsJumpForwardTrigger="<tab>"
     let g:UltiSnipsJumpBackwardTrigger="<s-tab>"
+    " let g:UltiSnipsListSnippets="<c-l>"
+    let g:UltiSnipsEnableSnipMate=0
 
     command! ResetUltiSnip :py UltiSnips_Manager.reset()
     "}}}2
@@ -1519,20 +1527,33 @@ endif " has("autocmd")
     "}}}2
 
     "### xptemplate {{{2
-    ""avoid key conflict
-    "let g:SuperTabMappingForward = '<Plug>supertabKey'
+    " Prevent supertab from mapping <tab> to anything.
+    let g:SuperTabMappingForward = '<Plug>xpt_void'
 
-    ""if nothing matched in xpt, try supertab
-    "let g:xptemplate_fallback = '<Plug>supertabKey'
+    " Tell XPTemplate what to fall back to, if nothing matches.
+    " Original SuperTab() yields nothing if g:SuperTabMappingForward was set to
+    " something it does not know.
+    let g:xptemplate_fallback = '<C-r>=XPTwrapSuperTab("n")<CR>'
+
+    fun! XPTwrapSuperTab(command)
+        let v = SuperTab(a:command)
+        if v == ''
+            " Change \<Tab> to whatever you want, when neither XPTemplate or
+            " supertab needs to do anything.
+            return "\<Tab>"
+        else
+            return v
+        end
+    endfunction 
 
     ""xpt uses <Tab> as trigger key
-    "let g:xptemplate_key = '<Tab>'
-    let g:xptemplate_key = '<c-m>'
+    let g:xptemplate_key = '<Tab>'
+    "let g:xptemplate_key = '<c-m>'
 
     "" trigger snippet with <Tab> no matter popup menu opened or not
-    "let g:xptemplate_key = '<Plug>triggerxpt'
-    "inoremap <Plug>closePUM <C-v><C-v><BS>
-    "imap <TAB> <Plug>closePUM<Plug>triggerxpt
+    " let g:xptemplate_key = '<Plug>triggerxpt'
+    " inoremap <Plug>closePUM <C-v><C-v><BS>
+    " imap <TAB> <Plug>closePUM<Plug>triggerxpt
 
     let g:xptemplate_move_even_with_pum = 0
     let g:xptemplate_always_show_pum = 1
@@ -1580,7 +1601,7 @@ endif " has("autocmd")
 			\   'is_stay': 1
 			\ }), get(a:, 1, {}))
 		endfunction
-    noremap <silent><expr> /  incsearch#go(<SID>incsearch_config_easymotion())
+    " noremap <silent><expr> /  incsearch#go(<SID>incsearch_config_easymotion())
 
 		" incsearch.vim x fuzzy x vim-easymotion
 		function! s:config_easyfuzzymotion(...) abort
@@ -1649,7 +1670,9 @@ endif " has("autocmd")
     "   \ }
     
     " will ignore entries in .agignore file
+    " GOTCHA: list files with ag will ignore newly created empty files
     let g:ctrlp_user_command = 'cd %s && ag --nocolor --nogroup -l'
+
     let g:ctrlp_extensions = ['buffertag', 'dir', 'bookmarkdir'] " ['dir', 'tag', 'rtscript', 'changes']
     let g:ctrlp_prompt_mappings = { 'PrtCurLeft()': ['<left>', '<c-^>'], 'PrtBS()': ['<bs>', '<c-]>', '<c-h>'] }
 
@@ -1756,8 +1779,9 @@ endif " has("autocmd")
 
     "### YouCompleteMe {{{2
     let g:ycm_confirm_extra_conf = 0
-    let g:ycm_key_list_select_completion = ['<TAB>', '<Down>', 'C-j']
-    let g:ycm_key_list_previous_completion = ['<S-TAB>', '<Up>', 'C-k']
+    let g:ycm_key_list_select_completion = ['<c-n>', '<Down>', 'C-j']
+    let g:ycm_key_list_previous_completion = ['<c-p>', '<Up>', 'C-k']
+    let g:ycm_min_num_of_chars_for_completion = 3
     "}}}2
 
     "### Vitra {{{2
