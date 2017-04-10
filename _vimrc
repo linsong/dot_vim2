@@ -1859,13 +1859,22 @@ endif " has("autocmd")
     
     "### Grepper {{{2
     command! -nargs=* -complete=file GG Grepper -tool git -open -switch -query <args>
-    command! -nargs=* -complete=file Ag Grepper -tool ag -open -switch -jump -query <args>
-    command! -nargs=* -complete=file Pt Grepper -tool pt -open -switch -jump -query <args>
+    command! -nargs=* -complete=file Ag Grepper -tool ag -open -switch -query <args>
+    command! -nargs=* -complete=file Pt Grepper -tool pt -open -switch -query <args>
     
     " nmap ,gr  <plug>(GrepperOperator)
     " xmap ,gr  <plug>(GrepperOperator)
-    nmap ,gr  yiw:Grepper -tool ag -open -switch -query "<cr>
-    xmap ,gr  y:Grepper -tool ag -open -switch -query "<cr>
+    nnoremap <leader>g <plug>(GrepperOperator)
+    xnoremap <leader>g <plug>(GrepperOperator)
+    nmap ,gr  yiw:Ag "<CR>
+    xmap ,gr  yiw:Ag "<CR>
+
+    let g:grepper           = {}
+    let g:grepper.open      = 1
+    let g:grepper.switch    = 1
+    let g:grepper.jump      = 1
+    let g:grepper.dispatch  = 0
+    let g:grepper.tools     = ['git', 'ag', 'findstr', 'sift', 'grep']
     "}}}2
     
     "### CamelCaseMotion {{{2
