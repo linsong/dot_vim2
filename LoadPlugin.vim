@@ -48,15 +48,18 @@ Plug 'sk1418/Join', {'on': 'Join'}
 Plug 'sessionman.vim', {'on': ['SessionOpen', 'SessionOpenLast', 'SessionClose', 'SessionSave', 'SessionSaveAs', 'SessionShowLast']}
 " Plug 'MattesGroeger/vim-bookmarks', {'on': 'BookmarkToggle'}
 Plug 'kana/vim-textobj-user'
-Plug 'lilydjwg/colorizer'
+" Plug 'lilydjwg/colorizer'
 " Plug 'tpope/vim-afterimage'
 Plug 'vim-scripts/Visual-Mark'
-Plug 'terryma/vim-expand-region'
+" Plug 'terryma/vim-expand-region'
 " Plug 'terryma/vim-multiple-cursors'
 
 Plug 'haya14busa/incsearch.vim'
 Plug 'haya14busa/incsearch-easymotion.vim'
 Plug 'haya14busa/incsearch-fuzzy.vim'
+
+Plug 'linsong/hexman.vim'
+Plug 'vim-scripts/DrawIt'
 "}}}1
 
 " Utils {{{1
@@ -81,7 +84,7 @@ Plug 'renamer.vim', {'on': 'Renamer'}
 Plug 'vimGTD', {'for': 'gtd'}
 Plug 'skwp/greplace.vim', {'on': 'Gsearch'}
 Plug 'ViewOutput', {'on': 'VO'}
-Plug 't9md/vim-choosewin'
+" Plug 't9md/vim-choosewin'
 
 " ScreenShot.vim enables you make screenshot of your VIM session as HTML code. 
 Plug 'ScreenShot', {'on': ['ScreenShot', 'Text2Html', 'Diff2Html']}
@@ -89,10 +92,12 @@ Plug 'mbbill/VimExplorer', {'on': 'VE'}
 Plug 'vim-scripts/Mark--Karkat'
 Plug 'bling/vim-airline'
 
+Plug 'vim-utils/vim-man'
+
 " choose one of below three plugins 
-Plug 'szw/vim-maximizer'
+" Plug 'szw/vim-maximizer'
 " Plug 'vim-scripts/ZoomWin', {'on': 'ZoomWin'}
-Plug 'chrisbra/NrrwRgn'
+" Plug 'chrisbra/NrrwRgn'
 "}}}1
 
 " Ruby Vundles {{{1

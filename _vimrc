@@ -1528,12 +1528,12 @@ endif " has("autocmd")
 
     "### xptemplate {{{2
     " Prevent supertab from mapping <tab> to anything.
-    let g:SuperTabMappingForward = '<Plug>xpt_void'
+    "let g:SuperTabMappingForward = '<Plug>xpt_void'
 
     " Tell XPTemplate what to fall back to, if nothing matches.
     " Original SuperTab() yields nothing if g:SuperTabMappingForward was set to
     " something it does not know.
-    let g:xptemplate_fallback = '<C-r>=XPTwrapSuperTab("n")<CR>'
+    "let g:xptemplate_fallback = '<C-r>=XPTwrapSuperTab("n")<CR>'
 
     fun! XPTwrapSuperTab(command)
         let v = SuperTab(a:command)
@@ -1547,8 +1547,8 @@ endif " has("autocmd")
     endfunction 
 
     ""xpt uses <Tab> as trigger key
-    let g:xptemplate_key = '<Tab>'
-    "let g:xptemplate_key = '<c-m>'
+    "let g:xptemplate_key = '<Tab>'
+    let g:xptemplate_key = '<c-m>'
 
     "" trigger snippet with <Tab> no matter popup menu opened or not
     " let g:xptemplate_key = '<Plug>triggerxpt'
