@@ -1721,44 +1721,44 @@ endif " has("autocmd")
     "let g:seek_enable_jumps = 1
     "}}}2
 
-    "### unite {{{2
-    nnoremap    [unite]   <Nop>
-    nmap    ] [unite]
-
-    nnoremap <silent> [unite]c  :<C-u>UniteWithCurrentDir
-          \ -buffer-name=files buffer file_mru bookmark file<CR>
-    nnoremap <silent> [unite]b  :<C-u>UniteWithBufferDir
-          \ -buffer-name=files -prompt=%\  buffer file_mru bookmark file<CR>
-    nnoremap <silent> [unite]r  :<C-u>Unite
-          \ -buffer-name=register register<CR>
-    nnoremap <silent> [unite]o  :<C-u>Unite line<CR>
-    nnoremap <silent> [unite]d
-          \ :<C-u>Unite -buffer-name=files -default-action=lcd directory_mru<CR>
-    nnoremap <silent> [unite]ma
-          \ :<C-u>Unite mapping<CR>
-    nnoremap <silent> [unite]me
-          \ :<C-u>Unite output:message<CR>
-    nnoremap  [unite]f  :<C-u>Unite source<CR>
-    nnoremap <silent> [unite]s
-          \ :<C-u>Unite -buffer-name=files -no-split
-          \ jump_point file_point buffer_tab
-          \ file_rec:! file file/new file_mru<CR>
-    " Start insert.
-    let g:unite_enable_start_insert = 1
-    let g:unite_enable_short_source_names = 0
-
-    if executable('ag')
-      " Use ag in unite grep source.
-      let g:unite_source_grep_command = 'ag'
-      let g:unite_source_grep_default_opts = '--nocolor --nogroup --column'
-      let g:unite_source_grep_recursive_opt = ''
-    elseif executable('ack-grep')
-      " Use ack in unite grep source.
-      let g:unite_source_grep_command = 'ack-grep'
-      let g:unite_source_grep_default_opts = '--no-heading --no-color -a'
-      let g:unite_source_grep_recursive_opt = ''
-    endif
-    "}}}2
+    " "### unite {{{2
+    " nnoremap    [unite]   <Nop>
+    " nmap    ] [unite]
+    "
+    " nnoremap <silent> [unite]c  :<C-u>UniteWithCurrentDir
+    "       \ -buffer-name=files buffer file_mru bookmark file<CR>
+    " nnoremap <silent> [unite]b  :<C-u>UniteWithBufferDir
+    "       \ -buffer-name=files -prompt=%\  buffer file_mru bookmark file<CR>
+    " nnoremap <silent> [unite]r  :<C-u>Unite
+    "       \ -buffer-name=register register<CR>
+    " nnoremap <silent> [unite]o  :<C-u>Unite line<CR>
+    " nnoremap <silent> [unite]d
+    "       \ :<C-u>Unite -buffer-name=files -default-action=lcd directory_mru<CR>
+    " nnoremap <silent> [unite]ma
+    "       \ :<C-u>Unite mapping<CR>
+    " nnoremap <silent> [unite]me
+    "       \ :<C-u>Unite output:message<CR>
+    " nnoremap  [unite]f  :<C-u>Unite source<CR>
+    " nnoremap <silent> [unite]s
+    "       \ :<C-u>Unite -buffer-name=files -no-split
+    "       \ jump_point file_point buffer_tab
+    "       \ file_rec:! file file/new file_mru<CR>
+    " " Start insert.
+    " let g:unite_enable_start_insert = 1
+    " let g:unite_enable_short_source_names = 0
+    "
+    " if executable('ag')
+    "   " Use ag in unite grep source.
+    "   let g:unite_source_grep_command = 'ag'
+    "   let g:unite_source_grep_default_opts = '--nocolor --nogroup --column'
+    "   let g:unite_source_grep_recursive_opt = ''
+    " elseif executable('ack-grep')
+    "   " Use ack in unite grep source.
+    "   let g:unite_source_grep_command = 'ack-grep'
+    "   let g:unite_source_grep_default_opts = '--no-heading --no-color -a'
+    "   let g:unite_source_grep_recursive_opt = ''
+    " endif
+    " "}}}2
 
     "### vimfiler {{{2
     let g:vimfiler_quick_look_command = 'qlmanage -p'
@@ -1858,23 +1858,22 @@ endif " has("autocmd")
     "}}}2
     
     "### Grepper {{{2
-    command! -nargs=* -complete=file GG Grepper -tool git -open -switch -query <args>
+    " command! -nargs=* -complete=file GG Grepper -tool git -open -switch -query <args>
     command! -nargs=* -complete=file Ag Grepper -tool ag -open -switch -query <args>
-    command! -nargs=* -complete=file Pt Grepper -tool pt -open -switch -query <args>
+    command! -nargs=* -complete=file Rg Grepper -tool rg -open -switch -query <args>
+    " command! -nargs=* -complete=file Pt Grepper -tool pt -open -switch -query <args>
     
-    " nmap ,gr  <plug>(GrepperOperator)
-    " xmap ,gr  <plug>(GrepperOperator)
-    nnoremap <leader>g <plug>(GrepperOperator)
-    xnoremap <leader>g <plug>(GrepperOperator)
-    nmap ,gr  yiw:Ag "<CR>
-    xmap ,gr  yiw:Ag "<CR>
+    " nnoremap <leader>g <plug>(GrepperOperator)
+    " xnoremap <leader>g <plug>(GrepperOperator)
+    nnoremap ,gr :Grepper -tool rg -cword -noprompt<cr>
+    vnoremap ,gr  y:Rg "<CR>
 
     let g:grepper           = {}
     let g:grepper.open      = 1
     let g:grepper.switch    = 1
     let g:grepper.jump      = 1
     let g:grepper.dispatch  = 0
-    let g:grepper.tools     = ['git', 'ag', 'findstr', 'sift', 'grep']
+    let g:grepper.tools     = ['rg', 'git', 'ag', 'findstr', 'sift', 'grep']
     "}}}2
     
     "### CamelCaseMotion {{{2

@@ -17,6 +17,7 @@ Plug 'scratch.vim', {'on': 'Scratch'}
 Plug 'AndrewRadev/switch.vim'
 Plug 'Valloric/YouCompleteMe'
 Plug 'scrooloose/nerdtree'
+Plug 'thinca/vim-quickrun', {'on': 'QuickRun'}
 " }}}1
 
 " ColorSchemes {{{1
@@ -54,9 +55,9 @@ Plug 'vim-scripts/Visual-Mark'
 " Plug 'terryma/vim-expand-region'
 " Plug 'terryma/vim-multiple-cursors'
 
-Plug 'haya14busa/incsearch.vim'
-Plug 'haya14busa/incsearch-easymotion.vim'
-Plug 'haya14busa/incsearch-fuzzy.vim'
+" Plug 'haya14busa/incsearch.vim'
+" Plug 'haya14busa/incsearch-easymotion.vim'
+" Plug 'haya14busa/incsearch-fuzzy.vim'
 
 Plug 'linsong/hexman.vim'
 Plug 'vim-scripts/DrawIt'
@@ -93,6 +94,8 @@ Plug 'vim-scripts/Mark--Karkat'
 Plug 'bling/vim-airline'
 
 Plug 'vim-utils/vim-man'
+Plug 'will133/vim-dirdiff', {'on': 'DirDiff'}
+
 
 " choose one of below three plugins 
 " Plug 'szw/vim-maximizer'
