@@ -7,6 +7,11 @@
 "       Visually select some text, then <ctrl-x>  (swap)
 
 " ---------------------------------------------------------------------
+if exists("loaded_visswap")
+	finish
+endif
+let loaded_visswap = 1
+
 " Public Interface:
 if !hasmapto('<Plug>VisualPreSwap')
  map <silent> <unique> <c-y> <Plug>VisualPreSwap

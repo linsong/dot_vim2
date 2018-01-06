@@ -3,6 +3,7 @@ XPTemplate priority=personal+
 " inclusion
 XPTinclude
       \ _common/common
+      \ _common/c.like
 
 XPTemplateDef
 
