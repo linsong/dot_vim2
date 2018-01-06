@@ -149,10 +149,15 @@ endif
     :set encoding=utf-8
 
     :set fileencodings=ucs-bom,utf-8,gb2312,cp936
-
-    :set splitbelow
-    :set splitright
 "## }}}1
+"
+:set splitbelow
+:set splitright
+
+" tips from https://kinbiko.com/vim/my-shiniest-vim-gems/
+if v:version > 703 || v:version == 703 && has('patch541')
+  set formatoptions+=j
+endif
 
 "## General Mapping {{{1
 
@@ -260,13 +265,11 @@ endif
     nmap <leader>ff :RedoFoldOnRegex<CR>
     nmap <leader>fu :FoldEndFolding<CR>
 
-    " nmap <leader>wf :WinFullScreen <CR>
-
     " it can copy texts to last edited place continuously
     function! CopyToLastEditPos()
-        let cmd = 'gigp'
+        let cmd = 'gip'
         if visualmode()==# 'V'
-            let cmd = cmd . 'k'
+            let cmd = cmd . 'k'
         endif
         let cmd = cmd . '`>'
         :exec 'norm ' . cmd
@@ -408,9 +411,9 @@ endif
         map <F26> <end>
       endif
     endif
-    "if !has("gui_running")
-        ":set term=builtin_ansi
-    "endif
+    if !has("gui_running") && !has("nvim") && exists("&term")
+        :set term=builtin_ansi
+    endif
 
     if has('clipboard')
       :nmap ,cp :let @*=expand('%:p')<CR>
@@ -1034,11 +1037,17 @@ endif " has("autocmd")
     "   let g:alternateExtensions_h = 'm'
     " endif
 
-    map ;aa :A<CR>
-    map ;as :AS<CR>
-    map ;av :AV<CR>
+    " map ;aa :A<CR>
+    " map ;as :AS<CR>
+    " map ;av :AV<CR>
     "### }}}2
-
+    
+    "### settings for FSwitch {{{2
+		map ;aa :FSHere<CR>
+		map ;as :FSSplitRight<CR>
+		map ;av :FSSplitBelow<CR>
+    "### }}}2
+    
     "### setting for python editing {{{2
         " setting about python
         " Now I use python.vim
@@ -1213,106 +1222,106 @@ endif " has("autocmd")
     "}}}2
 
     "### setting for fuzzyfinder.vim {{{2
-    " by default mru command and mru file modes are disabled
-    "let g:fuf_modesDisable = [ 'mrufile', 'mrucmd', 'coveragefile', 'help']
-    let g:fuf_modesDisable = [ 'mrufile', 'mrucmd', 'help']
-
-    let g:fuf_abbrevMap =
-                \    { "^,a" : [$PROJECT_DIR, "~/workspace/auction"],
-                \      "^,w" : ["~/workspace/zhiyong/web"],
-                \      "^,v" : map(filter(split(&runtimepath, ','), 'v:val !~ "after$"'), 'v:val . ''/**/'''),
-                \      "^,r" : ["app/models", "app/views", "app/controllers", "test/functional", "test/integration", "test/unit", "test/fixtures", "db/fixtures"],
-                \      "^,u" : [$PROJECT_DIR . "/../ui_design/template/feb2010/html/02 - current/"],
-                \      "^,c" : ["~/Documents/codes"],
-                \    }
-    "let g:fuf_abbrevMap = {
-          "\   '^vr:' : map(filter(split(&runtimepath, ','), 'v:val !~ "after$"'), 'v:val . ''/**/'''),
-          "\   '^m0:' : [ '/mnt/d/0/', '/mnt/j/0/' ],
-          "\ }
-
-    let g:fuf_mrufile_maxItem = 300
-    let g:fuf_mrucmd_maxItem = 400
-
-    let  g:fuf_file_exclude = '\v\~$|\.o$|\.bak$|\.pyc$|\.exe$|\.bak$|\.swp$|\.swo|\.DS_Store$|\.svn/$|\.gitignore$|\.git/$|\CVS/$|((^|[/\\])\.[/\\]$)'
-
-    let g:fuf_ignoreCase = 1
-    let g:fuf_useMigemo = 0
-
-    let g:fuf_promptHighlight = 'FileMode'
-
-    " customize mode's prompts
-    let g:fuf_buffer_prompt = '[Buffer]'
-    let g:fuf_file_prompt = '[File]'
-    let g:fuf_dir_prompt = '[Dir]'
-    let g:fuf_mrufile_prompt = '[MruFile]'
-    let g:fuf_mrucmd_prompt = '[MruCmd]'
-    let g:fuf_bookmarkfile_prompt = '[BookmarkFile]'
-    let g:fuf_bookmarkdir_prompt = '[BookmarkDir]'
-    let g:fuf_tag_prompt = '[Tag]'
-    let g:fuf_taggedfile_prompt = '[TaggedFile]'
-    let g:fuf_givenFile_prompt = '[GivenFile]'
-    let g:fuf_jumplist_prompt = '[Jump-List]'
-    let g:fuf_changelist_prompt = '[Change-List]'
-    let g:fuf_quickfix_prompt = '[Quickfix]'
-    let g:fuf_line_prompt = '[Line]'
-
-    let g:fuf_keyOpenTabpage = '<C-t>'
-    let g:fuf_keyOpen = '<CR>'
-    let g:fuf_keyOpenSplit = '<C-x>'
-    let g:fuf_keyOpenVsplit = '<C-v>'
-
-    :noremap ,ff :FufFileWithCurrentBufferDir<CR>
-    ":noremap ,fb :FufBuffer<CR>
-    ":noremap ,fm :FufMruFile<CR>
-    :noremap ,f; :FufMruCmd<CR>
-    :noremap ,fk :FufBookmarkFile<CR>
-    :noremap ,fa :FufBookmarkFileAdd<CR>
-    ":noremap ,fr :FufBookmarkDir<CR>
-    ":noremap ,fe :FufBookmarkDirAdd<CR>
-    :noremap ,fd :FufDir<CR>
-    ":noremap ,ft :FufTaggedFile<CR>
-    ":noremap ,fg :FufTag<CR>
-    :noremap ,f] :FufTag! <C-r>=expand('<cword>')<CR><CR>
-    ":noremap ,fl :FufLine<CR>
-    :noremap ,fq :FufQuickfix<CR>
-    :noremap ,fp :FufChangeList<CR>
-    :noremap ,fj :FufJumpList<CR>
-    :noremap ,fi :FufEditDataFile<CR>
-    :noremap ,fc :FufRenewCache<CR>
-    :noremap ,fh :FufBufferTag<CR>
-    :noremap ,fs :FufCoverageFileChange<CR>
-
-    " super find file command, will search the files recursively from current
-    " directory
-    ":noremap <silent> ,fs :call fuf#givenfile#launch('', 0, '[SuperFF]', split(glob("`~/tools/get_file_list.sh`"), "\n"))<CR>
-
-    "let listener = {}
-    "function! listener.onComplete(item, method)
-      "let content = join(split(a:item, ' ')[1:], ' ')
-      "exec  "norm i " . content . ''
-      ""call setline(line('.'), content)
-    "endfunction
-
-    "function! listener.onAbort()
-      "echo "Abort"
-    "endfunction
-
-    "" Select an item from a given list.
-    "if filereadable(expand("~/.mutt/aliases"))
-      "let g:aliases_lines = []
-      "for a in readfile(expand("~/.mutt/aliases"))
-          "let parts = split(a, ' ')
-          "call add(g:aliases_lines, join(parts[1:], ' '))
-      "endfor
-      ":noremap ,fe :call g:FuzzyFinderMode.CallbackItem.launch('', 1, listener, g:aliases_lines, 0)<CR>
-    "endif
-
-    " FuzzyFinderTag is really useful especially after we process the tags
-    " file, for example generate a tags file for files, that will minic the
-    " behavior of TextMate easily. So give it a seperate shortcut
-    :noremap ,s  :FufTag<CR>
-
-    let g:fuf_previewHeight = 0
+    " " by default mru command and mru file modes are disabled
+    " "let g:fuf_modesDisable = [ 'mrufile', 'mrucmd', 'coveragefile', 'help']
+    " let g:fuf_modesDisable = [ 'mrufile', 'mrucmd', 'help']
+    "
+    " let g:fuf_abbrevMap =
+    "             \    { "^,a" : [$PROJECT_DIR, "~/workspace/auction"],
+    "             \      "^,w" : ["~/workspace/zhiyong/web"],
+    "             \      "^,v" : map(filter(split(&runtimepath, ','), 'v:val !~ "after$"'), 'v:val . ''/**/'''),
+    "             \      "^,r" : ["app/models", "app/views", "app/controllers", "test/functional", "test/integration", "test/unit", "test/fixtures", "db/fixtures"],
+    "             \      "^,u" : [$PROJECT_DIR . "/../ui_design/template/feb2010/html/02 - current/"],
+    "             \      "^,c" : ["~/Documents/codes"],
+    "             \    }
+    " "let g:fuf_abbrevMap = {
+    "       "\   '^vr:' : map(filter(split(&runtimepath, ','), 'v:val !~ "after$"'), 'v:val . ''/**/'''),
+    "       "\   '^m0:' : [ '/mnt/d/0/', '/mnt/j/0/' ],
+    "       "\ }
+    "
+    " let g:fuf_mrufile_maxItem = 300
+    " let g:fuf_mrucmd_maxItem = 400
+    "
+    " let  g:fuf_file_exclude = '\v\~$|\.o$|\.bak$|\.pyc$|\.exe$|\.bak$|\.swp$|\.swo|\.DS_Store$|\.svn/$|\.gitignore$|\.git/$|\CVS/$|((^|[/\\])\.[/\\]$)'
+    "
+    " let g:fuf_ignoreCase = 1
+    " let g:fuf_useMigemo = 0
+    "
+    " let g:fuf_promptHighlight = 'FileMode'
+    "
+    " " customize mode's prompts
+    " let g:fuf_buffer_prompt = '[Buffer]'
+    " let g:fuf_file_prompt = '[File]'
+    " let g:fuf_dir_prompt = '[Dir]'
+    " let g:fuf_mrufile_prompt = '[MruFile]'
+    " let g:fuf_mrucmd_prompt = '[MruCmd]'
+    " let g:fuf_bookmarkfile_prompt = '[BookmarkFile]'
+    " let g:fuf_bookmarkdir_prompt = '[BookmarkDir]'
+    " let g:fuf_tag_prompt = '[Tag]'
+    " let g:fuf_taggedfile_prompt = '[TaggedFile]'
+    " let g:fuf_givenFile_prompt = '[GivenFile]'
+    " let g:fuf_jumplist_prompt = '[Jump-List]'
+    " let g:fuf_changelist_prompt = '[Change-List]'
+    " let g:fuf_quickfix_prompt = '[Quickfix]'
+    " let g:fuf_line_prompt = '[Line]'
+    "
+    " let g:fuf_keyOpenTabpage = '<C-t>'
+    " let g:fuf_keyOpen = '<CR>'
+    " let g:fuf_keyOpenSplit = '<C-x>'
+    " let g:fuf_keyOpenVsplit = '<C-v>'
+    "
+    " :noremap ,ff :FufFileWithCurrentBufferDir<CR>
+    " ":noremap ,fb :FufBuffer<CR>
+    " ":noremap ,fm :FufMruFile<CR>
+    " :noremap ,f; :FufMruCmd<CR>
+    " :noremap ,fk :FufBookmarkFile<CR>
+    " :noremap ,fa :FufBookmarkFileAdd<CR>
+    " ":noremap ,fr :FufBookmarkDir<CR>
+    " ":noremap ,fe :FufBookmarkDirAdd<CR>
+    " :noremap ,fd :FufDir<CR>
+    " ":noremap ,ft :FufTaggedFile<CR>
+    " ":noremap ,fg :FufTag<CR>
+    " :noremap ,f] :FufTag! <C-r>=expand('<cword>')<CR><CR>
+    " ":noremap ,fl :FufLine<CR>
+    " :noremap ,fq :FufQuickfix<CR>
+    " :noremap ,fp :FufChangeList<CR>
+    " :noremap ,fj :FufJumpList<CR>
+    " :noremap ,fi :FufEditDataFile<CR>
+    " :noremap ,fc :FufRenewCache<CR>
+    " :noremap ,fh :FufBufferTag<CR>
+    " :noremap ,fs :FufCoverageFileChange<CR>
+    "
+    " " super find file command, will search the files recursively from current
+    " " directory
+    " ":noremap <silent> ,fs :call fuf#givenfile#launch('', 0, '[SuperFF]', split(glob("`~/tools/get_file_list.sh`"), "\n"))<CR>
+    "
+    " "let listener = {}
+    " "function! listener.onComplete(item, method)
+    "   "let content = join(split(a:item, ' ')[1:], ' ')
+    "   "exec  "norm i " . content . ''
+    "   ""call setline(line('.'), content)
+    " "endfunction
+    "
+    " "function! listener.onAbort()
+    "   "echo "Abort"
+    " "endfunction
+    "
+    " "" Select an item from a given list.
+    " "if filereadable(expand("~/.mutt/aliases"))
+    "   "let g:aliases_lines = []
+    "   "for a in readfile(expand("~/.mutt/aliases"))
+    "       "let parts = split(a, ' ')
+    "       "call add(g:aliases_lines, join(parts[1:], ' '))
+    "   "endfor
+    "   ":noremap ,fe :call g:FuzzyFinderMode.CallbackItem.launch('', 1, listener, g:aliases_lines, 0)<CR>
+    " "endif
+    "
+    " " FuzzyFinderTag is really useful especially after we process the tags
+    " " file, for example generate a tags file for files, that will minic the
+    " " behavior of TextMate easily. So give it a seperate shortcut
+    " :noremap ,s  :FufTag<CR>
+    "
+    " let g:fuf_previewHeight = 0
     "}}}2
 
     "### setting for view_diff.vim {{{2
@@ -1548,7 +1557,8 @@ endif " has("autocmd")
 
     ""xpt uses <Tab> as trigger key
     "let g:xptemplate_key = '<Tab>'
-    let g:xptemplate_key = '<c-m>'
+    "let g:xptemplate_key = '<c-m>'
+    let g:xptemplate_key = '<c-l>'
 
     "" trigger snippet with <Tab> no matter popup menu opened or not
     " let g:xptemplate_key = '<Plug>triggerxpt'
@@ -1671,7 +1681,8 @@ endif " has("autocmd")
     
     " will ignore entries in .agignore file
     " GOTCHA: list files with ag will ignore newly created empty files
-    let g:ctrlp_user_command = 'cd %s && ag --nocolor --nogroup -l'
+    " let g:ctrlp_user_command = 'cd %s && ag --nocolor --nogroup -l'
+    let g:ctrlp_user_command = 'cd %s && /usr/local/bin/myfindfile'
 
     let g:ctrlp_extensions = ['buffertag', 'dir', 'bookmarkdir'] " ['dir', 'tag', 'rtscript', 'changes']
     let g:ctrlp_prompt_mappings = { 'PrtCurLeft()': ['<left>', '<c-^>'], 'PrtBS()': ['<bs>', '<c-]>', '<c-h>'] }
@@ -1690,7 +1701,7 @@ endif " has("autocmd")
     " You can manualy clear it by <F5>
     let g:ctrlp_clear_cache_on_exit = 0
 
-    let g:ctrlp_max_files = 0
+    let g:ctrlp_max_files = 3000 
 
     " If ag is available use it as filename list generator instead of 'find'
     if executable("ag")
@@ -1835,8 +1846,86 @@ endif " has("autocmd")
     "}}}2
     
     "### fzf {{{2
-    "installed by brew 
-    set rtp+=/usr/local/Cellar/fzf/0.9.11
+    "Jump to the existing window if possible 
+    let g:fzf_buffers_jump = 1
+
+		" Customize fzf colors to match your color scheme
+		let g:fzf_colors =
+		\ { 'fg':      ['fg', 'Normal'],
+			\ 'bg':      ['bg', 'Normal'],
+			\ 'hl':      ['fg', 'Comment'],
+			\ 'fg+':     ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
+			\ 'bg+':     ['bg', 'CursorLine', 'CursorColumn'],
+			\ 'hl+':     ['fg', 'Statement'],
+			\ 'info':    ['fg', 'PreProc'],
+			\ 'border':  ['fg', 'Ignore'],
+			\ 'prompt':  ['fg', 'Conditional'],
+			\ 'pointer': ['fg', 'Exception'],
+			\ 'marker':  ['fg', 'Keyword'],
+			\ 'spinner': ['fg', 'Label'],
+			\ 'header':  ['fg', 'Comment'] }
+
+    " Insert mode completion
+    imap <c-x><c-f> <plug>(fzf-complete-path)
+    imap <c-x><c-j> <plug>(fzf-complete-file-ag)
+    imap <c-x><c-l> <plug>(fzf-complete-line)
+
+    " complete input as name in current file in fuzzy way
+    " e.g.: gCC => getCurrentComponent
+    inoremap <expr> <c-x><c-k> fzf#complete({
+          \ 'source': "/usr/bin/grep -o -E '\\w{5,}' " . expand('%:p') . "\| /usr/bin/sort -uf",
+          \ 'options': '-0 -1 -x',
+          \ 'left': 35})
+
+		" " select file/path from command
+		" function! s:append_dir_with_fzf(line)
+		" 	call fzf#run(fzf#wrap({
+		" 		\ 'options': ['--prompt', a:line.'> '],
+		" 		\ 'source': 'find . -type d',
+		" 		\ 'sink': {line -> feedkeys("\<esc>:".a:line.line, 'n')}}))
+		" 	return ''
+		" endfunction
+		" cnoremap <expr> <c-x><c-d> <sid>append_dir_with_fzf(getcmdline())
+
+		function! s:get_cmd_args(...) abort 
+			if a:0 > 0
+				return a:1
+			else
+				return '.'
+			endif
+		endfunction
+		command! -nargs=* -complete=dir Cd call fzf#run(fzf#wrap(
+			\ {'source': '/usr/local/bin/myfind '. s:get_cmd_args(<f-args>),
+			\  'sink': 'cd'}))
+
+    " Likewise, Files command with preview window
+    command! -bang -nargs=? -complete=dir Files
+       \ call fzf#vim#files(<q-args>, fzf#vim#with_preview('right:50%:hidden', '?'), <bang>0)
+    
+		" Augmenting Ag command using fzf#vim#with_preview function
+		"   * fzf#vim#with_preview([[options], preview window, [toggle keys...]])
+		"     * For syntax-highlighting, Ruby and any of the following tools are required:
+		"       - Highlight: http://www.andre-simon.de/doku/highlight/en/highlight.php
+		"       - CodeRay: http://coderay.rubychan.de/
+		"       - Rouge: https://github.com/jneen/rouge
+		"
+		"   :Ag  - Start fzf with hidden preview window that can be enabled with "?" key
+		"   :Ag! - Start fzf in fullscreen and display the preview window above
+		command! -bang -nargs=* Ag
+			\ call fzf#vim#ag(<q-args>,
+			\                 <bang>0 ? fzf#vim#with_preview('up:60%')
+			\                         : fzf#vim#with_preview('right:50%:hidden', '?'),
+			\                 <bang>0)
+
+    nnoremap ,fg :Ag! "<CR>
+    vnoremap ,fg  y:Ag! "<CR>
+
+    noremap <c-n> :Files<CR>
+    noremap ,ff :Files<CR>
+		noremap ,fd :Cd<CR>
+		noremap ,ft :Tags<CR>
+    noremap ,fr :FZFMru<CR>
+
     "}}}2
 
     "### choosewin {{{2
@@ -1859,7 +1948,7 @@ endif " has("autocmd")
     
     "### Grepper {{{2
     " command! -nargs=* -complete=file GG Grepper -tool git -open -switch -query <args>
-    command! -nargs=* -complete=file Ag Grepper -tool ag -open -switch -query <args>
+    " command! -nargs=* -complete=file Ag Grepper -tool ag -open -switch -query <args>
     command! -nargs=* -complete=file Rg Grepper -tool rg -open -switch -query <args>
     " command! -nargs=* -complete=file Pt Grepper -tool pt -open -switch -query <args>
     
@@ -1880,6 +1969,14 @@ endif " has("autocmd")
     call camelcasemotion#CreateMotionMappings(',')
     "}}}2
     
+    "### VimMarkDown {{{2
+    let g:vim_markdown_toml_frontmatter = 1
+    "}}}2
+    
+    "### visswap {{{2
+     map <silent> <unique> <c-y> <Plug>VisualPreSwap
+     map <silent> <unique> <c-x> <Plug>VisualSwap
+    "}}}2
 "## }}}1
 
 "## Xterm colors defination {{{1
@@ -2150,7 +2247,10 @@ command! -nargs=+ -complete=command TabMessage call TabMessage(<q-args>)
 "## }}}1
 
 "## Color Scheme {{{1
-  :colorscheme jellybeans
+  :colorscheme molokai
+  " :colorscheme jellybeans
+  
+  let g:rehash256 = 1 "enable 256 color in terminal for molokai
 " }}}1
 
 "## MacVim Related {{{1

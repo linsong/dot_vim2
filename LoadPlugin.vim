@@ -12,11 +12,11 @@ Plug 'bkad/CamelCaseMotion'
 " Coding {{{1
 Plug 'tomtom/tcomment_vim'
 Plug 'Yggdroot/indentLine'
-Plug 'majutsushi/tagbar'
-Plug 'scratch.vim', {'on': 'Scratch'}
+"Plug 'majutsushi/tagbar'
+Plug 'vim-scripts/scratch.vim', {'on': 'Scratch'}
 Plug 'AndrewRadev/switch.vim'
-Plug 'Valloric/YouCompleteMe'
-Plug 'scrooloose/nerdtree'
+" Plug 'Valloric/YouCompleteMe'
+" Plug 'scrooloose/nerdtree'
 Plug 'thinca/vim-quickrun', {'on': 'QuickRun'}
 " }}}1
 
@@ -28,25 +28,31 @@ Plug 'mbbill/desertEx'
 Plug 'vim-scripts/synic.vim'
 Plug 'nanotech/jellybeans.vim'
 Plug 'nice/sweater'
+Plug 'tomasr/molokai'
+Plug 'liuchengxu/space-vim-dark'
+Plug 'endel/vim-github-colorscheme'
 " }}}1
 
 " Advanced Editing {{{1
 Plug 'kien/ctrlp.vim'
 Plug 'FelikZ/ctrlp-py-matcher'
 Plug 'tacahiroy/ctrlp-funky'
-Plug 'AutoComplPop'
+Plug '/usr/local/opt/fzf'
+Plug 'junegunn/fzf.vim'
+Plug 'pbogut/fzf-mru.vim'
+Plug 'vim-scripts/AutoComplPop'
 Plug 'rking/ag.vim', {'on': 'Ag'}
 Plug 'mhinz/vim-grepper'
 Plug 'drmingdrmer/xptemplate'
 "Plug 'SirVer/ultisnips'
 "Plug 'honza/vim-snippets'
 Plug 'junegunn/vim-easy-align', {'on': 'EasyAlign'}
-Plug 'LargeFile'
+Plug 'vim-scripts/LargeFile'
 Plug 'tpope/vim-abolish', {'on': 'Subvert'}
 Plug 'tpope/vim-dispatch'
 Plug 'vim-scripts/vimwiki'
 Plug 'sk1418/Join', {'on': 'Join'}
-Plug 'sessionman.vim', {'on': ['SessionOpen', 'SessionOpenLast', 'SessionClose', 'SessionSave', 'SessionSaveAs', 'SessionShowLast']}
+Plug 'vim-scripts/sessionman.vim', {'on': ['SessionOpen', 'SessionOpenLast', 'SessionClose', 'SessionSave', 'SessionSaveAs', 'SessionShowLast']}
 " Plug 'MattesGroeger/vim-bookmarks', {'on': 'BookmarkToggle'}
 Plug 'kana/vim-textobj-user'
 " Plug 'lilydjwg/colorizer'
@@ -65,8 +71,9 @@ Plug 'vim-scripts/DrawIt'
 
 " Utils {{{1
 Plug 'kana/vim-fakeclip'
-Plug 'a.vim'
-Plug 'localvimrc'
+" Plug 'vim-scripts/a.vim'
+Plug 'derekwyatt/vim-fswitch'
+Plug 'vim-scripts/localvimrc'
 Plug 'epeli/slimux', {'on': 'SlimuxShellRun'} " related to tmux 
 Plug 'mhinz/vim-startify', {'on': 'Startify'}
 Plug 'rizzatti/funcoo.vim' " for Dash
@@ -81,21 +88,21 @@ Plug 'dhruvasagar/vim-table-mode', {
   \ 'on': ['TableModeEnable', 'TableModeToggle', 'Tableize']
   \}
 
-Plug 'renamer.vim', {'on': 'Renamer'}
-Plug 'vimGTD', {'for': 'gtd'}
+Plug 'vim-scripts/renamer.vim', {'on': 'Renamer'}
+Plug 'vim-scripts/vimGTD', {'for': 'gtd'}
 Plug 'skwp/greplace.vim', {'on': 'Gsearch'}
-Plug 'ViewOutput', {'on': 'VO'}
+Plug 'vim-scripts/ViewOutput', {'on': 'VO'}
 " Plug 't9md/vim-choosewin'
 
 " ScreenShot.vim enables you make screenshot of your VIM session as HTML code. 
-Plug 'ScreenShot', {'on': ['ScreenShot', 'Text2Html', 'Diff2Html']}
+Plug 'vim-scripts/ScreenShot', {'on': ['ScreenShot', 'Text2Html', 'Diff2Html']}
 Plug 'mbbill/VimExplorer', {'on': 'VE'}
 Plug 'vim-scripts/Mark--Karkat'
-Plug 'bling/vim-airline'
+Plug 'vim-airline/vim-airline'
 
 Plug 'vim-utils/vim-man'
 Plug 'will133/vim-dirdiff', {'on': 'DirDiff'}
-
+Plug 'rickhowe/diffchar.vim'
 
 " choose one of below three plugins 
 " Plug 'szw/vim-maximizer'
@@ -108,42 +115,43 @@ Plug 'tpope/vim-endwise', {'for': 'ruby'}
 Plug 'tpope/vim-rails', {'for': ['ruby', 'rails']}
 Plug 'vim-ruby/vim-ruby', {'for': ['ruby', 'rails']}
 Plug 'janx/vim-rubytest', {'for': ['ruby', 'rails']}
-Plug 'ri-browser', {'for': ['ruby', 'rails']}
+Plug 'vim-scripts/ri-browser', {'for': ['ruby', 'rails']}
 " }}}1
 
 " Python Vundles {{{1
-Plug 'python.vim', {'for': ['python',],}
+Plug 'vim-scripts/python.vim', {'for': ['python',],}
 Plug 'fs111/pydoc.vim', {'for': ['python',],}
-Plug 'python_match.vim', {'for': ['python',],}
+Plug 'vim-scripts/python_match.vim', {'for': ['python',],}
 " }}}1
 
 " Web Vundles {{{1
-Plug 'vim-coffee-script'
+Plug 'vim-scripts/vim-coffee-script'
 Plug 'gregsexton/MatchTag', {'for': ['xhtml', 'html', 'js', 'css', 'xml', 'php'],}
 Plug 'mattn/emmet-vim'
 Plug 'sukima/xmledit'
-Plug 'jsbeautify', {'for': ['html', 'js', 'css', 'xml'],}
+Plug 'vim-scripts/jsbeautify', {'for': ['html', 'js', 'css', 'xml'],}
 Plug 'tmhedberg/matchit'
 " }}}1
 
 " Git Utils {{{1
 Plug 'tpope/vim-fugitive'
 Plug 'gregsexton/gitv', {'on': 'Gitv'}
-Plug 'Gist.vim', {'on': 'Gist'}
+Plug 'vim-scripts/Gist.vim', {'on': 'Gist'}
 "}}}1
 
 "" C/C++ NeoBundles {{{1
-Plug 'OmniCppComplete', {'for': ['c', 'cpp', 'h'],}
+Plug 'vim-scripts/OmniCppComplete', {'for': ['c', 'cpp', 'h'],}
 Plug 'derekwyatt/vim-protodef', {'for': ['c', 'cpp', 'h'],}
-Plug 'FSwitch', {'for': ['c', 'cpp', 'h'],}
+Plug 'vim-scripts/FSwitch', {'for': ['c', 'cpp', 'h'],}
 
 " Qt
-Plug 'https://bitbucket.org/kh3phr3n/vim-qt-syntax.git', {'for': ['c', 'cpp', 'h'],}
+" Plug 'https://bitbucket.org/kh3phr3n/vim-qt-syntax.git', {'for': ['c', 'cpp', 'h'],}
+Plug 'vim-scripts/cpp.vim', {'for': ['c', 'cpp', 'h'],}
 "" }}}1
 
 " SQL Vundles {{{1
-Plug 'SQLUtilities', {'for': 'sql'}
-Plug 'dbext.vim', {'for': 'sql'}
+Plug 'vim-scripts/SQLUtilities', {'for': 'sql'}
+Plug 'vim-scripts/dbext.vim', {'for': 'sql'}
 " }}}1
 
 " iOS Vundles {{{1
