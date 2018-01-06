@@ -657,11 +657,13 @@ endif
 
         " windows setting end }}}2
     elseif has('macunix') "macosx specific settings {{{2
+      if !has('gui_vimr')
         "set guifont=Monaco:h13
         " set guifont=Source\ Code\ Pro:h18
         " set guifont=Anonymous\ Pro:h18
         set guifont=DejaVu\ Sans\ Mono\ for\ Powerline:h18
         let Grep_Xargs_Options = '-0'
+      endif
         " macosx specific settings end}}}2
     else  " linux like platform specific setting {{{2
         " put some untested or untrusted plugin into .vim-experiment folder,
@@ -1900,7 +1902,7 @@ endif " has("autocmd")
 
     " Likewise, Files command with preview window
     command! -bang -nargs=? -complete=dir Files
-       \ call fzf#vim#files(<q-args>, fzf#vim#with_preview('right:50%:hidden', '?'), <bang>0)
+       \ call fzf#vim#files(<q-args>, fzf#vim#with_preview('up:50%:hidden', '?'), <bang>0)
     
 		" Augmenting Ag command using fzf#vim#with_preview function
 		"   * fzf#vim#with_preview([[options], preview window, [toggle keys...]])
@@ -1924,6 +1926,7 @@ endif " has("autocmd")
     noremap ,ff :Files<CR>
 		noremap ,fd :Cd<CR>
 		noremap ,ft :Tags<CR>
+    noremap ,fl :Lines<CR>
     noremap ,fr :FZFMru<CR>
 
     "}}}2
