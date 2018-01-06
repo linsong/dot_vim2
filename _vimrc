@@ -1656,13 +1656,13 @@ endif " has("autocmd")
 
     "### ctrlp {{{2
     let g:ctrlp_map = '<c-p>'
-    noremap ,fb :CtrlPBuffer<CR>
-    noremap ,fm :CtrlPMRU<CR>
-    noremap ,ft :CtrlPBufTag<CR>
-    noremap ,fg :CtrlPBufTagAll<CR>
-    noremap ,fl :CtrlPLine<CR>
-    noremap ,fr :CtrlPBookmarkDir<CR>
-    noremap ,fe :CtrlPBookmarkDirAdd<CR>
+    " noremap ,fb :CtrlPBuffer<CR>
+    " noremap ,fm :CtrlPMRU<CR>
+    " noremap ,ft :CtrlPBufTag<CR>
+    " noremap ,fg :CtrlPBufTagAll<CR>
+    " noremap ,fl :CtrlPLine<CR>
+    " noremap ,fr :CtrlPBookmarkDir<CR>
+    " noremap ,fe :CtrlPBookmarkDirAdd<CR>
 
     let g:ctrlp_cmd = 'CtrlP'
     let g:ctrlp_working_path_mode = 0
@@ -1919,7 +1919,7 @@ endif " has("autocmd")
 			\                         : fzf#vim#with_preview('right:50%:hidden', '?'),
 			\                 <bang>0)
 
-    nnoremap ,fg :Ag! "<CR>
+    nnoremap ,fg yiw:Ag! "<CR>
     vnoremap ,fg  y:Ag! "<CR>
 
     noremap <c-n> :Files<CR>
@@ -1928,6 +1928,7 @@ endif " has("autocmd")
 		noremap ,ft :Tags<CR>
     noremap ,fl :Lines<CR>
     noremap ,fr :FZFMru<CR>
+    noremap ,fb :Buffers<CR>
 
     "}}}2
 
