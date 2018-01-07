@@ -115,6 +115,7 @@ endif
 :set number
 
 :let g:mapleader='['
+" let g:mapleader = "\<Space>"
 
 if has("gui_macvim")
     :set transparency=5
@@ -131,6 +132,14 @@ endif
 :set lazyredraw
 
 :set modelines=5
+
+:set splitbelow
+:set splitright
+
+" tips from https://kinbiko.com/vim/my-shiniest-vim-gems/
+if v:version > 703 || v:version == 703 && has('patch541')
+  set formatoptions+=j
+endif
 
 "## }}}1
 
@@ -150,14 +159,6 @@ endif
 
     :set fileencodings=ucs-bom,utf-8,gb2312,cp936
 "## }}}1
-"
-:set splitbelow
-:set splitright
-
-" tips from https://kinbiko.com/vim/my-shiniest-vim-gems/
-if v:version > 703 || v:version == 703 && has('patch541')
-  set formatoptions+=j
-endif
 
 "## General Mapping {{{1
 
@@ -246,24 +247,18 @@ endif
     "endif
     ":nmap ,v :e $HOME/.vimrc<CR>
 
-    " Make navigate tabs easier
-    :nnoremap <silent> <M-.> gt
-    :nnoremap <silent> <M-,> gT
-    ":nnoremap <silent> <M-n> :tabnew<CR>
-    :nnoremap <silent> <M-q> :tabclose<CR>
-
-    :nnoremap <silent> <M->> :if tabpagenr() == tabpagenr("$")\|tabm 0\|else\|exe "tabm ".tabpagenr()\|endif<CR>
-    :nnoremap <silent> <M-<> :if tabpagenr() == 1\|exe "tabm ".tabpagenr("$")\|else\|exe "tabm ".(tabpagenr()-2)\|endif<CR>
+    " :nnoremap <silent> <M->> :if tabpagenr() == tabpagenr("$")\|tabm 0\|else\|exe "tabm ".tabpagenr()\|endif<CR>
+    " :nnoremap <silent> <M-<> :if tabpagenr() == 1\|exe "tabm ".tabpagenr("$")\|else\|exe "tabm ".(tabpagenr()-2)\|endif<CR>
 
     if has("xterm_clipboard")
        nmap <S-Insert> :set paste<CR>"+p:set nopaste<CR>
        imap <S-Insert> <ESC>:set paste<CR>"+p:set nopaste<CR>i
     endif
 
-    nnoremap <space> @=((foldclosed(line('.')) < 0) ? 'zc' : 'zo')<CR>
+    nnoremap <leader>t @=((foldclosed(line('.')) < 0) ? 'zc' : 'zo')<CR>
 
-    nmap <leader>ff :RedoFoldOnRegex<CR>
-    nmap <leader>fu :FoldEndFolding<CR>
+    " nmap <leader>ff :RedoFoldOnRegex<CR>
+    " nmap <leader>fu :FoldEndFolding<CR>
 
     " it can copy texts to last edited place continuously
     function! CopyToLastEditPos()
@@ -277,7 +272,7 @@ endif
     :xmap gy y:call CopyToLastEditPos()<CR>
     :nmap gy yy:call CopyToLastEditPos()<CR>
 
-    :nmap ,o :only<CR>
+    :nmap <leader>o :only<CR>
 
     " I want to exchange the meaning of following shortcuts:
     :noremap <C-]> g<C-]>
@@ -339,7 +334,6 @@ endif
 
     " nnoremap <silent> ;;  :silent! %s/\s\+$//g <bar> w<CR>
     nnoremap <silent> ;;  :w<CR>
-    nnoremap <silent> ,,  :wa<CR>
 
     nnoremap <silent> <f5> :w <bar> make<CR>
     imap <silent> <f5> <Esc>:w<CR>:make<CR>i
@@ -601,23 +595,6 @@ endif
 "}}}1
 
 "## Platform dependent Setting {{{1
-    let $VIMCFG = '$HOME/.vim'
-    "set clipboard=unnamed " for pbcopy and pbpast to work on macosx
-
-    " how to check different systems
-    "if has("unix")
-    "  " code common to Cygwin and Linux
-    "  if has("win32unix")
-    "    " code for Cygwin but not Linux
-    "  else
-    "    " code for Linux but not Cygwin
-    "  endif
-    "elseif has("win32")
-    "  " code for windows-native Vim
-    "else
-    "  echoerr "Unknown OS"
-    "endif
-
     if has('win32')  " windows specific setting{{{2
         set runtimepath=~/.vim,$VIMRUNTIME
 
@@ -736,11 +713,6 @@ if has("autocmd")
         " turn off the bell and visual flash
         autocmd VimEnter * set vb t_vb=
 
-        " automate save the latest work to a session
-        " for now, I don't always need this
-        ":au VimEnter * source ~/Session.vim
-        ":au VimLeave * mksession!
-
         " display the status line in different ways based on the current
         " editing mode
         if version >= 700
@@ -748,9 +720,6 @@ if has("autocmd")
            au InsertLeave * hi StatusLine term=reverse ctermfg=0 ctermbg=2 gui=bold,reverse
         endif
 
-        " highlight current word under cursor
-        "autocmd CursorMoved * silent! exe printf('match IncSearch /\<%s\>/', expand('<cword>'))
-        
         autocmd filetype crontab setlocal nobackup nowritebackup
 
     augroup END
@@ -760,16 +729,6 @@ if has("autocmd")
     augroup ft_augroup
         au!
         :au BufRead /etc/network/interfaces :set syntax=interfaces
-
-        :au BufNewFile,BufRead *.as set suffixesadd=.as
-
-        :au BufNewFile,BufRead *.html let b:snip_start_tag = "@"
-        :au BufNewFile,BufRead *.html let b:snip_end_tag = "@"
-        :au BufNewFile,BufRead *.lzx let g:snip_start_tag = "@"
-        :au BufNewFile,BufRead *.lzx let g:snip_end_tag = "@"
-
-        :au BufEnter *.lzx :call FoldOnRegex('^\s*<\w\+', 0)
-        ":au BufEnter *.py  :call FoldOnRegex('^\s*\(\<def\>\|\<class\>\)', 0)
 
         " remove trailing whitespace automatically
         :au BufWritePre *.py :%s/\s\+$//e
@@ -795,9 +754,6 @@ if has("autocmd")
         :autocmd User Rails.migration*  set ft=railsmigration.ruby
         :autocmd User Rails.view.erb*   set ft=railsview.eruby
         :autocmd User Rails             let g:Grep_Skip_Dirs = join(['log', 'vender', 'index', 'tmp', 'wireframes', 'graphs', 'documents', 'pdf_forms', 'performance'] + Grep_Skip_Dirs_List, ' ')
-
-        " add the current extension to the grep file list
-        ":autocmd BufNewFile,BufRead * let g:Grep_Default_Filelist = join(["*." . expand("%:e")] + Grep_Default_Filelist_List, ' ')
 
         autocmd FileType html setlocal ts=2
         autocmd FileType html setlocal sw=2
@@ -858,8 +814,8 @@ endif " has("autocmd")
     "tools according to current context
     let g:manpageview_winopen="reuse"
     "nmap <silent> <leader>k  :call FTSMan(expand("<cword>")) <CR>
-    nmap <silent> <leader>k  :call FTSMan(expand("<cword>")) <CR>
-    vmap <silent> <leader>k  :call FTSMan('"'.GetVisualSelectionEscaped("").'"') <CR>
+    " nmap <silent> <leader>k  :call FTSMan(expand("<cword>")) <CR>
+    " vmap <silent> <leader>k  :call FTSMan('"'.GetVisualSelectionEscaped("").'"') <CR>
     " File Type Sessitive Man function
     function! FTSMan(word)
         let manpagetopic = substitute(a:word,'[,.;]$','','')
@@ -903,11 +859,6 @@ endif " has("autocmd")
         com!  -nargs=+ CommandCabbr call CommandCabbr( <f-args> )
         " Use it itself to define a simpler abbreviation for itself...
         CommandCabbr ccab CommandCabbr
-    " }}}2
-
-    "### command to diff the modified file with original file {{{2
-        command! DiffOrig vert new | set bt=nofile | r # | 0d_ | diffthis |
-             \ wincmd p | diffthis
     " }}}2
 
     "### function that will fold file based on specified regex pattern {{{2
@@ -960,139 +911,6 @@ endif " has("autocmd")
     source ~/.vim/LoadPlugin.vim
   endif
 
-    "### setting for winmanager.vim {{{2
-        ":let g:winManagerWindowLayout = "FileExplorer,TagsExplorer|BufExplorer"
-        :let g:winManagerWindowLayout = "FileExplorer"
-        :let g:explHideFiles = "^\.#,~$"
-        :map <c-w><c-b> :BottomExplorerWindow<CR>
-        :map <c-w><c-t> :WMToggle<CR>
-    "### }}}2
-
-    "### setting for showmarks.vim {{{2
-        :let g:showmarks_enable=0
-        :let g:showmarks_include="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.'`"
-        ":let g:showmarks_ignore_type="hmpqr"
-        :let g:showmarks_hlline_lower = 1
-        :let g:showmarks_hlline_upper = 1
-    "### }}}2
-
-    "### setting for vcscommand.vim {{{2
-    " disabled for now
-    "nmap <Leader>add <Plug>CVSAdd
-    "nmap <Leader>va VCSAdd
-    "nmap <Leader>vn VCSAnnotate
-    "nmap <Leader>vc VCSCommit
-    "nmap <Leader>vd VCSDiff
-    "nmap <Leader>vg VCSGotoOriginal
-    "nmap <Leader>vG VCSGotoOriginal!
-    "nmap <Leader>vl VCSLog
-    "nmap <Leader>vr VCSReview
-    "nmap <Leader>vs VCSStatus
-    "nmap <Leader>vu VCSUpdate
-    "nmap <Leader>vv VCSVimDiff
-
-    " only for cvs
-    "nmap <Leader>ve CVSEdit
-    "nmap <Leader>vi CVSEditors
-    "nmap <Leader>vt CVSUnedit
-    "nmap <Leader>vwv CVSWatchers
-    "nmap <Leader>vwa CVSWatchAdd
-    "nmap <Leader>vwn CVSWatchOn
-    "nmap <Leader>vwf CVSWatchOff
-    "nmap <Leader>vwf CVSWatchRemove
-
-    " Only for SVN buffers:
-    "nmap <Leader>vi SVNInfo
-
-    "### }}}2
-
-    "### setting for grep.vim {{{2
-    let Grep_Key = '<F12>'
-    let Grep_Default_Options = '-inH'
-    let Grep_Skip_Dirs_List = ['.svn', '.cvs', 'zope', '.git', '.cache']
-    let Grep_Skip_Dirs = join(g:Grep_Skip_Dirs_List, ' ')
-    let Grep_Skip_Files_List = ['*.bak', '*~', '*.swp', '*.swo', '*.pyc', '*.swf', '*.exe', 'tags', 'TAGS', 'ftags', '*.log']
-    let Grep_Skip_Files = join(Grep_Skip_Files_List, ' ')
-    let Grep_Default_Filelist_List = ['*']
-    let Grep_Default_Filelist = join(Grep_Default_Filelist_List, ' ')
-    "map ,gr :Rgrep<CR>
-    "map ,gg :Grep<CR>
-    "map ,gf :Fgrep<CR>
-    "### }}}2
-
-    "### settings for ag.vim {{{2
-    "disabled, use Grepper plugin instead 
-    "let g:ag_prg="ag --nocolor --nogroup --column --smart-case "
-    "let g:ag_mapping_message=0
-    "map ,gr yiw:Ag "<CR>
-    "vmap ,gr y:Ag "<CR>
-    "}}}2
-
-    "### setting for a.vim {{{2
-    let g:alternateNoDefaultAlternate = 1
-
-    " " for objective-c
-    " let g:alternateExtensions_m = 'h'
-    " if exists('g:alternateExtensions_h')
-    "   let g:alternateExtensions_h = g:alternateExtensions_h . ',m'
-    " else
-    "   let g:alternateExtensions_h = 'm'
-    " endif
-
-    " map ;aa :A<CR>
-    " map ;as :AS<CR>
-    " map ;av :AV<CR>
-    "### }}}2
-    
-    "### settings for FSwitch {{{2
-		map ;aa :FSHere<CR>
-		map ;as :FSSplitRight<CR>
-		map ;av :FSSplitBelow<CR>
-    "### }}}2
-    
-    "### setting for python editing {{{2
-        " setting about python
-        " Now I use python.vim
-        " other python vim script are pylint, python_match,python_box etc,I will try
-        " them later :)
-
-        " hightlight all python syntax items (for syntax/python.vim)
-        :let python_highlight_all = 1
-        " **** python edit config end
-    "### }}}2
-
-    "### setting for yankring.vim {{{2
-    :let g:yankring_n_keys = "yy dd yw dw ye de yE dE yiw diw yaw daw y$ d$ ygg dgg yG dG D Y ya\' ya\" yi\' yi\""
-    " we don't the default map of yangring since it uses <C-N> and <C-P> and
-    " those are mapped to completion normally
-    let g:yankring_replace_n_pkey = ''
-    let g:yankring_replace_n_nkey = ''
-    let g:yankring_map_dot = 0
-    let g:yankring_max_element_length = 1024
-    nmap ,y :YRGetElem <CR>
-    imap <F4> <C-o>:YRGetElem <CR>
-    "### }}}2
-
-    "### setting for HTML.vim {{{2
-    :let g:no_html_toolbar = 1
-    :let g:no_html_menu = 1
-    :let g:no_html_tab_mapping = 1
-    "### }}}2
-
-    "### setting for scratch.vim {{{2
-    :let g:scratchBackupFile = '/tmp/scratch.txt'
-    "### }}}2
-
-    "### setting for imaps.vim {{{2
-    " example:
-    "  call IMAP("bit`", "\\begin{itemize}\<cr>\\item \<cr>\\end{itemize}<++>", "")
-    " You can use the <C-r> command to insert dynamic elements such as dates.
-    "   call IMAP ('date`', "\<c-r>=strftime('%b %d %Y')\<cr>", '')
-    " read the docs of imaps.vim to get more details
-    "let g:disable_imap = 1
-    "imap <C-g>   <plug>IMAP_JumpForward
-    "### }}}2
-
     "### setting for netrw.vim {{{2
     " set what kind of files we will ignore
     let g:netrw_list_hide='^\..*$,^.*\~$,^.*\.pyc$'
@@ -1124,859 +942,11 @@ endif " has("autocmd")
     :vnoremap <silent> ,cy <ESC>:call NERDComment('x', 'yank')<CR>
     "### }}}2
 
-    ""### setting for MRU.vim {{{2
-    "let MRU_Max_Entries = 150
-    "let MRU_Exclude_Files = '^/tmp/.*\|^/var/tmp/.*'
-    "map <silent> ,m :MRU<CR>
-    ""### }}}2
-
-    "### setting for project.vim {{{2
-    let g:proj_flags = "mstb"
-    "### }}}2
-
-    "### setting for flagit.vim {{{2
-    let icons_path = $HOME."/.vim/signs/"
-    let g:Fi_Flags = { "arrow" : [icons_path."go-next.png", "> ", 1, "texthl=Title"],
-          \ "function" : [icons_path."emblem-system.png", "+ ", 0, "texthl=Comment"],
-          \ "warning" : [icons_path."dialog-warning.png", "! ", 0, "texthl=WarningMsg"],
-          \ "error" : [icons_path."dialog-error.png", "XX", "true", "texthl=ErrorMsg linehl=ErrorMsg"],
-          \ "step" : [icons_path."start-here.png", "..", "true", ""] }
-    let g:Fi_OnlyText = 0
-    let g:Fi_ShowMenu = 0
-    "### }}}2
-
-    "### setting for pyljvim.vim {{{2
-    let g:pyljpost_path = $HOME."/.vim/tools/pyljpost.py"
-    let g:pyljpost_templates_path = $HOME . "/.pyljpost/templates"
-    let g:pyljpost_encoding = &encoding
-    let g:pyljpost_username = "vincent_wang"
-    "let g:pyljpost_password = ""
-    "}}}2
-
-    "### setting for lookupfile.vim {{{2
-    let g:LookupFile_TagExpr = '"./filenametags"'
-    "}}}2
-
-    "### setting for DirDiff.vim {{{2
-    let g:DirDiffExcludes = "*.pyc,*.pye,.svn,*.svn-base,*.svn-work,*~,*.orig,*.rej,*.swf,.*.swp,.*.swo"
-    "}}}2
-
-    "### setting for exo-codereview.vim {{{2
-    let g:codereview_username = "Vincent"
-    let g:svn_base_url = "https://nordicbet.dev.exoweb.net/svn/trunk/src"
-    let g:svn_workcopy_path = '/home/vincent/work/trunk/src'
-    "}}}2
-
-    "### setting for Decho.vim {{{2
-    "let g:dechomode = 4
-    "}}}2
-
-    "### setting for SQLUtilities.vim {{{2
-     let g:sqlutil_keyword_case = '\U'
-    "}}}2
-
-    "### setting for tagselect.vim {{{2
-     let g:no_tagselect_maps = 1
-    "}}}2
-
-    "### setting for toggle_words.vim {{{2
-     " let g:toggle_words_dict = {'*': [['white', 'black'], ['add', 'remove'], ['read', 'write'], ['hide', 'show'], ['before', 'after'], ['up', 'down'], ['open', 'close'], ['right', 'left'], ['long', 'short'], ['big', 'small'], ['post', 'get']], 'python': [['if', 'elif', 'else']]}
-     " nmap ,t :ToggleWord<CR>
-     " vmap ,t <ESC>:ToggleWord<CR>
-    "}}}2
-
-    "###  setting for Switch  {{{2
-    let g:switch_custom_definitions =
-      \ [
-      \  ['white', 'black'],
-      \  ['add', 'remove'],
-      \  ['read', 'write'],
-      \  ['hide', 'show'],
-      \  ['before', 'after'],
-      \  ['up', 'down'],
-      \  ['open', 'close'],
-      \  ['right', 'left'],
-      \  ['long', 'short'],
-      \  ['big', 'small'],
-      \  ['post', 'get'],
-      \   {
-      \     '\<[a-z0-9]\+_\k\+\>': {
-      \       '_\(.\)': '\U\1'
-      \     },
-      \     '\<[a-z0-9]\+[A-Z]\k\+\>': {
-      \       '\([A-Z]\)': '_\l\1'
-      \     },
-      \   }
-      \  ]
-     noremap ,t :Switch<CR>
-     vnoremap ,t <ESC>:Switch<CR>
-    "}}}2
-
-    "### setting for vimExplorer.vim {{{2
-     let g:VEConf_showHiddenFiles = 0 " don't show dot files by default
-     let g:VEConf_usingGnome = 1 "use Gnome desktop system. TODO: add support for Mac OSX
-
-     " override some file mode hot keys
-     "let g:VEConf_fileHotkey = {}
-     " switch itemClicked and openPreview hotkeys
-     "let g:VEConf_fileHotkey.itemClicked = 'u'
-     "let g:VEConf_fileHotkey.openPreview = '<cr>'
-    "}}}2
-
-    "### setting for fuzzyfinder.vim {{{2
-    " " by default mru command and mru file modes are disabled
-    " "let g:fuf_modesDisable = [ 'mrufile', 'mrucmd', 'coveragefile', 'help']
-    " let g:fuf_modesDisable = [ 'mrufile', 'mrucmd', 'help']
-    "
-    " let g:fuf_abbrevMap =
-    "             \    { "^,a" : [$PROJECT_DIR, "~/workspace/auction"],
-    "             \      "^,w" : ["~/workspace/zhiyong/web"],
-    "             \      "^,v" : map(filter(split(&runtimepath, ','), 'v:val !~ "after$"'), 'v:val . ''/**/'''),
-    "             \      "^,r" : ["app/models", "app/views", "app/controllers", "test/functional", "test/integration", "test/unit", "test/fixtures", "db/fixtures"],
-    "             \      "^,u" : [$PROJECT_DIR . "/../ui_design/template/feb2010/html/02 - current/"],
-    "             \      "^,c" : ["~/Documents/codes"],
-    "             \    }
-    " "let g:fuf_abbrevMap = {
-    "       "\   '^vr:' : map(filter(split(&runtimepath, ','), 'v:val !~ "after$"'), 'v:val . ''/**/'''),
-    "       "\   '^m0:' : [ '/mnt/d/0/', '/mnt/j/0/' ],
-    "       "\ }
-    "
-    " let g:fuf_mrufile_maxItem = 300
-    " let g:fuf_mrucmd_maxItem = 400
-    "
-    " let  g:fuf_file_exclude = '\v\~$|\.o$|\.bak$|\.pyc$|\.exe$|\.bak$|\.swp$|\.swo|\.DS_Store$|\.svn/$|\.gitignore$|\.git/$|\CVS/$|((^|[/\\])\.[/\\]$)'
-    "
-    " let g:fuf_ignoreCase = 1
-    " let g:fuf_useMigemo = 0
-    "
-    " let g:fuf_promptHighlight = 'FileMode'
-    "
-    " " customize mode's prompts
-    " let g:fuf_buffer_prompt = '[Buffer]'
-    " let g:fuf_file_prompt = '[File]'
-    " let g:fuf_dir_prompt = '[Dir]'
-    " let g:fuf_mrufile_prompt = '[MruFile]'
-    " let g:fuf_mrucmd_prompt = '[MruCmd]'
-    " let g:fuf_bookmarkfile_prompt = '[BookmarkFile]'
-    " let g:fuf_bookmarkdir_prompt = '[BookmarkDir]'
-    " let g:fuf_tag_prompt = '[Tag]'
-    " let g:fuf_taggedfile_prompt = '[TaggedFile]'
-    " let g:fuf_givenFile_prompt = '[GivenFile]'
-    " let g:fuf_jumplist_prompt = '[Jump-List]'
-    " let g:fuf_changelist_prompt = '[Change-List]'
-    " let g:fuf_quickfix_prompt = '[Quickfix]'
-    " let g:fuf_line_prompt = '[Line]'
-    "
-    " let g:fuf_keyOpenTabpage = '<C-t>'
-    " let g:fuf_keyOpen = '<CR>'
-    " let g:fuf_keyOpenSplit = '<C-x>'
-    " let g:fuf_keyOpenVsplit = '<C-v>'
-    "
-    " :noremap ,ff :FufFileWithCurrentBufferDir<CR>
-    " ":noremap ,fb :FufBuffer<CR>
-    " ":noremap ,fm :FufMruFile<CR>
-    " :noremap ,f; :FufMruCmd<CR>
-    " :noremap ,fk :FufBookmarkFile<CR>
-    " :noremap ,fa :FufBookmarkFileAdd<CR>
-    " ":noremap ,fr :FufBookmarkDir<CR>
-    " ":noremap ,fe :FufBookmarkDirAdd<CR>
-    " :noremap ,fd :FufDir<CR>
-    " ":noremap ,ft :FufTaggedFile<CR>
-    " ":noremap ,fg :FufTag<CR>
-    " :noremap ,f] :FufTag! <C-r>=expand('<cword>')<CR><CR>
-    " ":noremap ,fl :FufLine<CR>
-    " :noremap ,fq :FufQuickfix<CR>
-    " :noremap ,fp :FufChangeList<CR>
-    " :noremap ,fj :FufJumpList<CR>
-    " :noremap ,fi :FufEditDataFile<CR>
-    " :noremap ,fc :FufRenewCache<CR>
-    " :noremap ,fh :FufBufferTag<CR>
-    " :noremap ,fs :FufCoverageFileChange<CR>
-    "
-    " " super find file command, will search the files recursively from current
-    " " directory
-    " ":noremap <silent> ,fs :call fuf#givenfile#launch('', 0, '[SuperFF]', split(glob("`~/tools/get_file_list.sh`"), "\n"))<CR>
-    "
-    " "let listener = {}
-    " "function! listener.onComplete(item, method)
-    "   "let content = join(split(a:item, ' ')[1:], ' ')
-    "   "exec  "norm i " . content . ''
-    "   ""call setline(line('.'), content)
-    " "endfunction
-    "
-    " "function! listener.onAbort()
-    "   "echo "Abort"
-    " "endfunction
-    "
-    " "" Select an item from a given list.
-    " "if filereadable(expand("~/.mutt/aliases"))
-    "   "let g:aliases_lines = []
-    "   "for a in readfile(expand("~/.mutt/aliases"))
-    "       "let parts = split(a, ' ')
-    "       "call add(g:aliases_lines, join(parts[1:], ' '))
-    "   "endfor
-    "   ":noremap ,fe :call g:FuzzyFinderMode.CallbackItem.launch('', 1, listener, g:aliases_lines, 0)<CR>
-    " "endif
-    "
-    " " FuzzyFinderTag is really useful especially after we process the tags
-    " " file, for example generate a tags file for files, that will minic the
-    " " behavior of TextMate easily. So give it a seperate shortcut
-    " :noremap ,s  :FufTag<CR>
-    "
-    " let g:fuf_previewHeight = 0
-    "}}}2
-
-    "### setting for view_diff.vim {{{2
-    "let g:vd_svn_repo_prefix = 'https://nordicbet.dev.exoweb.net/svn/trunk/src'
-    "}}}2
-
-    "### settings for utl.vim {{{2
-    let g:nordicbet_trac_base_url = 'https://nordictrac.dev.exoweb.net/trac'
-    let g:Font_Size = 2
-    "}}}2
-
-    "### settings for dbext.vim {{{2
-    let g:dbext_default_profile_pg_vincent = 'type=PGSQL:user=vincent:dbname=NBET_vincent:host=localhost'
-    let g:dbext_default_profile_pg_vincent_testdb = 'type=PGSQL:user=vincent:dbname=TESTDB_vincent:host=localhost'
-    let g:dbext_default_profile = 'pg_vincent'
-    let g:dbext_default_type = 'PGSQL'
-    let g:dbext_default_user = 'vincent'
-    let g:dbext_default_host = 'localhost'
-
-    let g:dbext_default_use_sep_result_buffer = 1
-    let g:dbext_default_always_prompt_for_variables = 1
-    "let g:dbext_default_display_cmd_line = 1
-    "}}}2
-
-    "### settings for blogger.vim {{{2
-    let g:Gmail_Account = 'linsong.qizi@gmail.com'
-    let g:Blog_URI = 'http://vincent-wang.blogspot.com'
-    let g:Blog_Use_Markdown = 1
-    "}}}2
-
-    "### settings for vst.vim (Vim reStructured Text) {{{2
-    let g:vst_html_post = "myhtmlvst.vim"
-    "}}}2
-
-    "### settings for supertab.vim {{{2
-    let g:SuperTabLongestHighlight = 1
-    
-    " following setting will set YouCompleteMe as default completion type
-    " refer to: http://stackoverflow.com/questions/14896327/ultisnips-and-youcompleteme
-    let g:SuperTabDefaultCompletionType = '<c-n>'
-
-    " let g:SuperTabMappingBackward = '<nop>' " disable backward mapping
-    "}}}2
-
-    "### settings for acp.vim {{{2
-    map ,ace :AcpEnable<CR>
-    map ,acd :AcpDisable<CR>
-    let g:AutoComplPop_NotEnableAtStartup = 0
-    let g:acp_behaviorKeywordLength = 3
-    "}}}2
-
-    "### settings for rcsvers.vim {{{2
-    "TODO: need add more options
-    let g:rvExcludeExpression = '\c\.pyc\|\c\.pyo\|\c\.bmp'
-    "}}}2
-
     "### settting for blockdiff.vim {{{2
     vmap ,d1 :call BlockDiff_GetBlock1()<CR>
     vmap ,d2 :call BlockDiff_GetBlock2()<CR>
     "}}}2
 
-    "### settings for mark.vim {{{2
-    let g:mwHistAdd = "/@"
-    let g:mwAutoLoadMarks = 0
-    let g:mwAutoSaveMarks = 0
-    nmap <Plug>IgnoreMarkSearchNext <Plug>MarkSearchNext
-    nmap <Plug>IgnoreMarkSearchPrev <Plug>MarkSearchPrev
-
-    "highlight def MarkWord7   ctermfg=Cyan      ctermbg=Black  guifg=#8CCBEA    guibg=Black
-    "highlight def MarkWord8   ctermfg=Green     ctermbg=Black  guifg=#A4E57E    guibg=Black
-    "highlight def MarkWord9   ctermfg=Yellow    ctermbg=Black  guifg=#FFDB72    guibg=Black
-    "highlight def MarkWord10  ctermfg=Red       ctermbg=Black  guifg=#FF7272    guibg=Black
-    "highlight def MarkWord11  ctermfg=Magenta   ctermbg=Black  guifg=#FFB3FF    guibg=Black
-    "highlight def MarkWord12  ctermfg=Blue      ctermbg=Black  guifg=#9999FF    guibg=Black
-
-    "highlight def MarkWord13  ctermbg=Cyan      ctermfg=White  guibg=#8CCBEA    guifg=White
-    "highlight def MarkWord14  ctermbg=Green     ctermfg=White  guibg=#A4E57E    guifg=White
-    "highlight def MarkWord15  ctermbg=Yellow    ctermfg=White  guibg=#FFDB72    guifg=White
-    "highlight def MarkWord16  ctermbg=Red       ctermfg=White  guibg=#FF7272    guifg=White
-    "highlight def MarkWord17  ctermbg=Magenta   ctermfg=White  guibg=#FFB3FF    guifg=White
-    "highlight def MarkWord18  ctermbg=Blue      ctermfg=White  guibg=#9999FF    guifg=White
-
-    if &t_Co>=256 || has("gui_running")
-      let g:mwDefaultHighlightingPalette = 'extended'
-    endif
-    "}}}2
-
-    "### settings for RltvNmbr.vim {{{2
-    map ,r :RN<CR>
-    "}}}2
-
-    "### settings for marvim.vim {{{2
-    let marvim_store = $HOME.'/.marvim/'
-    let marvim_find_key = ',mf'
-    let marvim_store_key = ',ms'
-    "let marvim_register = 'q'
-    "}}}2
-
-    "### settings for NERDTree {{{2
-    let NERDTreeShowBookmarks=1
-    "}}}2
-
-    "### settings for vimim {{{2
-    let g:vimim_i_ctrl6 = 1
-
-    " enable microsoft double pinyin
-    let g:vimim_double_pinyin_microsoft = 1
-    "}}}2
-
-    "### settings for EasyGrep.vim {{{2
-    let g:EasyGrepMode = 2
-    let g:EasyGrepCommand = 1
-    let g:EasyGrepRecursive = 1
-    "}}}2
-
-    "### settings for crefvim {{{2
-    vnoremap <silent> <unique> ,cr <Plug>CRV_CRefVimVisual
-    nnoremap <silent> <unique> ,cr <Plug>CRV_CRefVimNormal
-    nnoremap <silent> <unique> ,cw <Plug>CRV_CRefVimAsk
-    nnoremap <silent> <unique> ,cc <Plug>CRV_CRefVimInvoke
-    "}}}2
-
-    "### settings for c.vim {{{2
-    let g:C_Ctrl_j   = 'off'
-    let g:C_Root = '&Plugin.&C\/C\+\+.'
-    "}}}2
-
-    "### settings for bash.vim {{{2
-    let g:BASH_Root = "&Plugin.B&ash."
-    "}}}2
-
-    "### settings for DrChip serial plugins {{{2
-    let g:DrChipTopLvlMenu = "&Plugin.DrChip."
-    "}}}2
-
-    "### settings for vimwiki {{{2
-    let g:vimwiki_menu = "Plugin.Vimwiki"
-    let g:vimwiki_list = [{'path': '~/vimwiki', 'path_html': '~/vimwiki_html'},
-          \ {'path': '~/workspace/auction/client/notes/', 'path_html': '~/workspace/auction/client/notes/html'}]
-    "}}}2
-
-    "### settings for autotag {{{2
-    let g:autotagDisabled = 1
-    "}}}2
-
-    "### settings for mutt-alias.vim {{{2
-    let g:mutt_aliases_file = "/Users/vincent/.mutt/aliases"
-    "}}}2
-
-    "### settings for UltiSnips.vim {{{2
-    let g:UltiSnipsExpandTrigger="<tab>"
-    let g:UltiSnipsJumpForwardTrigger="<tab>"
-    let g:UltiSnipsJumpBackwardTrigger="<s-tab>"
-    " let g:UltiSnipsListSnippets="<c-l>"
-    let g:UltiSnipsEnableSnipMate=0
-
-    command! ResetUltiSnip :py UltiSnips_Manager.reset()
-    "}}}2
-
-    "### settings for redocommand {{{2
-    let g:redocommand_no_short_command = 1
-    "}}}2
-
-    "### settings for git-vim {{{2
-    let g:git_no_map_default = 1
-    nnoremap ,gd :GitDiff<Enter>
-    nnoremap ,gD :GitDiff --cached<Enter>
-    nnoremap ,gs :GitStatus<Enter>
-    nnoremap ,gl :GitLog<Enter>
-    nnoremap ,ga :GitAdd<Enter>
-    nnoremap ,gA :GitAdd <cfile><Enter>
-    nnoremap ,gc :GitCommit<Enter>
-    nnoremap ,gp :GitPullRebase<Enter>
-    nnoremap ,gb :GitBlame<Enter>
-    "}}}2
-
-    "### settings for twitvim {{{2
-    let twitvim_api_root = "http://168.143.162.100"
-    let twitvim_browser_cmd = "open"
-    "}}}2
-
-    "### settings for syntastic {{{2
-    let g:syntastic_enable_signs = 1
-    let g:syntastic_auto_loc_list = 0
-    let g:syntastic_mode_map = { 'mode': 'passive',
-                               \ 'active_filetypes': [],
-                               \ 'passive_filetypes': ['python', 'cpp', 'ruby', 'puppet'] }
-    "}}}2
-
-    "### blogit {{{2
-    let blogit_unformat="html2text.py"
-    let blogit_format="rmarkdown.rb"
-    "}}}2
-
-    "### vimcommander {{{2
-    :noremap <silent> ;vc                     :cal VimCommanderToggle()<CR>
-    "}}}2
-
-    "### screen {{{2
-    " let g:ScreenImpl = 'Tmux'
-    "let g:ScreenImpl = 'GnuScreen'
-    "noremap <Enter>  exists('ScreenSend') ? :ScreenSend : <Enter><CR>
-    " noremap ;e :call ScreenShellSend("ruby -Itest " . expand("%:p"))<CR>
-    "}}}2
-
-    "### fugitive {{{2
-    map ,gb :Gblame<CR>
-    map ,gs :Gstatus<CR>
-    map ,gd :Gdiff<CR>
-    map ,gl :Glog<CR>
-    map ,gc :Gcommit<CR>
-    "}}}2
-
-    "### xptemplate {{{2
-    " Prevent supertab from mapping <tab> to anything.
-    "let g:SuperTabMappingForward = '<Plug>xpt_void'
-
-    " Tell XPTemplate what to fall back to, if nothing matches.
-    " Original SuperTab() yields nothing if g:SuperTabMappingForward was set to
-    " something it does not know.
-    "let g:xptemplate_fallback = '<C-r>=XPTwrapSuperTab("n")<CR>'
-
-    fun! XPTwrapSuperTab(command)
-        let v = SuperTab(a:command)
-        if v == ''
-            " Change \<Tab> to whatever you want, when neither XPTemplate or
-            " supertab needs to do anything.
-            return "\<Tab>"
-        else
-            return v
-        end
-    endfunction 
-
-    ""xpt uses <Tab> as trigger key
-    "let g:xptemplate_key = '<Tab>'
-    "let g:xptemplate_key = '<c-m>'
-    let g:xptemplate_key = '<c-l>'
-
-    "" trigger snippet with <Tab> no matter popup menu opened or not
-    " let g:xptemplate_key = '<Plug>triggerxpt'
-    " inoremap <Plug>closePUM <C-v><C-v><BS>
-    " imap <TAB> <Plug>closePUM<Plug>triggerxpt
-
-    let g:xptemplate_move_even_with_pum = 0
-    let g:xptemplate_always_show_pum = 1
-
-    "xpt trigger snippet only when there are at least one character
-    let g:xptemplate_minimal_prefix = 1
-
-    "disable brace complete
-    let g:xptemplate_brace_complete = 0
-
-    let g:xptemplate_pum_tab_nav = 1
-
-    let g:xptemplate_goback = '<C-g>'
-
-    let g:xptemplate_strict = 1
-
-    let g:xptemplate_bundle = "cpp_*"
-
-    set runtimepath+=~/.vim/personal/
-    "}}}2
-
-    "### reload scrit {{{2
-    let g:reload_on_write = 0 "disable reload by default, use :ReloadScript manually
-    "}}}2
-
-    "### EasyMotion {{{2
-    let g:EasyMotion_leader_key = ';'
-    let g:EasyMotion_smartcase = 1
-    let g:EasyMotion_enter_jump_first = 1
-
-    map ss <Plug>(easymotion-s2)
-    map s2 <Plug>(easymotion-s2)
-    map sn <Plug>(easymotion-sn)
-
-    map ;l <Plug>(easymotion-lineforward)
-    map ;h <Plug>(easymotion-linebackward)
-    
-    nmap ;l <Plug>(easymotion-overwin-line)
-
-		function! s:incsearch_config_easymotion(...) abort
-			return extend(copy({
-			\   'modules': [incsearch#config#easymotion#module({'overwin': 1})],
-			\   'keymap': {"\<CR>": '<Over>(easymotion)'},
-			\   'is_expr': 0,
-			\   'is_stay': 1
-			\ }), get(a:, 1, {}))
-		endfunction
-    " noremap <silent><expr> /  incsearch#go(<SID>incsearch_config_easymotion())
-
-		" incsearch.vim x fuzzy x vim-easymotion
-		function! s:config_easyfuzzymotion(...) abort
-			return extend(copy({
-			\   'converters': [incsearch#config#fuzzy#converter()],
-			\   'modules': [incsearch#config#easymotion#module({'overwin': 1})],
-			\   'keymap': {"\<CR>": '<Over>(easymotion)'},
-			\   'is_expr': 0,
-			\   'is_stay': 1
-			\ }), get(a:, 1, {}))
-		endfunction
-		noremap <silent><expr> <Space>/ incsearch#go(<SID>config_easyfuzzymotion())
-    "}}}2
-
-    "### Ack {{{2
-    let g:ackprg="ack -H --nocolor --nogroup --column"
-    "}}}2
-
-    "### sparkup {{{2
-    let g:sparkupNextMapping = '<c-r>'
-    "}}}2
-
-    "### OmniCppComplete {{{2
-    let OmniCpp_NamespaceSearch = 1
-    let OmniCpp_GlobalScopeSearch = 1
-    let OmniCpp_ShowAccess = 1
-    "let OmniCpp_ShowPrototypeInAbbr = 1 " show function parameters
-    let OmniCpp_MayCompleteDot = 1 " autocomplete after .
-    let OmniCpp_MayCompleteArrow = 1 " autocomplete after ->
-    let OmniCpp_MayCompleteScope = 1 " autocomplete after ::
-    "let OmniCpp_DefaultNamespaces = ["std", "_GLIBCXX_STD"]
-    " automatically open and close the popup menu / preview window
-    "au CursorMovedI,InsertLeave * if pumvisible() == 0|silent! pclose|endif
-    "set completeopt=menuone,menu,longest,preview
-    "}}}2
-
-    "### powerline {{{2
-    "let g:Powerline_symbols = 'fancy'
-    "}}}2
-
-    "### ctrlp {{{2
-    let g:ctrlp_map = '<c-p>'
-    " noremap ,fb :CtrlPBuffer<CR>
-    " noremap ,fm :CtrlPMRU<CR>
-    " noremap ,ft :CtrlPBufTag<CR>
-    " noremap ,fg :CtrlPBufTagAll<CR>
-    " noremap ,fl :CtrlPLine<CR>
-    " noremap ,fr :CtrlPBookmarkDir<CR>
-    " noremap ,fe :CtrlPBookmarkDirAdd<CR>
-
-    let g:ctrlp_cmd = 'CtrlP'
-    let g:ctrlp_working_path_mode = 0
-    let g:ctrlp_cache_dir = $HOME.'/.cache/ctrlp'
-
-    " after change custom_ignore or user_command, need to clear ctrlp's cache 
-    let g:ctrlp_custom_ignore = {
-      \ 'dir':  '\.git$\|\.hg$\|\.svn$\|\.cache$\|build$\|\.moc$\|\.obj$',
-      \ 'file': '\.exe$\|\.so$\|\.dll$\|\.pyc$\|\.swp$\|\.swc$\|\.swf$\|\.swo$\|tags$\|\.DS_Store$\|\.log$\|\.png$\|\.jpg$\|\.bmp$\|\.o$\|\.obj$\|moc_.*$\|\.plist$',
-      \ }
-    " let g:ctrlp_user_command = {
-    "   \ 'types': {
-    "     \ 1: ['.git/', 'cd %s && git ls-files'],
-    "     \ 2: ['.hg/', 'hg --cwd %s locate -I .'],
-    "     \ },
-    "   \ 'fallback': 'cd %s && ag --nocolor --nogroup -l'
-    "   \ }
-    
-    " will ignore entries in .agignore file
-    " GOTCHA: list files with ag will ignore newly created empty files
-    " let g:ctrlp_user_command = 'cd %s && ag --nocolor --nogroup -l'
-    let g:ctrlp_user_command = 'cd %s && /usr/local/bin/myfindfile'
-
-    let g:ctrlp_extensions = ['buffertag', 'dir', 'bookmarkdir'] " ['dir', 'tag', 'rtscript', 'changes']
-    let g:ctrlp_prompt_mappings = { 'PrtCurLeft()': ['<left>', '<c-^>'], 'PrtBS()': ['<bs>', '<c-]>', '<c-h>'] }
-
-    " PyMatcher for CtrlP, PyMatcher can improve CtrlP's performance a lot
-    if !has('python')
-        echo 'In order to use pymatcher plugin, you need +python compiled vim'
-    else
-        let g:ctrlp_match_func = { 'match': 'pymatcher#PyMatch' }
-    endif
-
-    " Set delay to prevent extra search
-    let g:ctrlp_lazy_update = 150
-
-    " Do not clear filenames cache, to improve CtrlP startup
-    " You can manualy clear it by <F5>
-    let g:ctrlp_clear_cache_on_exit = 0
-
-    let g:ctrlp_max_files = 3000 
-
-    " If ag is available use it as filename list generator instead of 'find'
-    if executable("ag")
-      set grepprg=ag\ --nogroup\ --nocolor
-      "let g:ctrlp_user_command = 'ag %s -i --nocolor --nogroup --ignore ''.git'' --ignore ''.DS_Store'' --ignore ''node_modules'' --hidden -g ""'
-    endif
-    " end of PyMatcher
-
-    "}}}2
-
-    "### rainbow {{{2
-    let g:rainbow_active = 0
-    map ;r :silent! RainbowToggle <CR>
-    "map ;r :silent! RainbowParenthesesToggle <CR>
-    "}}}2
-
-    "### localvimrc {{{2
-    let g:localvimrc_persistent = 1
-    let g:localvimrc_whitelist = '' . $HOME . '/workspace/.*'
-    let g:localvimrc_sandbox = 0
-    "}}}2
-
-    "### vim-PinyinSearch {{{2
-    let g:PinyinSearch_Dict = '' . $HOME . '/.vim/bundle/vim-PinyinSearch/PinyinSearch.dict'
-    "}}}2
-
-    "### vim-seek {{{2
-    "let g:seek_enable_jumps = 1
-    "}}}2
-
-    " "### unite {{{2
-    " nnoremap    [unite]   <Nop>
-    " nmap    ] [unite]
-    "
-    " nnoremap <silent> [unite]c  :<C-u>UniteWithCurrentDir
-    "       \ -buffer-name=files buffer file_mru bookmark file<CR>
-    " nnoremap <silent> [unite]b  :<C-u>UniteWithBufferDir
-    "       \ -buffer-name=files -prompt=%\  buffer file_mru bookmark file<CR>
-    " nnoremap <silent> [unite]r  :<C-u>Unite
-    "       \ -buffer-name=register register<CR>
-    " nnoremap <silent> [unite]o  :<C-u>Unite line<CR>
-    " nnoremap <silent> [unite]d
-    "       \ :<C-u>Unite -buffer-name=files -default-action=lcd directory_mru<CR>
-    " nnoremap <silent> [unite]ma
-    "       \ :<C-u>Unite mapping<CR>
-    " nnoremap <silent> [unite]me
-    "       \ :<C-u>Unite output:message<CR>
-    " nnoremap  [unite]f  :<C-u>Unite source<CR>
-    " nnoremap <silent> [unite]s
-    "       \ :<C-u>Unite -buffer-name=files -no-split
-    "       \ jump_point file_point buffer_tab
-    "       \ file_rec:! file file/new file_mru<CR>
-    " " Start insert.
-    " let g:unite_enable_start_insert = 1
-    " let g:unite_enable_short_source_names = 0
-    "
-    " if executable('ag')
-    "   " Use ag in unite grep source.
-    "   let g:unite_source_grep_command = 'ag'
-    "   let g:unite_source_grep_default_opts = '--nocolor --nogroup --column'
-    "   let g:unite_source_grep_recursive_opt = ''
-    " elseif executable('ack-grep')
-    "   " Use ack in unite grep source.
-    "   let g:unite_source_grep_command = 'ack-grep'
-    "   let g:unite_source_grep_default_opts = '--no-heading --no-color -a'
-    "   let g:unite_source_grep_recursive_opt = ''
-    " endif
-    " "}}}2
-
-    "### vimfiler {{{2
-    let g:vimfiler_quick_look_command = 'qlmanage -p'
-    let g:vimfiler_as_default_explorer = 1
-
-    "NeoBundleLazy 'Shougo/vimfiler', {
-    "      \ 'depends' : 'Shougo/unite.vim',
-    "      \ 'autoload' : {
-    "      \    'commands' : [{ 'name' : 'VimFiler',
-    "      \                    'complete' : 'customlist,vimfiler#complete' },
-    "      \                  'VimFilerExplorer',
-    "      \                  'Edit', 'Read', 'Source', 'Write'],
-    "      \    'mappings' : ['<Plug>(vimfiler_switch)'],
-    "      \    'explorer' : 1,
-    "      \ }
-    "      \ }
-    "}}}2
-
-    "### YouCompleteMe {{{2
-    let g:ycm_confirm_extra_conf = 0
-    let g:ycm_key_list_select_completion = ['<c-n>', '<Down>', 'C-j']
-    let g:ycm_key_list_previous_completion = ['<c-p>', '<Up>', 'C-k']
-    let g:ycm_min_num_of_chars_for_completion = 3
-    "}}}2
-
-    "### Vitra {{{2
-    let g:tracServerList = {}
-    let g:tracServerList['cpt-tools'] = {
-        \ 'schema': 'http',
-        \ 'auth': 'vincent:hellofoo',
-        \ 'server': 'pi:3000',
-        \ 'rpc_path': '/login/rpc',
-        \ 'auth_type': 'basic',
-        \ }
-    "}}}2
-
-    "### EasyAlign {{{2
-    vnoremap <silent> <Enter> :EasyAlign<cr>
-    "}}}2
-
-    "### Dash {{{2
-    let g:dash_map = {
-      \ 'cpp' : 'qt'
-      \ }
-    :nmap <silent> ,k <Plug>DashSearch
-    "}}}2
-
-    "### IndentLine {{{2
-    " let g:indentLine_char= '︙'
-    let g:indentLine_color_term = 239
-    let g:indentLine_color_gui = '#A4E57E'
-    "}}}2
-
-    "### AirLine {{{2
-    if has('macunix')
-      let g:airline_powerline_fonts = 1
-    endif
-    let g:airline#extensions#whitespace#enabled = 0
-    let g:airline#extensions#tagbar#enabled = 0
-    let g:airline#extensions#hunks#enabled = 0
-    let g:airline#extensions#eclim#enabled = 0
-    if !exists('g:airline_symbols')
-      let g:airline_symbols = {}
-    endif
-    let g:airline_symbols.linenr = '|'
-    "}}}2
-    
-    "### Colorize {{{2
-    let g:colorizer_startup = 0
-    "}}}2
-    
-    "### ScreenShot {{{2
-    let g:ScreenShot = {'Credits': 0}
-    "}}}2
-    
-    "### fzf {{{2
-    "Jump to the existing window if possible 
-    let g:fzf_buffers_jump = 1
-
-		" Customize fzf colors to match your color scheme
-		let g:fzf_colors =
-		\ { 'fg':      ['fg', 'Normal'],
-			\ 'bg':      ['bg', 'Normal'],
-			\ 'hl':      ['fg', 'Comment'],
-			\ 'fg+':     ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
-			\ 'bg+':     ['bg', 'CursorLine', 'CursorColumn'],
-			\ 'hl+':     ['fg', 'Statement'],
-			\ 'info':    ['fg', 'PreProc'],
-			\ 'border':  ['fg', 'Ignore'],
-			\ 'prompt':  ['fg', 'Conditional'],
-			\ 'pointer': ['fg', 'Exception'],
-			\ 'marker':  ['fg', 'Keyword'],
-			\ 'spinner': ['fg', 'Label'],
-			\ 'header':  ['fg', 'Comment'] }
-
-    " Insert mode completion
-    imap <c-x><c-f> <plug>(fzf-complete-path)
-    imap <c-x><c-j> <plug>(fzf-complete-file-ag)
-    imap <c-x><c-l> <plug>(fzf-complete-line)
-
-    " complete input as name in current file in fuzzy way
-    " e.g.: gCC => getCurrentComponent
-    inoremap <expr> <c-x><c-k> fzf#complete({
-          \ 'source': "/usr/bin/grep -o -E '\\w{5,}' " . expand('%:p') . "\| /usr/bin/sort -uf",
-          \ 'options': '-0 -1 -x',
-          \ 'left': 35})
-
-		" " select file/path from command
-		" function! s:append_dir_with_fzf(line)
-		" 	call fzf#run(fzf#wrap({
-		" 		\ 'options': ['--prompt', a:line.'> '],
-		" 		\ 'source': 'find . -type d',
-		" 		\ 'sink': {line -> feedkeys("\<esc>:".a:line.line, 'n')}}))
-		" 	return ''
-		" endfunction
-		" cnoremap <expr> <c-x><c-d> <sid>append_dir_with_fzf(getcmdline())
-
-		function! s:get_cmd_args(...) abort 
-			if a:0 > 0
-				return a:1
-			else
-				return '.'
-			endif
-		endfunction
-		command! -nargs=* -complete=dir Cd call fzf#run(fzf#wrap(
-			\ {'source': '/usr/local/bin/myfind '. s:get_cmd_args(<f-args>),
-			\  'sink': 'cd'}))
-
-    " Likewise, Files command with preview window
-    command! -bang -nargs=? -complete=dir Files
-       \ call fzf#vim#files(<q-args>, fzf#vim#with_preview('up:50%:hidden', '?'), <bang>0)
-    
-		" Augmenting Ag command using fzf#vim#with_preview function
-		"   * fzf#vim#with_preview([[options], preview window, [toggle keys...]])
-		"     * For syntax-highlighting, Ruby and any of the following tools are required:
-		"       - Highlight: http://www.andre-simon.de/doku/highlight/en/highlight.php
-		"       - CodeRay: http://coderay.rubychan.de/
-		"       - Rouge: https://github.com/jneen/rouge
-		"
-		"   :Ag  - Start fzf with hidden preview window that can be enabled with "?" key
-		"   :Ag! - Start fzf in fullscreen and display the preview window above
-		command! -bang -nargs=* Ag
-			\ call fzf#vim#ag(<q-args>,
-			\                 <bang>0 ? fzf#vim#with_preview('up:60%')
-			\                         : fzf#vim#with_preview('right:50%:hidden', '?'),
-			\                 <bang>0)
-
-    nnoremap ,fg yiw:Ag! "<CR>
-    vnoremap ,fg  y:Ag! "<CR>
-
-    noremap <c-n> :Files<CR>
-    noremap ,ff :Files<CR>
-		noremap ,fd :Cd<CR>
-		noremap ,ft :Tags<CR>
-    noremap ,fl :Lines<CR>
-    noremap ,fr :FZFMru<CR>
-    noremap ,fb :Buffers<CR>
-
-    "}}}2
-
-    "### choosewin {{{2
-    nmap <c-w>- <Plug>(choosewin)
-    let g:choosewin_overlay_enable = 1
-    "}}}2
-    
-    "### xmledit {{{2
-    let g:xmledit_enable_html = 1
-    "}}}2
-    
-    "### visualmark {{{2
-    nnoremap <silent> ,n :call Vm_goto_next_sign()<cr>
-    nnoremap <silent> ,p :call Vm_goto_prev_sign()<cr>
-    "}}}2
-    
-    "### ZoomWin {{{2
-    nnoremap <silent> <leader>wf :MaximizerToggle<cr>
-    "}}}2
-    
-    "### Grepper {{{2
-    " command! -nargs=* -complete=file GG Grepper -tool git -open -switch -query <args>
-    " command! -nargs=* -complete=file Ag Grepper -tool ag -open -switch -query <args>
-    command! -nargs=* -complete=file Rg Grepper -tool rg -open -switch -query <args>
-    " command! -nargs=* -complete=file Pt Grepper -tool pt -open -switch -query <args>
-    
-    " nnoremap <leader>g <plug>(GrepperOperator)
-    " xnoremap <leader>g <plug>(GrepperOperator)
-    nnoremap ,gr :Grepper -tool rg -cword -noprompt<cr>
-    vnoremap ,gr  y:Rg "<CR>
-
-    let g:grepper           = {}
-    let g:grepper.open      = 1
-    let g:grepper.switch    = 1
-    let g:grepper.jump      = 1
-    let g:grepper.dispatch  = 0
-    let g:grepper.tools     = ['rg', 'git', 'ag', 'findstr', 'sift', 'grep']
-    "}}}2
-    
-    "### CamelCaseMotion {{{2
-    call camelcasemotion#CreateMotionMappings(',')
-    "}}}2
-    
-    "### VimMarkDown {{{2
-    let g:vim_markdown_toml_frontmatter = 1
-    "}}}2
-    
     "### visswap {{{2
      map <silent> <unique> <c-y> <Plug>VisualPreSwap
      map <silent> <unique> <c-x> <Plug>VisualSwap
