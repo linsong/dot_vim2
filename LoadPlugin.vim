@@ -1,3 +1,10 @@
+" Autoinstall vim-plug {{{
+if empty(glob('~/.vim/autoload/plug.vim'))
+  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
+    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+  autocmd VimEnter * PlugInstall
+endif
+" }}}
 
 call plug#begin('~/.vim/bundle')
 
@@ -262,6 +269,10 @@ Plug 'pbogut/fzf-mru.vim'
   command! -nargs=* -complete=dir Cd call fzf#run(fzf#wrap(
     \ {'source': '/usr/local/bin/myfind '. s:get_cmd_args(<f-args>),
     \  'sink': 'cd'}))
+  " smart CD
+  command! -nargs=* -complete=dir Z call fzf#run(fzf#wrap(
+    \ {'source': '/usr/local/bin/fasd -Rdl '. s:get_cmd_args(<f-args>),
+    \  'sink': 'cd'}))
 
   " Likewise, Files command with preview window
   command! -bang -nargs=? -complete=dir Files
@@ -288,6 +299,7 @@ Plug 'pbogut/fzf-mru.vim'
   noremap <c-p> :Files<CR>
   noremap ,ff :Files<CR>
   noremap ,fd :Cd<CR>
+  noremap ,fz :Z<CR>
   noremap ,ft :Tags<CR>
   noremap ,fl :Lines<CR>
   noremap ,fr :FZFMru<CR>
