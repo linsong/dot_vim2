@@ -63,9 +63,6 @@ Plug 'ervandew/supertab'
 Plug 'bsl/obviousmode'
 Plug 'tpope/vim-surround'
 Plug 'bkad/CamelCaseMotion'
-"### CamelCaseMotion {{{2
-  " call camelcasemotion#CreateMotionMappings(',')
-"}}}2
 
 " }}}1
 
@@ -132,6 +129,12 @@ Plug 'thinca/vim-quickrun', {'on': 'QuickRun'}
                              \ 'active_filetypes': [],
                              \ 'passive_filetypes': ['python', 'cpp', 'ruby', 'puppet'] }
 "}}}2
+
+Plug 'w0rp/ale'
+" settings for ale {{{2
+let g:ale_lint_on_text_changed = 'never'
+let g:ale_lint_on_enter = 0
+" }}}2
 
 
 " }}}1
@@ -249,15 +252,15 @@ Plug 'pbogut/fzf-mru.vim'
         \ 'options': '-0 -1 -x',
         \ 'left': 35})
 
-  " " select file/path from command
-  " function! s:append_dir_with_fzf(line)
-  " 	call fzf#run(fzf#wrap({
-  " 		\ 'options': ['--prompt', a:line.'> '],
-  " 		\ 'source': 'find . -type d',
-  " 		\ 'sink': {line -> feedkeys("\<esc>:".a:line.line, 'n')}}))
-  " 	return ''
-  " endfunction
-  " cnoremap <expr> <c-x><c-d> <sid>append_dir_with_fzf(getcmdline())
+  " select file/path from command
+  function! s:append_dir_with_fzf(line)
+  	call fzf#run(fzf#wrap(
+  		\ 'options': ['--prompt', a:line.'> '],
+  		\ 'source': 'find . -type d',
+  		\ 'sink': {line -> feedkeys("\<esc>:".a:line.line, 'n')}}))
+  	return ''
+  endfunction
+  cnoremap <expr> <c-x><c-d> <sid>append_dir_with_fzf(getcmdline())
 
   function! s:get_cmd_args(...) abort 
     if a:0 > 0
@@ -268,10 +271,6 @@ Plug 'pbogut/fzf-mru.vim'
   endfunction
   command! -nargs=* -complete=dir Cd call fzf#run(fzf#wrap(
     \ {'source': '/usr/local/bin/myfind '. s:get_cmd_args(<f-args>),
-    \  'sink': 'cd'}))
-  " smart CD
-  command! -nargs=* -complete=dir Z call fzf#run(fzf#wrap(
-    \ {'source': '/usr/local/bin/fasd -Rdl '. s:get_cmd_args(<f-args>),
     \  'sink': 'cd'}))
 
   " Likewise, Files command with preview window
@@ -297,7 +296,7 @@ Plug 'pbogut/fzf-mru.vim'
   vnoremap ,fg  y:Ag! "<CR>
 
   noremap <c-p> :Files<CR>
-  noremap ,ff :Files<CR>
+  noremap ,ff :Files 
   noremap ,fd :Cd<CR>
   noremap ,fz :Z<CR>
   noremap ,ft :Tags<CR>
@@ -679,6 +678,17 @@ Plug 'rayburgemeestre/phpfolding.vim'
 "}}}1
 
 call plug#end()
+
+" colorscheme settings {{{1
+  :colorscheme molokai
+  " :colorscheme jellybeans
+  
+  let g:rehash256 = 1 "enable 256 color in terminal for molokai
+" }}}1
+
+"### CamelCaseMotion {{{2
+  call camelcasemotion#CreateMotionMappings(',')
+"}}}2
 
 " vim: ft=vim foldmethod=marker expandtab ts=2 sw=2
 
