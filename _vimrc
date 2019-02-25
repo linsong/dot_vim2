@@ -141,6 +141,9 @@ if v:version > 703 || v:version == 703 && has('patch541')
   set formatoptions+=j
 endif
 
+" turn off the quote conceal, that is very annoying
+let g:vim_json_syntax_conceal = 0
+
 "## }}}1
 
 "## Encodings {{{1
@@ -638,7 +641,8 @@ endif
         "set guifont=Monaco:h13
         " set guifont=Source\ Code\ Pro:h18
         " set guifont=Anonymous\ Pro:h18
-        set guifont=DejaVu\ Sans\ Mono\ for\ Powerline:h18
+        " set guifont=DejaVu\ Sans\ Mono\ for\ Powerline:h18
+        set guifont=DejaVu\ Sans\ Mono\ Nerd\ Font:h18
         let Grep_Xargs_Options = '-0'
       endif
         " macosx specific settings end}}}2
