@@ -122,10 +122,10 @@ let g:switch_custom_definitions =
 
 " Plug 'Valloric/YouCompleteMe'
 "### YouCompleteMe {{{2
-  let g:ycm_confirm_extra_conf = 0
-  let g:ycm_key_list_select_completion = ['<c-n>', '<Down>', 'C-j']
-  let g:ycm_key_list_previous_completion = ['<c-p>', '<Up>', 'C-k']
-  let g:ycm_min_num_of_chars_for_completion = 3
+  " let g:ycm_confirm_extra_conf = 0
+  " let g:ycm_key_list_select_completion = ['<c-n>', '<Down>', 'C-j']
+  " let g:ycm_key_list_previous_completion = ['<c-p>', '<Up>', 'C-k']
+  " let g:ycm_min_num_of_chars_for_completion = 3
 "}}}2
 
 Plug 'scrooloose/nerdtree'
@@ -160,6 +160,7 @@ Plug 'nice/sweater'
 Plug 'tomasr/molokai'
 Plug 'liuchengxu/space-vim-dark'
 Plug 'endel/vim-github-colorscheme'
+Plug 'junegunn/seoul256.vim'
 " }}}1
 
 " Advanced Editing {{{1
@@ -252,7 +253,7 @@ Plug 'junegunn/fzf.vim'
     \ 'header':  ['fg', 'Comment'] }
 
   " Insert mode completion
-  imap <c-x><c-f> <plug>(fzf-complete-path)
+  " imap <c-x><c-f> <plug>(fzf-complete-path)
   imap <c-x><c-j> <plug>(fzf-complete-file-ag)
   imap <c-x><c-l> <plug>(fzf-complete-line)
 
@@ -304,7 +305,7 @@ Plug 'junegunn/fzf.vim'
     \                 <bang>0)
 
   function! Fzf_files_with_dev_icons(command)
-    let l:fzf_files_options = '-x -m --preview="bat --color \"always\" --style numbers {2..} | head -'.&lines.'" --preview-window=wrap:hidden --bind="?:toggle-preview,ctrl-e:preview-up,ctrl-d:preview-down,ctrl-r:jump-accept" --expect=ctrl-v,ctrl-x'
+    let l:fzf_files_options = '-x -m --preview="bat --color \"always\" --style numbers {2..} | head -'.&lines.'" --preview-window=wrap:hidden --bind="?:toggle-preview,ctrl-e:preview-up,ctrl-d:preview-down,ctrl-r:jump-accept" --expect=ctrl-v,ctrl-x --tiebreak=end,length'
     function! s:edit_devicon_prepended_file(items)
       let items = a:items
       let i = 1
@@ -317,18 +318,19 @@ Plug 'junegunn/fzf.vim'
       call s:Sink(items)
     endfunction
 
-    let opts = fzf#wrap({})
-    let opts.source = a:command.' | devicon-lookup'
-    let s:Sink = opts['sink*']
-    let opts['sink*'] = function('s:edit_devicon_prepended_file')
-    let opts.options = l:fzf_files_options
-    let opts.down = '40%'
-    call fzf#run(opts)
+    echom a:command
+    let l:opts = fzf#wrap({})
+    let l:opts.source = a:command.' | devicon-lookup'
+    let s:Sink = l:opts['sink*']
+    let l:opts['sink*'] = function('s:edit_devicon_prepended_file')
+    let l:opts.options = l:fzf_files_options
+    let l:opts.down = '40%'
+    call fzf#run(l:opts)
   endfunction   
   nnoremap <c-p> :call Fzf_files_with_dev_icons($FZF_DEFAULT_COMMAND)<CR>
 
   function! Fzf_git_diff_files_with_dev_icons()
-    let l:fzf_files_options = '-x -m --ansi --preview "sh -c \"(git diff --color=always -- {3..} | sed 1,4d; bat --color always --style numbers {3..}) | head -'.&lines.'\"" --preview-window=wrap:hidden --bind="?:toggle-preview,ctrl-e:preview-up,ctrl-d:preview-down,ctrl-r:jump-accept" --expect=ctrl-v,ctrl-x'
+    let l:fzf_files_options = '-x -m --ansi --preview "sh -c \"(git diff --color=always -- {3..} | sed 1,4d; bat --color always --style numbers {3..}) | head -'.&lines.'\"" --preview-window=wrap:hidden --bind="?:toggle-preview,ctrl-e:preview-up,ctrl-d:preview-down,ctrl-r:jump-accept" --expect=ctrl-v,ctrl-x --tiebreak=end,length '
 
     function! s:edit_devicon_prepended_file_diff(items)
       let items = a:items
@@ -515,11 +517,15 @@ Plug 'vim-scripts/VisIncr'
 
 if has('nvim')
   Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+  Plug 'zchee/deoplete-go', { 'do': 'make'}
+  Plug 'Shougo/deoplete-clangx'
+  Plug 'padawan-php/deoplete-padawan', { 'do': 'composer install' }
 else
   " Plug 'Shougo/deoplete.nvim'
   " Plug 'roxma/nvim-yarp'
   " Plug 'roxma/vim-hug-neovim-rpc'
 endif
+
 
 "}}}1
 
@@ -655,6 +661,9 @@ Plug 'szw/vim-maximizer'
 "}}}2
 
 Plug 'chrisbra/NrrwRgn'
+Plug 'junegunn/goyo.vim'
+
+Plug 'bps/vim-tshark'
 "}}}1
 
 " Ruby {{{1
@@ -698,6 +707,7 @@ Plug 'tpope/vim-fugitive'
 Plug 'gregsexton/gitv', {'on': 'Gitv'}
 Plug 'junegunn/gv.vim', {'on': 'GV'}
 Plug 'vim-scripts/Gist.vim', {'on': 'Gist'}
+Plug 'airblade/vim-gitgutter'
 "}}}1
 
 " C/C++ {{{1
@@ -742,6 +752,10 @@ Plug 'msanders/cocoa.vim', {'for': 'objective-c'}
 Plug 'rayburgemeestre/phpfolding.vim'
 " }}}1
 
+" GoLang {{{1
+Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
+" }}}1
+
 " Vue {{{1
 Plug 'posva/vim-vue'
 " }}}1
@@ -756,13 +770,6 @@ Plug 'ryanoasis/vim-devicons'
 "}}}1
 
 call plug#end()
-
-" colorscheme settings {{{1
-  :colorscheme molokai
-  " :colorscheme jellybeans
-  
-  let g:rehash256 = 1 "enable 256 color in terminal for molokai
-" }}}1
 
 "### CamelCaseMotion {{{1
   call camelcasemotion#CreateMotionMappings(',')
@@ -787,7 +794,11 @@ if has('nvim')
   let g:deoplete#enable_at_startup = 1
   call deoplete#custom#option({
   \ 'auto_complete_delay': 200,
+  \ 'smart_case': v:true,
   \ })
+  " deoplete-go settings 
+  let g:deoplete#sources#go#gocode_binary = $GOPATH.'/bin/gocode'
+  let g:deoplete#sources#go#sort_class = ['package', 'func', 'type', 'var', 'const']
 endif
 " }}}1
 
@@ -797,11 +808,28 @@ let g:webdevicons_enable_startify = 1
 "}}}1
 
 "### startify settings {{{1
-let g:startify_bookmarks = [ {'c': '~/workspace/cpt/cpt'}, {'v': '~/.vim'} ]
+let g:startify_bookmarks = [ 
+  \ {'c': '~/workspace/cpt/cpt'},
+  \ {'w': '~/workspace/cpt/batch_worker'},
+  \ {'m': '~/workspace/cpt/ems'},
+  \ {'f': '~/workspace/iot/freeboard'},
+  \ {'v': '~/.vim'} ]
 let g:startify_custom_header = [
   \ '',
   \ '   Happy Vimming! ']
-  
+noremap ,s :Startify<CR>
+"}}}1
+
+"### gitgutter settings {{{1
+set updatetime=150
+"}}}1
+
+"### vim-go settings {{{1
+" let g:go_fmt_options = {
+"  \ 'gofmt': '-s'
+"  \ }
+  let g:go_auto_sameids = 1
+  let g:go_addtags_transform = 'camelcase'
 "}}}1
 
 " vim: ft=vim foldmethod=marker expandtab ts=2 sw=2
