@@ -566,7 +566,7 @@ let g:DirDiffExcludes = "*.pyc,*.pye,.svn,*.svn-base,*.svn-work,*~,*.orig,*.rej,
 Plug 'rickhowe/diffchar.vim'
 
 " choose one of below three plugins 
-" Plug 'szw/vim-maximizer'
+Plug 'szw/vim-maximizer'
 " Plug 'vim-scripts/ZoomWin', {'on': 'ZoomWin'}
 "### ZoomWin {{{2
   nnoremap <silent> <leader>wf :MaximizerToggle<cr>

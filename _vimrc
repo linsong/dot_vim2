@@ -356,7 +356,7 @@ endif
     "     http://groups.yahoo.com/group/vim/message/66414
     "     http://vim.sourceforge.net/tips/tip.php?tip_id=1272
     "
-    set timeout timeoutlen=3000 ttimeoutlen=100
+    set timeout timeoutlen=1000 ttimeoutlen=0
     if !has("gui_running")
       if &term == "win32"
       else
