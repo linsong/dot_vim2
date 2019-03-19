@@ -141,6 +141,11 @@ if v:version > 703 || v:version == 703 && has('patch541')
   set formatoptions+=j
 endif
 
+:set showtabline=0
+
+" turn off the quote conceal, that is very annoying
+let g:vim_json_syntax_conceal = 0
+
 "## }}}1
 
 "## Encodings {{{1
@@ -638,7 +643,8 @@ endif
         "set guifont=Monaco:h13
         " set guifont=Source\ Code\ Pro:h18
         " set guifont=Anonymous\ Pro:h18
-        set guifont=DejaVu\ Sans\ Mono\ for\ Powerline:h18
+        " set guifont=DejaVu\ Sans\ Mono\ for\ Powerline:h18
+        set guifont=DejaVu\ Sans\ Mono\ Nerd\ Font:h18
         let Grep_Xargs_Options = '-0'
       endif
         " macosx specific settings end}}}2
@@ -1221,10 +1227,13 @@ command! -nargs=+ -complete=command TabMessage call TabMessage(<q-args>)
 "## }}}1
 
 "## Color Scheme {{{1
-  :colorscheme molokai
   " :colorscheme jellybeans
   
-  let g:rehash256 = 1 "enable 256 color in terminal for molokai
+  " :colorscheme molokai
+  " let g:rehash256 = 1 "enable 256 color in terminal for molokai
+
+  let g:seoul256_background = 235 
+  colorscheme seoul256
 " }}}1
 
 "## MacVim Related {{{1

@@ -49,6 +49,8 @@ Plug 'Lokaltog/vim-easymotion'
   " noremap <silent><expr> <Space>/ incsearch#go(<SID>config_easyfuzzymotion())
 "}}}2
 
+Plug 'justinmk/vim-sneak'
+
 Plug 'ervandew/supertab'
 "### settings for supertab.vim {{{2
   let g:SuperTabLongestHighlight = 1
@@ -60,14 +62,22 @@ Plug 'ervandew/supertab'
   " let g:SuperTabMappingBackward = '<nop>' " disable backward mapping
 "}}}2
 
-Plug 'bsl/obviousmode'
+" this plugin make vim slow, don't know why
+" Plug 'bsl/obviousmode'
+
 Plug 'tpope/vim-surround'
 Plug 'bkad/CamelCaseMotion'
+
+" ISSUE: can only highlight word within one buffer
+" Plug 'lfv89/vim-interestingwords'
 
 " }}}1
 
 " Coding {{{1
-Plug 'tomtom/tcomment_vim'
+" Plug 'tomtom/tcomment_vim'
+Plug 'Shougo/context_filetype.vim' " help caw.vim to comment based on filetype of context
+Plug 'tyru/caw.vim'
+
 Plug 'Yggdroot/indentLine'
 "### IndentLine {{{2
   " let g:indentLine_char= '︙'
@@ -112,16 +122,16 @@ let g:switch_custom_definitions =
 
 " Plug 'Valloric/YouCompleteMe'
 "### YouCompleteMe {{{2
-  let g:ycm_confirm_extra_conf = 0
-  let g:ycm_key_list_select_completion = ['<c-n>', '<Down>', 'C-j']
-  let g:ycm_key_list_previous_completion = ['<c-p>', '<Up>', 'C-k']
-  let g:ycm_min_num_of_chars_for_completion = 3
+  " let g:ycm_confirm_extra_conf = 0
+  " let g:ycm_key_list_select_completion = ['<c-n>', '<Down>', 'C-j']
+  " let g:ycm_key_list_previous_completion = ['<c-p>', '<Up>', 'C-k']
+  " let g:ycm_min_num_of_chars_for_completion = 3
 "}}}2
 
-" Plug 'scrooloose/nerdtree'
+Plug 'scrooloose/nerdtree'
 Plug 'thinca/vim-quickrun', {'on': 'QuickRun'}
 
-" Plug 'vim-syntastic/syntastic' 
+Plug 'vim-syntastic/syntastic' 
 "### settings for syntastic {{{2
   let g:syntastic_enable_signs = 1
   let g:syntastic_auto_loc_list = 0
@@ -130,10 +140,10 @@ Plug 'thinca/vim-quickrun', {'on': 'QuickRun'}
                              \ 'passive_filetypes': ['python', 'cpp', 'ruby', 'puppet'] }
 "}}}2
 
-Plug 'w0rp/ale'
+"Plug 'w0rp/ale'
 " settings for ale {{{2
-let g:ale_lint_on_text_changed = 'never'
-let g:ale_lint_on_enter = 0
+"let g:ale_lint_on_text_changed = 'never'
+"let g:ale_lint_on_enter = 0
 " }}}2
 
 
@@ -150,6 +160,7 @@ Plug 'nice/sweater'
 Plug 'tomasr/molokai'
 Plug 'liuchengxu/space-vim-dark'
 Plug 'endel/vim-github-colorscheme'
+Plug 'junegunn/seoul256.vim'
 " }}}1
 
 " Advanced Editing {{{1
@@ -219,7 +230,8 @@ Plug 'endel/vim-github-colorscheme'
 
 Plug '/usr/local/opt/fzf'
 Plug 'junegunn/fzf.vim'
-Plug 'pbogut/fzf-mru.vim'
+" Plug 'tweekmonster/fzf-filemru'
+" Plug 'pbogut/fzf-mru.vim'
 "### fzf {{{2
   "Jump to the existing window if possible 
   let g:fzf_buffers_jump = 1
@@ -241,7 +253,7 @@ Plug 'pbogut/fzf-mru.vim'
     \ 'header':  ['fg', 'Comment'] }
 
   " Insert mode completion
-  imap <c-x><c-f> <plug>(fzf-complete-path)
+  " imap <c-x><c-f> <plug>(fzf-complete-path)
   imap <c-x><c-j> <plug>(fzf-complete-file-ag)
   imap <c-x><c-l> <plug>(fzf-complete-line)
 
@@ -292,22 +304,74 @@ Plug 'pbogut/fzf-mru.vim'
     \                         : fzf#vim#with_preview('right:50%:hidden', '?'),
     \                 <bang>0)
 
-  nnoremap ,fg yiw:Ag! "<CR>
-  vnoremap ,fg  y:Ag! "<CR>
+  function! Fzf_files_with_dev_icons(command)
+    let l:fzf_files_options = '-x -m --preview="bat --color \"always\" --style numbers {2..} | head -'.&lines.'" --preview-window=wrap:hidden --bind="?:toggle-preview,ctrl-e:preview-up,ctrl-d:preview-down,ctrl-r:jump-accept" --expect=ctrl-v,ctrl-x --tiebreak=end,length'
+    function! s:edit_devicon_prepended_file(items)
+      let items = a:items
+      let i = 1
+      let ln = len(items)
+      while i < ln 
+        let item = items[i][4:-1]
+        let items[i] = item
+        let i += 1
+      endwhile
+      call s:Sink(items)
+    endfunction
 
-  noremap <c-p> :Files<CR>
-  noremap ,ff :Files 
+    echom a:command
+    let l:opts = fzf#wrap({})
+    let l:opts.source = a:command.' | devicon-lookup'
+    let s:Sink = l:opts['sink*']
+    let l:opts['sink*'] = function('s:edit_devicon_prepended_file')
+    let l:opts.options = l:fzf_files_options
+    let l:opts.down = '40%'
+    call fzf#run(l:opts)
+  endfunction   
+  nnoremap <c-p> :call Fzf_files_with_dev_icons($FZF_DEFAULT_COMMAND)<CR>
+
+  function! Fzf_git_diff_files_with_dev_icons()
+    let l:fzf_files_options = '-x -m --ansi --preview "sh -c \"(git diff --color=always -- {3..} | sed 1,4d; bat --color always --style numbers {3..}) | head -'.&lines.'\"" --preview-window=wrap:hidden --bind="?:toggle-preview,ctrl-e:preview-up,ctrl-d:preview-down,ctrl-r:jump-accept" --expect=ctrl-v,ctrl-x --tiebreak=end,length '
+
+    function! s:edit_devicon_prepended_file_diff(items)
+      let items = a:items
+      let i = 1
+      let ln = len(items)
+      let l:first_diff_line_number = 0
+      while i < ln
+        let l:file_path = items[i][7:-1]
+        let items[i] = l:file_path
+        let l:first_diff_line_number = system("git diff -U0 ".l:file_path." | rg '^@@.*\+' -o | rg '[0-9]+' -o | head -1")
+        let i += 1
+      endwhile
+      call s:SinkForGitDiff(items)
+      execute l:first_diff_line_number
+    endfunction
+
+    let opts = fzf#wrap({})
+    let opts.source = 'git -c color.status=always status --short --untracked-files=all | devicon-lookup'
+    let s:SinkForGitDiff = opts['sink*']
+    let opts['sink*'] = function('s:edit_devicon_prepended_file_diff')
+    let opts.options = l:fzf_files_options
+    let opts.down = '40%'
+    call fzf#run(opts)
+  endfunction
+  nnoremap ,fc :call Fzf_git_diff_files_with_dev_icons()<CR>
+
+  noremap ,ff :Files<CR>
   noremap ,fd :Cd<CR>
   noremap ,fz :Z<CR>
   noremap ,ft :Tags<CR>
   noremap ,fl :Lines<CR>
-  noremap ,fr :FZFMru<CR>
+  " noremap ,fr :FZFMru<CR>
   noremap ,fb :Buffers<CR>
   noremap ,fh :History<CR>
 
+  nnoremap ,fg yiw:Ag! "<CR>
+  vnoremap ,fg  y:Ag! "<CR>
+
 "}}}2
 
-Plug 'vim-scripts/AutoComplPop'
+"Plug 'vim-scripts/AutoComplPop'
 
 Plug 'rking/ag.vim', {'on': 'Ag'}
 "### settings for ag.vim {{{2
@@ -420,7 +484,8 @@ Plug 'vim-scripts/vimwiki'
 Plug 'sk1418/Join', {'on': 'Join'}
 Plug 'vim-scripts/sessionman.vim', {'on': ['SessionOpen', 'SessionOpenLast', 'SessionClose', 'SessionSave', 'SessionSaveAs', 'SessionShowLast']}
 " Plug 'MattesGroeger/vim-bookmarks', {'on': 'BookmarkToggle'}
-Plug 'kana/vim-textobj-user'
+" Plug 'kana/vim-textobj-user'
+Plug 'wellle/targets.vim'
 " Plug 'lilydjwg/colorizer'
 "### Colorize {{{2
   let g:colorizer_startup = 0
@@ -440,8 +505,28 @@ Plug 'vim-scripts/Visual-Mark'
 " Plug 'haya14busa/incsearch-easymotion.vim'
 " Plug 'haya14busa/incsearch-fuzzy.vim'
 
-Plug 'linsong/hexman.vim'
-Plug 'vim-scripts/DrawIt'
+Plug 'vim-scripts/VisIncr'
+
+" Plug 'linsong/hexman.vim'
+" Plug 'vim-scripts/DrawIt'
+
+" Plug 'autozimu/LanguageClient-neovim', {
+"    \ 'branch': 'next',
+"    \ 'do': 'bash install.sh',
+"    \ }
+
+if has('nvim')
+  Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+  Plug 'zchee/deoplete-go', { 'do': 'make'}
+  Plug 'Shougo/deoplete-clangx'
+  Plug 'padawan-php/deoplete-padawan', { 'do': 'composer install' }
+else
+  " Plug 'Shougo/deoplete.nvim'
+  " Plug 'roxma/nvim-yarp'
+  " Plug 'roxma/vim-hug-neovim-rpc'
+endif
+
+
 "}}}1
 
 " Utils {{{1
@@ -463,7 +548,10 @@ Plug 'vim-scripts/localvimrc'
 "}}}2
 
 Plug 'epeli/slimux', {'on': 'SlimuxShellRun'} " related to tmux 
-Plug 'mhinz/vim-startify', {'on': 'Startify'}
+
+" Plug 'mhinz/vim-startify', {'on': 'Startify'}
+Plug 'mhinz/vim-startify'
+
 Plug 'rizzatti/funcoo.vim' " for Dash
 Plug 'rizzatti/dash.vim'
 "### Dash {{{2
@@ -503,10 +591,10 @@ Plug 'vim-scripts/ScreenShot', {'on': ['ScreenShot', 'Text2Html', 'Diff2Html']}
   let g:ScreenShot = {'Credits': 0}
 "}}}2
 
-Plug 'mbbill/VimExplorer', {'on': 'VE'}
-"### setting for vimExplorer.vim {{{2
- let g:VEConf_showHiddenFiles = 0 " don't show dot files by default
- let g:VEConf_usingGnome = 1 "use Gnome desktop system. TODO: add support for Mac OSX
+" Plug 'mbbill/VimExplorer', {'on': 'VE'}
+" "### setting for vimExplorer.vim {{{2
+"  let g:VEConf_showHiddenFiles = 0 " don't show dot files by default
+"  let g:VEConf_usingGnome = 1 "use Gnome desktop system. TODO: add support for Mac OSX
 
  " override some file mode hot keys
  "let g:VEConf_fileHotkey = {}
@@ -566,13 +654,16 @@ let g:DirDiffExcludes = "*.pyc,*.pye,.svn,*.svn-base,*.svn-work,*~,*.orig,*.rej,
 Plug 'rickhowe/diffchar.vim'
 
 " choose one of below three plugins 
-Plug 'szw/vim-maximizer'
 " Plug 'vim-scripts/ZoomWin', {'on': 'ZoomWin'}
-"### ZoomWin {{{2
+Plug 'szw/vim-maximizer'
+"### vim-maximizer {{{2
   nnoremap <silent> <leader>wf :MaximizerToggle<cr>
 "}}}2
 
-" Plug 'chrisbra/NrrwRgn'
+Plug 'chrisbra/NrrwRgn'
+Plug 'junegunn/goyo.vim'
+
+Plug 'bps/vim-tshark'
 "}}}1
 
 " Ruby {{{1
@@ -614,25 +705,12 @@ Plug 'tpope/vim-fugitive'
 "}}}2
 
 Plug 'gregsexton/gitv', {'on': 'Gitv'}
+Plug 'junegunn/gv.vim', {'on': 'GV'}
 Plug 'vim-scripts/Gist.vim', {'on': 'Gist'}
+Plug 'airblade/vim-gitgutter'
 "}}}1
 
 " C/C++ {{{1
-Plug 'vim-scripts/OmniCppComplete', {'for': ['c', 'cpp', 'h'],}
-"### OmniCppComplete {{{2
-  let OmniCpp_NamespaceSearch = 1
-  let OmniCpp_GlobalScopeSearch = 1
-  let OmniCpp_ShowAccess = 1
-  "let OmniCpp_ShowPrototypeInAbbr = 1 " show function parameters
-  let OmniCpp_MayCompleteDot = 1 " autocomplete after .
-  let OmniCpp_MayCompleteArrow = 1 " autocomplete after ->
-  let OmniCpp_MayCompleteScope = 1 " autocomplete after ::
-  "let OmniCpp_DefaultNamespaces = ["std", "_GLIBCXX_STD"]
-  " automatically open and close the popup menu / preview window
-  "au CursorMovedI,InsertLeave * if pumvisible() == 0|silent! pclose|endif
-  "set completeopt=menuone,menu,longest,preview
-"}}}2
-
 Plug 'derekwyatt/vim-protodef', {'for': ['c', 'cpp', 'h'],}
 Plug 'vim-scripts/FSwitch', {'for': ['c', 'cpp', 'h'],}
 
@@ -646,6 +724,8 @@ Plug 'vim-scripts/SQLUtilities', {'for': 'sql'}
 "### setting for SQLUtilities.vim {{{
  let g:sqlutil_keyword_case = '\U'
 "}}}
+
+" Plug 'tpope/vim-db'
 
 Plug 'vim-scripts/dbext.vim', {'for': 'sql'}
 "### settings for dbext.vim {{{2
@@ -672,23 +752,85 @@ Plug 'msanders/cocoa.vim', {'for': 'objective-c'}
 Plug 'rayburgemeestre/phpfolding.vim'
 " }}}1
 
+" GoLang {{{1
+Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
+" }}}1
+
+" Vue {{{1
+Plug 'posva/vim-vue'
+" }}}1
+
 " games {{{1
 "NeoBundleLazy 'sokoban.vim' 
 "NeoBundleLazy 'TeTrIs.vim'
 "}}}1
 
+" always load devicon as the last one  {{{1
+Plug 'ryanoasis/vim-devicons'
+"}}}1
+
 call plug#end()
 
-" colorscheme settings {{{1
-  :colorscheme molokai
-  " :colorscheme jellybeans
-  
-  let g:rehash256 = 1 "enable 256 color in terminal for molokai
+"### CamelCaseMotion {{{1
+  call camelcasemotion#CreateMotionMappings(',')
+"}}}1
+
+"### LSP support {{{1
+
+let g:LanguageClient_serverCommands = {
+    \ 'javascript': ['/usr/local/bin/javascript-typescript-stdio'],
+    \ }
+
+"nnoremap <F5> :call LanguageClient_contextMenu()<CR>
+" Or map each action separately
+"nnoremap <silent> K :call LanguageClient#textDocument_hover()<CR>
+"nnoremap <silent> gd :call LanguageClient#textDocument_definition()<CR>
+"nnoremap <silent> <F2> :call LanguageClient#textDocument_rename()<CR>
+
 " }}}1
 
-"### CamelCaseMotion {{{2
-  call camelcasemotion#CreateMotionMappings(',')
-"}}}2
+"### deoplete settings {{{1
+if has('nvim')
+  let g:deoplete#enable_at_startup = 1
+  call deoplete#custom#option({
+  \ 'auto_complete_delay': 200,
+  \ 'smart_case': v:true,
+  \ })
+  " deoplete-go settings 
+  let g:deoplete#sources#go#gocode_binary = $GOPATH.'/bin/gocode'
+  let g:deoplete#sources#go#sort_class = ['package', 'func', 'type', 'var', 'const']
+endif
+" }}}1
+
+"### vimdevicons settings {{{1
+let g:airline_powerline_fonts = 1
+let g:webdevicons_enable_startify = 1
+"}}}1
+
+"### startify settings {{{1
+let g:startify_bookmarks = [ 
+  \ {'c': '~/workspace/cpt/cpt'},
+  \ {'w': '~/workspace/cpt/batch_worker'},
+  \ {'m': '~/workspace/cpt/ems'},
+  \ {'f': '~/workspace/iot/freeboard'},
+  \ {'v': '~/.vim'} ]
+let g:startify_custom_header = [
+  \ '',
+  \ '   Happy Vimming! ']
+noremap ,s :Startify<CR>
+"}}}1
+
+"### gitgutter settings {{{1
+set updatetime=150
+"}}}1
+
+"### vim-go settings {{{1
+" let g:go_fmt_options = {
+"  \ 'gofmt': '-s'
+"  \ }
+  let g:go_auto_sameids = 1
+  let g:go_addtags_transform = 'camelcase'
+"}}}1
 
 " vim: ft=vim foldmethod=marker expandtab ts=2 sw=2
 
