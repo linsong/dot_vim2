@@ -259,10 +259,13 @@ Plug 'junegunn/fzf.vim'
 
   " complete input as name in current file in fuzzy way
   " e.g.: gCC => getCurrentComponent
-  inoremap <expr> <c-x><c-k> fzf#complete({
-        \ 'source': "/usr/bin/grep -o -E '\\w{5,}' " . expand('%:p') . "\| /usr/bin/sort -uf",
-        \ 'options': '-0 -1 -x',
-        \ 'left': 35})
+  " inoremap <expr> <c-x><c-k> fzf#complete({
+  "      \ 'source': "/usr/bin/grep -o -E '\\w{5,}' " . expand('%:p') . "\| /usr/bin/sort -uf",
+  "      \ 'options': '-0 -1 -x',
+  "      \ 'left': 35})
+
+  " Replace the default dictionary completion with fzf-based fuzzy completion
+  " inoremap <expr> <c-x><c-k> fzf#vim#complete('cat /usr/share/dict/words')
 
   " select file/path from command
   function! s:append_dir_with_fzf(line)
@@ -364,6 +367,16 @@ Plug 'junegunn/fzf.vim'
     call fzf#run(opts)
   endfunction
   nnoremap ,fc :call Fzf_git_diff_files_with_dev_icons()<CR>
+
+  function! FzfSpellSink(word)
+    exec 'normal! "_ciw'.a:word
+  endfunction
+
+  function! FzfSpell() 
+    let suggestions = spellsuggest(expand("<cword>"))
+    return fzf#run({'source': suggestions, 'sink': function("FzfSpellSink"), 'down': 25})
+  endfunction
+  nnoremap <silent> z= :call FzfSpell()<CR>
 
   noremap ,ff :Files<CR>
   noremap ,fd :Cd<CR>
