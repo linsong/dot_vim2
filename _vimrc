@@ -225,7 +225,9 @@ let g:vim_json_syntax_conceal = 0
     cnoremap <C-A> <Home>
     cnoremap <C-B> <left>
     cnoremap <C-F> <right>
-    cnoremap <C-X> <Del>
+
+    " <C-X> as a prefix key under command mode 
+    " cnoremap <C-X> <Del>
 
     " key maps will make increase/decrease the width/height of window easier
     nnoremap - <C-W>-

@@ -266,10 +266,10 @@ Plug 'junegunn/fzf.vim'
 
   " select file/path from command
   function! s:append_dir_with_fzf(line)
-  	call fzf#run(fzf#wrap(
+  	call fzf#run(fzf#wrap({
   		\ 'options': ['--prompt', a:line.'> '],
-  		\ 'source': 'find . -type d',
-  		\ 'sink': {line -> feedkeys("\<esc>:".a:line.line, 'n')}}))
+  		\ 'source': 'fd -t d',
+  		\ 'sink': {line -> feedkeys("\<esc>:".a:line.line, 'nt')}}))
   	return ''
   endfunction
   cnoremap <expr> <c-x><c-d> <sid>append_dir_with_fzf(getcmdline())
@@ -282,7 +282,7 @@ Plug 'junegunn/fzf.vim'
     endif
   endfunction
   command! -nargs=* -complete=dir Cd call fzf#run(fzf#wrap(
-    \ {'source': '/usr/local/bin/myfind '. s:get_cmd_args(<f-args>),
+    \ {'source': 'fd -t d '. s:get_cmd_args(<f-args>),
     \  'sink': 'cd'}))
 
   " Likewise, Files command with preview window
@@ -303,6 +303,14 @@ Plug 'junegunn/fzf.vim'
     \                 <bang>0 ? fzf#vim#with_preview('up:60%')
     \                         : fzf#vim#with_preview('right:50%:hidden', '?'),
     \                 <bang>0)
+
+  command! -bang -nargs=* Rg
+    \ call fzf#vim#grep(
+    \   'rg --column --line-number --no-heading --color=always --smart-case '.shellescape(<q-args>), 1,
+    \   <bang>0 ? fzf#vim#with_preview('up:60%')
+    \           : fzf#vim#with_preview('right:50%:hidden', '?'),
+    \   <bang>0)
+
 
   function! Fzf_files_with_dev_icons(command)
     let l:fzf_files_options = '-x -m --preview="bat --color \"always\" --style numbers {2..} | head -'.&lines.'" --preview-window=wrap:hidden --bind="?:toggle-preview,ctrl-e:preview-up,ctrl-d:preview-down,ctrl-r:jump-accept" --expect=ctrl-v,ctrl-x --tiebreak=end,length'
@@ -366,8 +374,8 @@ Plug 'junegunn/fzf.vim'
   noremap ,fb :Buffers<CR>
   noremap ,fh :History<CR>
 
-  nnoremap ,fg yiw:Ag! "<CR>
-  vnoremap ,fg  y:Ag! "<CR>
+  nnoremap ,fg yiw:Rg "<CR>
+  vnoremap ,fg  y:Rg "<CR>
 
 "}}}2
 
