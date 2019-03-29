@@ -163,6 +163,12 @@ Plug 'endel/vim-github-colorscheme'
 Plug 'junegunn/seoul256.vim'
 " }}}1
 
+" Enhanced Syntax {{{1
+Plug 'neomutt/neomutt.vim'
+au BufNewFile,BufRead *.muttrc,aliases set filetype=neomuttrc
+
+" }}}1
+
 " Advanced Editing {{{1
 " Plug 'kien/ctrlp.vim'
 "### ctrlp {{{2
@@ -425,6 +431,9 @@ Plug 'mhinz/vim-grepper'
 
 Plug 'drmingdrmer/xptemplate'
 "### xptemplate {{{2
+  " load snippets from personal folder
+  set runtimepath+=~/.vim/personal/
+  
   " Prevent supertab from mapping <tab> to anything.
   "let g:SuperTabMappingForward = '<Plug>xpt_void'
 
@@ -471,15 +480,17 @@ Plug 'drmingdrmer/xptemplate'
 
   let g:xptemplate_bundle = "cpp_*"
 
-  set runtimepath+=~/.vim/personal/
+  let g:xptemplate_vars = "$author=Vincent\ Wang&$email=linsong.qizi@gmail.com"
+
 "}}}2
 
-"Plug 'SirVer/ultisnips'
+" Plug 'SirVer/ultisnips'
+" Plug 'honza/vim-snippets'
 "### settings for UltiSnips.vim {{{2
-  let g:UltiSnipsExpandTrigger="<tab>"
-  let g:UltiSnipsJumpForwardTrigger="<tab>"
-  let g:UltiSnipsJumpBackwardTrigger="<s-tab>"
-  " let g:UltiSnipsListSnippets="<c-l>"
+  let g:UltiSnipsExpandTrigger="<c-l>"
+  let g:UltiSnipsJumpForwardTrigger="<c-j>"
+  let g:UltiSnipsJumpBackwardTrigger="<c-k>"
+  let g:UltiSnipsListSnippets="<c-tab>"
   let g:UltiSnipsEnableSnipMate=0
 
   command! ResetUltiSnip :py UltiSnips_Manager.reset()
@@ -541,6 +552,7 @@ if has('nvim')
   Plug 'zchee/deoplete-go', { 'do': 'make'}
   Plug 'Shougo/deoplete-clangx'
   Plug 'padawan-php/deoplete-padawan', { 'do': 'composer install' }
+  Plug 'linsong/deoplete-mutt-alias'
 else
   " Plug 'Shougo/deoplete.nvim'
   " Plug 'roxma/nvim-yarp'
@@ -786,7 +798,8 @@ Plug 'posva/vim-vue'
 "NeoBundleLazy 'TeTrIs.vim'
 "}}}1
 
-" always load devicon as the last one  {{{1
+" icons {{{1
+" always load devicon as the last one  
 Plug 'ryanoasis/vim-devicons'
 "}}}1
 
@@ -820,6 +833,7 @@ if has('nvim')
   " deoplete-go settings 
   let g:deoplete#sources#go#gocode_binary = $GOPATH.'/bin/gocode'
   let g:deoplete#sources#go#sort_class = ['package', 'func', 'type', 'var', 'const']
+  call deoplete#custom#source('ultisnips', 'matchers', ['matcher_fuzzy'])
 endif
 " }}}1
 

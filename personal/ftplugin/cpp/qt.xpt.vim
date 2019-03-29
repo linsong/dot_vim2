@@ -7,7 +7,6 @@ XPTinclude
 XPTemplateDef
 
 XPT connect wrap=source " connect a signal to a slot
-XSET param3=R('more1')
 connect(`source^, SIGNAL(`signal_name^(`param1^`more1...^`, `param2?^`more1...^)), `this^, SLOT(`signal_name^{S(V(), '\^.', 'on\u&')}^(`param3^)));
 `cursor^
 
@@ -49,7 +48,7 @@ QVERIFY(`real^ == `expected^);
 ..XPT
 
 XPT qclass " create qt base class 
-XSET classname|def=CamelCase(fileRoot())
+XSET classname|def=camelCase(fileRoot())
 class `classname^ : public `QObject^
 {
     Q_OBJECT
