@@ -6,8 +6,13 @@ XPTinclude
 
 XPTemplateDef
 
+" XPT connect wrap=source " connect a signal to a slot
+" connect(`source^, SIGNAL(`signal_name^(`param1^`more1...^`, `param2?^`more1...^)), `this^, SLOT(`signal_name^{S(V(), '\^.', 'on\u&')}^(`param3^)));
+" `cursor^
+
 XPT connect wrap=source " connect a signal to a slot
-connect(`source^, SIGNAL(`signal_name^(`param1^`more1...^`, `param2?^`more1...^)), `this^, SLOT(`signal_name^{S(V(), '\^.', 'on\u&')}^(`param3^)));
+XSET dup_params=R( 'params' )
+connect2(`source^, SIGNAL(`signal_name^(`params^)), `this^, SLOT(`signal_name^{S(V(), '\^.', 'on\u&')}^(`dup_params^)));
 `cursor^
 
 " connect(`source^, SIGNAL(`signal_name^(`param1^`more1...^`, `param2?^`more1...^)), `this^, SLOT(`signal_name^{S(V(), '\^.', 'on\u&')}^(`param3^`more2...^, `param4^`more2...^)));

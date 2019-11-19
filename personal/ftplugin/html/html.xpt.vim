@@ -6,24 +6,15 @@ let s:f = g:XPTfuncs()
 " use snippet 'varFormat' to generate formatting variables
 " use snippet 'varSpaces' to generate spacing variables
 
+
 XPTinclude
     \ _common/common
 
-XPT wtitle " email title
-the progress of this iteration (`startOfWeekDate()^ ~ `endOfWeekDate()^)`cursor^
 
-XPT wc " weekly work content
-Hi Lim,
-
-  The progress of this iteration: 
-    `cursor^
-
-Cheers,
-Vincent
-..XPT
-
-XPT cheers 
-Cheers,
-Vincent
-
+XPT script wrap=content "script template
+<script type="text/template" id="`content_tpl^">
+  <div>
+    `content^`cursor^
+  </div>
+</script>
 

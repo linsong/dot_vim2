@@ -51,7 +51,7 @@ Plug 'Lokaltog/vim-easymotion'
 
 Plug 'justinmk/vim-sneak'
 
-Plug 'ervandew/supertab'
+" Plug 'ervandew/supertab'
 "### settings for supertab.vim {{{2
   let g:SuperTabLongestHighlight = 1
 
@@ -161,6 +161,8 @@ Plug 'tomasr/molokai'
 Plug 'liuchengxu/space-vim-dark'
 Plug 'endel/vim-github-colorscheme'
 Plug 'junegunn/seoul256.vim'
+Plug 'sainnhe/vim-color-desert-night'
+Plug 'lifepillar/vim-solarized8'
 " }}}1
 
 " Enhanced Syntax {{{1
@@ -263,6 +265,29 @@ Plug 'junegunn/fzf.vim'
   imap <c-x><c-j> <plug>(fzf-complete-file-ag)
   imap <c-x><c-l> <plug>(fzf-complete-line)
 
+  
+if has('nvim')
+  let g:fzf_layout = { 'window': 'call FloatingFZF()' }
+	function! FloatingFZF()
+		let buf = nvim_create_buf(v:false, v:true)
+		call setbufvar(buf, '&signcolumn', 'no')
+
+		let height = &lines - 3
+		let width = float2nr(&columns - (&columns * 2 / 10))
+		let col = float2nr((&columns - width) / 2)
+
+		let opts = {
+					\ 'relative': 'editor',
+					\ 'row': 1,
+					\ 'col': col,
+					\ 'width': width,
+					\ 'height': height
+					\ }
+
+		call nvim_open_win(buf, v:true, opts)
+	endfunction 
+endif
+
   " complete input as name in current file in fuzzy way
   " e.g.: gCC => getCurrentComponent
   " inoremap <expr> <c-x><c-k> fzf#complete({
@@ -322,7 +347,7 @@ Plug 'junegunn/fzf.vim'
 
 
   function! Fzf_files_with_dev_icons(command)
-    let l:fzf_files_options = '-x -m --preview="bat --color \"always\" --style numbers {2..} | head -'.&lines.'" --preview-window=wrap:hidden --bind="?:toggle-preview,ctrl-e:preview-up,ctrl-d:preview-down,ctrl-r:jump-accept" --expect=ctrl-v,ctrl-x --tiebreak=end,length'
+    let l:fzf_files_options = '-x -m --preview="bat --color \"always\" --style numbers {2..} | head -'.&lines.'" --preview-window=wrap:hidden --bind="?:toggle-preview,ctrl-e:preview-up,ctrl-d:preview-down,ctrl-r:jump-accept" --expect=ctrl-v,ctrl-x,ctrl-t --tiebreak=end,length'
     function! s:edit_devicon_prepended_file(items)
       let items = a:items
       let i = 1
@@ -344,10 +369,11 @@ Plug 'junegunn/fzf.vim'
     let l:opts.down = '40%'
     call fzf#run(l:opts)
   endfunction   
-  nnoremap <c-p> :call Fzf_files_with_dev_icons($FZF_DEFAULT_COMMAND)<CR>
+  nnoremap <c-p> :call Fzf_files_with_dev_icons("fd -d 8 -t f")<CR>
+  " nnoremap <c-p> :call Fzf_files_with_dev_icons($FZF_DEFAULT_COMMAND)<CR>
 
   function! Fzf_git_diff_files_with_dev_icons()
-    let l:fzf_files_options = '-x -m --ansi --preview "sh -c \"(git diff --color=always -- {3..} | sed 1,4d; bat --color always --style numbers {3..}) | head -'.&lines.'\"" --preview-window=wrap:hidden --bind="?:toggle-preview,ctrl-e:preview-up,ctrl-d:preview-down,ctrl-r:jump-accept" --expect=ctrl-v,ctrl-x --tiebreak=end,length '
+    let l:fzf_files_options = '-x -m --ansi --preview "sh -c \"(git diff --color=always -- {3..} | sed 1,4d; bat --color always --style numbers {3..}) | head -'.&lines.'\"" --preview-window=wrap:hidden --bind="?:toggle-preview,ctrl-e:preview-up,ctrl-d:preview-down,ctrl-r:jump-accept" --expect=ctrl-v,ctrl-x,ctrl-t --tiebreak=end,length '
 
     function! s:edit_devicon_prepended_file_diff(items)
       let items = a:items
@@ -413,13 +439,13 @@ Plug 'mhinz/vim-grepper'
 "### Grepper {{{2
   " command! -nargs=* -complete=file GG Grepper -tool git -open -switch -query <args>
   " command! -nargs=* -complete=file Ag Grepper -tool ag -open -switch -query <args>
-  command! -nargs=* -complete=file Rg Grepper -tool rg -open -switch -query <args>
+  command! -nargs=* -complete=file Rg Grepper -noprompt -tool rg -open -switch -query <args>
   " command! -nargs=* -complete=file Pt Grepper -tool pt -open -switch -query <args>
 
   " nnoremap <leader>g <plug>(GrepperOperator)
   " xnoremap <leader>g <plug>(GrepperOperator)
   nnoremap ,gr :Grepper -tool rg -cword -noprompt<cr>
-  vnoremap ,gr  y:Rg "<CR>
+  vnoremap ,gr  y:Rg "<cr>
 
   let g:grepper           = {}
   let g:grepper.open      = 1
@@ -442,16 +468,16 @@ Plug 'drmingdrmer/xptemplate'
   " something it does not know.
   "let g:xptemplate_fallback = '<C-r>=XPTwrapSuperTab("n")<CR>'
 
-  fun! XPTwrapSuperTab(command)
-      let v = SuperTab(a:command)
-      if v == ''
-          " Change \<Tab> to whatever you want, when neither XPTemplate or
-          " supertab needs to do anything.
-          return "\<Tab>"
-      else
-          return v
-      end
-  endfunction 
+  " fun! XPTwrapSuperTab(command)
+  "     let v = SuperTab(a:command)
+  "     if v == ''
+  "         " Change \<Tab> to whatever you want, when neither XPTemplate or
+  "         " supertab needs to do anything.
+  "         return "\<Tab>"
+  "     else
+  "         return v
+  "     end
+  " endfunction 
 
   ""xpt uses <Tab> as trigger key
   "let g:xptemplate_key = '<Tab>'
@@ -542,23 +568,21 @@ Plug 'vim-scripts/VisIncr'
 " Plug 'linsong/hexman.vim'
 " Plug 'vim-scripts/DrawIt'
 
-" Plug 'autozimu/LanguageClient-neovim', {
-"    \ 'branch': 'next',
-"    \ 'do': 'bash install.sh',
-"    \ }
-
+" Completion setup
 if has('nvim')
-  Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-  Plug 'zchee/deoplete-go', { 'do': 'make'}
-  Plug 'Shougo/deoplete-clangx'
-  Plug 'padawan-php/deoplete-padawan', { 'do': 'composer install' }
-  Plug 'linsong/deoplete-mutt-alias'
+  " Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+  " Plug 'zchee/deoplete-go', { 'do': 'make'}
+  " Plug 'Shougo/deoplete-clangx'
+  " Plug 'padawan-php/deoplete-padawan', { 'do': 'composer install' }
+  " Plug 'linsong/deoplete-mutt-alias'
 else
   " Plug 'Shougo/deoplete.nvim'
   " Plug 'roxma/nvim-yarp'
   " Plug 'roxma/vim-hug-neovim-rpc'
 endif
 
+" Use release branch
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
 "}}}1
 
@@ -697,6 +721,8 @@ Plug 'chrisbra/NrrwRgn'
 Plug 'junegunn/goyo.vim'
 
 Plug 'bps/vim-tshark'
+
+Plug 'guns/xterm-color-table.vim'
 "}}}1
 
 " Ruby {{{1
@@ -791,6 +817,9 @@ Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 
 " Vue {{{1
 Plug 'posva/vim-vue'
+" to make vim-vue plugin faster, more details: https://github.com/posva/vim-vue
+let g:vue_disable_pre_processors=1
+
 " }}}1
 
 " games {{{1
@@ -824,18 +853,101 @@ let g:LanguageClient_serverCommands = {
 " }}}1
 
 "### deoplete settings {{{1
-if has('nvim')
-  let g:deoplete#enable_at_startup = 1
-  call deoplete#custom#option({
-  \ 'auto_complete_delay': 200,
-  \ 'smart_case': v:true,
-  \ })
-  " deoplete-go settings 
-  let g:deoplete#sources#go#gocode_binary = $GOPATH.'/bin/gocode'
-  let g:deoplete#sources#go#sort_class = ['package', 'func', 'type', 'var', 'const']
-  call deoplete#custom#source('ultisnips', 'matchers', ['matcher_fuzzy'])
-endif
+" if has('nvim')
+"   let g:deoplete#enable_at_startup = 1
+"   call deoplete#custom#option({
+"  \ 'auto_complete_delay': 200,
+"  \ 'smart_case': v:true,
+"  \ })
+"   " deoplete-go settings 
+"   let g:deoplete#sources#go#gocode_binary = $GOPATH.'/bin/gocode'
+"   let g:deoplete#sources#go#sort_class = ['package', 'func', 'type', 'var', 'const']
+"   call deoplete#custom#source('ultisnips', 'matchers', ['matcher_fuzzy'])
+" endif
 " }}}1
+
+"### coc.vim settings {{{1
+
+set signcolumn=yes
+
+" Use tab for trigger completion with characters ahead and navigate.
+" Use command ':verbose imap <tab>' to make sure tab is not mapped by other plugin.
+inoremap <silent><expr> <TAB>
+      \ pumvisible() ? "\<C-n>" :
+      \ <SID>check_back_space() ? "\<TAB>" :
+      \ coc#refresh()
+inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+
+" Use <c-n> to trigger completion.
+inoremap <silent><expr> <c-n> coc#refresh()
+
+" To make <cr> select the first completion item and confirm the completion
+" and format code when no item has been selected
+inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm() : "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+
+" Use `[g` and `]g` to navigate diagnostics
+nmap <silent> [g <Plug>(coc-diagnostic-prev)
+nmap <silent> ]g <Plug>(coc-diagnostic-next)
+
+" Remap keys for gotos
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gY <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
+
+" Close the preview window when completion is done.
+autocmd! CompleteDone * if pumvisible() == 0 | pclose | endif
+
+" Highlight symbol under cursor on CursorHold
+autocmd CursorHold * silent call CocActionAsync('highlight')
+
+" show func signature help 
+" autocmd CursorHoldI * silent call CocActionAsync('showSignatureHelp')
+
+augroup mygroup
+  autocmd!
+  " Setup formatexpr specified filetype(s).
+  autocmd FileType typescript,json setl formatexpr=CocAction('formatSelected')
+  " Update signature help on jump placeholder
+  autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
+augroup end
+
+" Remap for rename current word
+nmap ;rn <Plug>(coc-rename)
+
+" Remap for format selected region
+xmap ;f  <Plug>(coc-format-selected)
+nmap ;f  <Plug>(coc-format-selected)
+
+" Remap for do codeAction of current line
+nmap ;ca  <Plug>(coc-codeaction)
+" Fix autofix problem of current line
+nmap ;qf  <Plug>(coc-fix-current)
+
+" Use `:Format` to format current buffer
+command! -nargs=0 Format :call CocAction('format')
+
+" Use `:Fold` to fold current buffer
+command! -nargs=? Fold :call CocAction('fold', <f-args>)
+
+" grep word under cursor
+command! -nargs=+ -complete=custom,s:GrepArgs CocRg exe 'CocList grep '.<q-args>
+
+function! s:GrepArgs(...)
+  let list = ['-S', '-smartcase', '-i', '-ignorecase', '-w', '-word',
+        \ '-e', '-regex', '-u', '-skip-vcs-ignores', '-t', '-extension']
+  return join(list, "\n")
+endfunction
+
+" Keymapping for grep word under cursor with interactive mode
+nnoremap <silent> ;cf :exe 'CocList --input='.expand('<cword>').' grep'<CR>
+
+"}}}1
 
 "### vimdevicons settings {{{1
 let g:airline_powerline_fonts = 1
@@ -856,7 +968,7 @@ noremap ,s :Startify<CR>
 "}}}1
 
 "### gitgutter settings {{{1
-set updatetime=150
+set updatetime=300
 "}}}1
 
 "### vim-go settings {{{1

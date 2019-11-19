@@ -31,7 +31,7 @@ fun! s:f.now()
 endfunction
 
 fun! s:f.startOfWeekDate()
-  let startOfWeek = system('date -v-5d "+%Y/%m/%d"')
+  let startOfWeek = system('date -v-4d "+%Y/%m/%d"')
   return startOfWeek 
 endfunction
 
@@ -49,3 +49,5 @@ XPT time
 XPT timestamp 
 `strftime("%s")^
 
+XPT date
+`strftime("%Y-%m-%d")^

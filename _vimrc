@@ -107,10 +107,12 @@ endif
 " save screen estate as much as possible
 :set numberwidth=1
 
-:set nobackup writebackup
+:set nobackup nowritebackup
 
 " set tags
 :set tags+=../tags,../../tags,ftags,../*.tags
+
+:set shortmess+=c
 
 :set number
 
@@ -211,8 +213,8 @@ let g:vim_json_syntax_conceal = 0
     nmap <C-l> <c-w>l
 
     " following key maps will make input mode's navigation easier
-    imap <C-j> <down>
-    imap <C-k> <up>
+    " imap <C-j> <down>
+    " imap <C-k> <up>
     imap <C-B> <Left>
     imap <C-F> <Right>
     imap <C-D> <Del>
@@ -1204,7 +1206,12 @@ endif " has("autocmd")
     hi x254_Grey89               ctermfg=254 guifg=#e4e4e4
     hi x255_Grey93               ctermfg=255 guifg=#eeeeee
 endif
-    "
+
+" set Vim-specific sequences for RGB colors
+set termguicolors
+let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
+ 
 "## }}}1
 
 "## Experiments {{{1
@@ -1234,8 +1241,10 @@ command! -nargs=+ -complete=command TabMessage call TabMessage(<q-args>)
   " :colorscheme molokai
   " let g:rehash256 = 1 "enable 256 color in terminal for molokai
 
-  let g:seoul256_background = 235 
-  colorscheme seoul256
+  " let g:seoul256_background = 235 
+  " colorscheme seoul256
+  set background=dark
+  colorscheme solarized8
 " }}}1
 
 "## MacVim Related {{{1
