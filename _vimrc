@@ -147,6 +147,7 @@ endif
 
 " turn off the quote conceal, that is very annoying
 let g:vim_json_syntax_conceal = 0
+let g:vim_json_conceal = 0
 
 "## }}}1
 
@@ -241,8 +242,8 @@ let g:vim_json_syntax_conceal = 0
     " nnoremap <silent> <C-l> :<C-u>nohlsearch<CR><C-l>
 
     " mappings for quickfix mode
-    nnoremap <xF4>   :cnext \| norm zz<CR>
-    nnoremap <S-xF4> :cprev \| norm zz<CR>
+    nnoremap <space>n :cnext \| norm zz<CR>
+    nnoremap <space>N :cprev \| norm zz<CR>
     nnoremap <C-F4>   :cnfile <CR>
     nnoremap <S-C-F4> :cpfile <CR>
 
@@ -339,7 +340,8 @@ let g:vim_json_syntax_conceal = 0
 
     " use two windows to view a long file
     " from vim tip wiki: http://vim.wikia.com/wiki/View_text_file_in_two_columns
-    :noremap <silent> <leader>vs :<C-u>let @z=&so<CR>:set so=0 noscb<CR>:bo vs<CR>Ljzt:setl scb<CR><C-w>p:setl scb<CR>:let &so=@z<CR>
+    " <leader>vs is used by VsplitVifm of vifm.vim
+    " :noremap <silent> <leader>vs :<C-u>let @z=&so<CR>:set so=0 noscb<CR>:bo vs<CR>Ljzt:setl scb<CR><C-w>p:setl scb<CR>:let &so=@z<CR>
 
     " nnoremap <silent> ;;  :silent! %s/\s\+$//g <bar> w<CR>
     nnoremap <silent> ;;  :w<CR>
@@ -959,7 +961,7 @@ endif " has("autocmd")
 
     "### visswap {{{2
      map <silent> <unique> <c-y> <Plug>VisualPreSwap
-     map <silent> <unique> <c-x> <Plug>VisualSwap
+     map <silent> <unique> <c-t> <Plug>VisualSwap
     "}}}2
 "## }}}1
 
@@ -1215,15 +1217,6 @@ let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
 "## }}}1
 
 "## Experiments {{{1
-
-"" TODO: need to be extended for more languages and replace selected lines
-"python << EOL
-"import vim
-"def EvaluateCurrentRange():
-  "eval(compile('\n'.join(vim.current.range),'<string>','exec'),globals())
-"EOL
-"map H :py EvaluateCurrentRange()<CR>
-
 function! TabMessage(cmd)
   redir => message
   silent execute a:cmd
@@ -1241,10 +1234,12 @@ command! -nargs=+ -complete=command TabMessage call TabMessage(<q-args>)
   " :colorscheme molokai
   " let g:rehash256 = 1 "enable 256 color in terminal for molokai
 
-  " let g:seoul256_background = 235 
-  " colorscheme seoul256
-  set background=dark
-  colorscheme solarized8
+  let g:seoul256_background = 235 
+  colorscheme seoul256
+  " set background=dark
+  " colorscheme solarized8
+  " colorscheme desertEx
+  " colorscheme synic
 " }}}1
 
 "## MacVim Related {{{1
