@@ -11,45 +11,47 @@ call plug#begin('~/.vim/bundle')
 " Basic Editing {{{1
 Plug 'tpope/vim-repeat'
 
-Plug 'Lokaltog/vim-easymotion'
-"### EasyMotion {{{2
-  let g:EasyMotion_leader_key = ';'
-  let g:EasyMotion_smartcase = 1
-  let g:EasyMotion_enter_jump_first = 1
+if has('nvim-0.5')
+  Plug 'phaazon/hop.nvim'
+else
+  Plug 'Lokaltog/vim-easymotion'
+  "### EasyMotion {{{2
+    let g:EasyMotion_leader_key = ';'
+    let g:EasyMotion_smartcase = 1
+    let g:EasyMotion_enter_jump_first = 1
 
-  map ss <Plug>(easymotion-s2)
-  map s2 <Plug>(easymotion-s2)
-  map sn <Plug>(easymotion-sn)
+    map ss <Plug>(easymotion-s2)
+    map s2 <Plug>(easymotion-s2)
+    map sn <Plug>(easymotion-sn)
 
-  map ;l <Plug>(easymotion-lineforward)
-  map ;h <Plug>(easymotion-linebackward)
+    map ;l <Plug>(easymotion-lineforward)
+    map ;h <Plug>(easymotion-linebackward)
 
-  nmap ;l <Plug>(easymotion-overwin-line)
+    nmap ;l <Plug>(easymotion-overwin-line)
 
-  function! s:incsearch_config_easymotion(...) abort
-    return extend(copy({
-    \   'modules': [incsearch#config#easymotion#module({'overwin': 1})],
-    \   'keymap': {"\<CR>": '<Over>(easymotion)'},
-    \   'is_expr': 0,
-    \   'is_stay': 1
-    \ }), get(a:, 1, {}))
-  endfunction
-  " noremap <silent><expr> /  incsearch#go(<SID>incsearch_config_easymotion())
+    function! s:incsearch_config_easymotion(...) abort
+      return extend(copy({
+      \   'modules': [incsearch#config#easymotion#module({'overwin': 1})],
+      \   'keymap': {"\<CR>": '<Over>(easymotion)'},
+      \   'is_expr': 0,
+      \   'is_stay': 1
+      \ }), get(a:, 1, {}))
+    endfunction
+    " noremap <silent><expr> /  incsearch#go(<SID>incsearch_config_easymotion())
 
-  " incsearch.vim x fuzzy x vim-easymotion
-  function! s:config_easyfuzzymotion(...) abort
-    return extend(copy({
-    \   'converters': [incsearch#config#fuzzy#converter()],
-    \   'modules': [incsearch#config#easymotion#module({'overwin': 1})],
-    \   'keymap': {"\<CR>": '<Over>(easymotion)'},
-    \   'is_expr': 0,
-    \   'is_stay': 1
-    \ }), get(a:, 1, {}))
-  endfunction
-  " noremap <silent><expr> <Space>/ incsearch#go(<SID>config_easyfuzzymotion())
-"}}}2
-
-Plug 'justinmk/vim-sneak'
+    " incsearch.vim x fuzzy x vim-easymotion
+    function! s:config_easyfuzzymotion(...) abort
+      return extend(copy({
+      \   'converters': [incsearch#config#fuzzy#converter()],
+      \   'modules': [incsearch#config#easymotion#module({'overwin': 1})],
+      \   'keymap': {"\<CR>": '<Over>(easymotion)'},
+      \   'is_expr': 0,
+      \   'is_stay': 1
+      \ }), get(a:, 1, {}))
+    endfunction
+    " noremap <silent><expr> <Space>/ incsearch#go(<SID>config_easyfuzzymotion())
+  "}}}2
+endif
 
 " Plug 'ervandew/supertab'
 "### settings for supertab.vim {{{2
@@ -68,9 +70,6 @@ Plug 'justinmk/vim-sneak'
 Plug 'tpope/vim-surround'
 Plug 'bkad/CamelCaseMotion'
 
-" ISSUE: can only highlight word within one buffer
-" Plug 'lfv89/vim-interestingwords'
-
 " }}}1
 
 " Coding {{{1
@@ -78,12 +77,12 @@ Plug 'bkad/CamelCaseMotion'
 Plug 'Shougo/context_filetype.vim' " help caw.vim to comment based on filetype of context
 Plug 'tyru/caw.vim'
 
-Plug 'Yggdroot/indentLine'
-"### IndentLine {{{2
-  " let g:indentLine_char= '︙'
-  let g:indentLine_color_term = 239
-  let g:indentLine_color_gui = '#A4E57E'
-"}}}2
+" Plug 'Yggdroot/indentLine'
+" "### IndentLine {{{2
+"   " let g:indentLine_char= '︙'
+"   let g:indentLine_color_term = 239
+"   let g:indentLine_color_gui = '#A4E57E'
+" "}}}2
 
 "Plug 'majutsushi/tagbar'
 
@@ -120,32 +119,19 @@ let g:switch_custom_definitions =
  vnoremap ,t <ESC>:Switch<CR>
 "}}}2
 
-" Plug 'Valloric/YouCompleteMe'
-"### YouCompleteMe {{{2
-  " let g:ycm_confirm_extra_conf = 0
-  " let g:ycm_key_list_select_completion = ['<c-n>', '<Down>', 'C-j']
-  " let g:ycm_key_list_previous_completion = ['<c-p>', '<Up>', 'C-k']
-  " let g:ycm_min_num_of_chars_for_completion = 3
-"}}}2
-
-Plug 'scrooloose/nerdtree'
+" Plug 'scrooloose/nerdtree'
+"
 Plug 'thinca/vim-quickrun', {'on': 'QuickRun'}
 
-Plug 'vim-syntastic/syntastic' 
-"### settings for syntastic {{{2
-  let g:syntastic_enable_signs = 1
-  let g:syntastic_auto_loc_list = 0
-  let g:syntastic_mode_map = { 'mode': 'passive',
-                             \ 'active_filetypes': [],
-                             \ 'passive_filetypes': ['python', 'cpp', 'ruby', 'puppet'] }
-"}}}2
-
-"Plug 'w0rp/ale'
-" settings for ale {{{2
-"let g:ale_lint_on_text_changed = 'never'
-"let g:ale_lint_on_enter = 0
-" }}}2
-
+" DEPRECATED: use tree sitter instead
+" Plug 'vim-syntastic/syntastic' 
+" "### settings for syntastic {{{2
+"   let g:syntastic_enable_signs = 1
+"   let g:syntastic_auto_loc_list = 0
+"   let g:syntastic_mode_map = { 'mode': 'passive',
+"                             \ 'active_filetypes': [],
+"                             \ 'passive_filetypes': ['python', 'cpp', 'ruby', 'puppet', 'javascript'] }
+" "}}}2
 
 " }}}1
 
@@ -161,7 +147,7 @@ Plug 'tomasr/molokai'
 Plug 'liuchengxu/space-vim-dark'
 Plug 'endel/vim-github-colorscheme'
 Plug 'junegunn/seoul256.vim'
-Plug 'sainnhe/vim-color-desert-night'
+" Plug 'sainnhe/vim-color-desert-night'
 Plug 'lifepillar/vim-solarized8'
 " }}}1
 
@@ -172,70 +158,6 @@ au BufNewFile,BufRead *.muttrc,aliases set filetype=neomuttrc
 " }}}1
 
 " Advanced Editing {{{1
-" Plug 'kien/ctrlp.vim'
-"### ctrlp {{{2
-" let g:ctrlp_map = '<c-p>'
-" noremap ,fb :CtrlPBuffer<CR>
-" noremap ,fm :CtrlPMRU<CR>
-" noremap ,ft :CtrlPBufTag<CR>
-" noremap ,fg :CtrlPBufTagAll<CR>
-" noremap ,fl :CtrlPLine<CR>
-" noremap ,fr :CtrlPBookmarkDir<CR>
-" noremap ,fe :CtrlPBookmarkDirAdd<CR>
-
-" let g:ctrlp_cmd = 'CtrlP'
-" let g:ctrlp_working_path_mode = 0
-" let g:ctrlp_cache_dir = $HOME.'/.cache/ctrlp'
-
-" " after change custom_ignore or user_command, need to clear ctrlp's cache 
-" let g:ctrlp_custom_ignore = {
-"   \ 'dir':  '\.git$\|\.hg$\|\.svn$\|\.cache$\|build$\|\.moc$\|\.obj$',
-"   \ 'file': '\.exe$\|\.so$\|\.dll$\|\.pyc$\|\.swp$\|\.swc$\|\.swf$\|\.swo$\|tags$\|\.DS_Store$\|\.log$\|\.png$\|\.jpg$\|\.bmp$\|\.o$\|\.obj$\|moc_.*$\|\.plist$',
-"   \ }
-" let g:ctrlp_user_command = {
-"   \ 'types': {
-"     \ 1: ['.git/', 'cd %s && git ls-files'],
-"     \ 2: ['.hg/', 'hg --cwd %s locate -I .'],
-"     \ },
-"   \ 'fallback': 'cd %s && ag --nocolor --nogroup -l'
-"   \ }
-
-" " will ignore entries in .agignore file
-" " GOTCHA: list files with ag will ignore newly created empty files
-" " let g:ctrlp_user_command = 'cd %s && ag --nocolor --nogroup -l'
-" let g:ctrlp_user_command = 'cd %s && /usr/local/bin/myfindfile'
-"
-" let g:ctrlp_extensions = ['buffertag', 'dir', 'bookmarkdir'] " ['dir', 'tag', 'rtscript', 'changes']
-" let g:ctrlp_prompt_mappings = { 'PrtCurLeft()': ['<left>', '<c-^>'], 'PrtBS()': ['<bs>', '<c-]>', '<c-h>'] }
-
-" " PyMatcher for CtrlP, PyMatcher can improve CtrlP's performance a lot
-" if !has('python')
-"     echo 'In order to use pymatcher plugin, you need +python compiled vim'
-" else
-"     let g:ctrlp_match_func = { 'match': 'pymatcher#PyMatch' }
-" endif
-
-" " Set delay to prevent extra search
-" let g:ctrlp_lazy_update = 150
-"
-" " Do not clear filenames cache, to improve CtrlP startup
-" " You can manualy clear it by <F5>
-" let g:ctrlp_clear_cache_on_exit = 0
-"
-" let g:ctrlp_max_files = 3000 
-
-" " If ag is available use it as filename list generator instead of 'find'
-" if executable("ag")
-"   set grepprg=ag\ --nogroup\ --nocolor
-"   "let g:ctrlp_user_command = 'ag %s -i --nocolor --nogroup --ignore ''.git'' --ignore ''.DS_Store'' --ignore ''node_modules'' --hidden -g ""'
-" endif
-" " end of PyMatcher
-
-"}}}2
-
-" Plug 'FelikZ/ctrlp-py-matcher'
-" Plug 'tacahiroy/ctrlp-funky'
-
 Plug '/usr/local/opt/fzf'
 Plug 'junegunn/fzf.vim'
 " Plug 'tweekmonster/fzf-filemru'
@@ -320,7 +242,7 @@ endif
     \  'sink': 'cd'}))
 
   " Likewise, Files command with preview window
-  command! -bang -nargs=? -complete=dir Files
+  command! -bang -nargs=? -complete=dir FzfFiles
      \ call fzf#vim#files(<q-args>, fzf#vim#with_preview('up:50%:hidden', '?'), <bang>0)
 
   " Augmenting Ag command using fzf#vim#with_preview function
@@ -332,22 +254,22 @@ endif
   "
   "   :Ag  - Start fzf with hidden preview window that can be enabled with "?" key
   "   :Ag! - Start fzf in fullscreen and display the preview window above
-  command! -bang -nargs=* Ag
+  command! -bang -nargs=* FzfAg
     \ call fzf#vim#ag(<q-args>,
-    \                 <bang>0 ? fzf#vim#with_preview('up:60%')
+    \                 <bang>0 ? fzf#vim#with_preview('up:70%')
     \                         : fzf#vim#with_preview('right:50%:hidden', '?'),
     \                 <bang>0)
 
-  command! -bang -nargs=* Rg
+  command! -bang -nargs=* FzfRg
     \ call fzf#vim#grep(
     \   'rg --column --line-number --no-heading --color=always --smart-case '.shellescape(<q-args>), 1,
-    \   <bang>0 ? fzf#vim#with_preview('up:60%')
+    \   <bang>0 ? fzf#vim#with_preview('up:70%')
     \           : fzf#vim#with_preview('right:50%:hidden', '?'),
     \   <bang>0)
 
 
   function! Fzf_files_with_dev_icons(command)
-    let l:fzf_files_options = '-x -m --preview="bat --color \"always\" --style numbers {2..} | head -'.&lines.'" --preview-window=wrap:hidden --bind="?:toggle-preview,ctrl-e:preview-up,ctrl-d:preview-down,ctrl-r:jump-accept" --expect=ctrl-v,ctrl-x,ctrl-t --tiebreak=end,length'
+    let l:fzf_files_options = '-x -m --preview="bat --color \"always\" --style numbers {2..} | head -'.&lines.'" --preview-window=up:70%:wrap:hidden --bind="?:toggle-preview,ctrl-p:preview-up,ctrl-n:preview-down,ctrl-r:jump-accept,ctrl-d:delete-char/eof" --expect=ctrl-v,ctrl-x,ctrl-t --tiebreak=end,length'
     function! s:edit_devicon_prepended_file(items)
       let items = a:items
       let i = 1
@@ -373,7 +295,7 @@ endif
   " nnoremap <c-p> :call Fzf_files_with_dev_icons($FZF_DEFAULT_COMMAND)<CR>
 
   function! Fzf_git_diff_files_with_dev_icons()
-    let l:fzf_files_options = '-x -m --ansi --preview "sh -c \"(git diff --color=always -- {3..} | sed 1,4d; bat --color always --style numbers {3..}) | head -'.&lines.'\"" --preview-window=wrap:hidden --bind="?:toggle-preview,ctrl-e:preview-up,ctrl-d:preview-down,ctrl-r:jump-accept" --expect=ctrl-v,ctrl-x,ctrl-t --tiebreak=end,length '
+    let l:fzf_files_options = '-x -m --ansi --preview "sh -c \"(git diff --color=always -- {3..} | sed 1,4d; bat --color always --style numbers {3..}) | head -'.&lines.'\"" --preview-window=up:70%:wrap:hidden --bind="?:toggle-preview,ctrl-e:preview-up,ctrl-d:preview-down,ctrl-r:jump-accept" --expect=ctrl-v,ctrl-x,ctrl-t --tiebreak=end,length '
 
     function! s:edit_devicon_prepended_file_diff(items)
       let items = a:items
@@ -410,7 +332,100 @@ endif
   endfunction
   nnoremap <silent> z= :call FzfSpell()<CR>
 
-  noremap ,ff :Files<CR>
+  " open dash docset through fzf
+  let g:dash_filetype_options = {
+      \ 'haskell': [ 'haskell' ],
+      \ 'go': [ 'go' ],
+      \ 'js': [ 'lodash', 'd3', 'moment', 'javascript' ],
+      \ 'r': [ 'r' ],
+      \ 'css': [ 'css' ],
+      \ 'less': [ 'css', 'less' ],
+      \ 'svg': [ 'svg' ],
+      \ 'cpp': [ 'cpp', 'qt' ],
+      \ 'php': [ 'php' ],
+      \ 'javascript': [ 'javascript' ],
+      \ }
+  function! DashDocFamilies() 
+    let l:families = ''
+    if has_key(g:dash_filetype_options, &ft) 
+      let l:options = g:dash_filetype_options[&ft]
+      if type(l:options) == 3 "options is a list
+        let l:families = join(l:options, ',')
+      endif
+    endif
+    return l:families
+  endfunction
+
+  let g:dash_chrome_tab_id = ''
+
+  function! s:do_open_docset_by_keyword(word, lucky_mode)
+    " GOTCHA: due to mac's privacy restriction, can not run chrome-cli within
+    " vimr to open doc URL in chrome. use mosquitto as a workaround: 
+    " in vimr, publish the url to topic '/chrome-control/url', then in
+    " terminal, need to run following command: 
+    " $ mosquitto_sub -t '/chrome-control/url' | xargs -I{} chrome-cli open "{}"
+    let l:is_vimr = has('gui_vimr')
+    if l:is_vimr 
+      let l:cmd = 'mosquitto_pub -t "/chrome-control/url" -m '
+    else
+      let l:cmd = 'chrome-cli open '
+    endif
+
+    let l:families = g:DashDocFamilies()
+
+    " escape special characters
+    let l:word = substitute(a:word, '\$', '\\$', '')
+
+    if a:lucky_mode == 1
+      let l:cmd = l:cmd . ' "$(fdoc -f ' . l:families . ' -t -m ' . l:word . ')"'
+    else
+      let l:cmd = l:cmd . ' "$(fdoc -f ' . l:families . ' -t -n ' . l:word . ')"'
+    endif
+    echom l:cmd
+
+    if l:is_vimr 
+      let l:foo = system(l:cmd)
+    else
+      if strlen(g:dash_chrome_tab_id) != 0 
+        let l:cmd = l:cmd . ' -t ' . g:dash_chrome_tab_id
+      endif
+
+      let l:lines = systemlist(l:cmd)
+      if len(l:lines) != 0
+        let g:dash_chrome_tab_id = substitute(l:lines[0], '^Id: \(\d\+\)$', '\1', '') 
+      endif
+    endif
+  endfunction
+
+  function! s:open_docset_by_keyword(word) 
+    call s:do_open_docset_by_keyword(a:word, 0)
+  endfunction
+
+  function! FzfDashOpenByWord(word) 
+    call s:do_open_docset_by_keyword(a:word, 1)
+  endfunction
+
+  function! FzfDash(...) 
+    let l:families = g:DashDocFamilies()
+
+    let l:fzf_options = ' --prompt="' . l:families . '> " '
+    if a:0 == 1
+      let l:fzf_options = l:fzf_options . ' --query="' . a:1 . '"'
+    endif
+
+    call fzf#run({
+        \ 'source': 'fdoc -f ' . l:families,
+        \ 'sink': function('s:open_docset_by_keyword'),
+        \ 'options': l:fzf_options
+        \ })
+  endfunction
+  command! -nargs=? FzfDash call FzfDash(<f-args>)
+  nmap <silent> ,k yiw:FzfDash '" <CR>
+  nmap <silent> ,K yiw:silent call FzfDashOpenByWord('"')<CR>
+  vmap <silent> ,K y:silent call FzfDashOpenByWord('"')<CR>
+
+
+  noremap ,ff :FzfFiles<CR>
   noremap ,fd :Cd<CR>
   noremap ,fz :Z<CR>
   noremap ,ft :Tags<CR>
@@ -419,41 +434,16 @@ endif
   noremap ,fb :Buffers<CR>
   noremap ,fh :History<CR>
 
-  nnoremap ,fg yiw:Rg "<CR>
-  vnoremap ,fg  y:Rg "<CR>
+  nnoremap ,fg yiw:FzfRg "<CR>
+  vnoremap ,fg  y:FzfRg "<CR>
 
 "}}}2
+
+Plug 'vifm/vifm.vim'
 
 "Plug 'vim-scripts/AutoComplPop'
 
-Plug 'rking/ag.vim', {'on': 'Ag'}
-"### settings for ag.vim {{{2
-"disabled, use Grepper plugin instead 
-"let g:ag_prg="ag --nocolor --nogroup --column --smart-case "
-"let g:ag_mapping_message=0
-"map ,gr yiw:Ag "<CR>
-"vmap ,gr y:Ag "<CR>
-"}}}2
-
 Plug 'mhinz/vim-grepper'
-"### Grepper {{{2
-  " command! -nargs=* -complete=file GG Grepper -tool git -open -switch -query <args>
-  " command! -nargs=* -complete=file Ag Grepper -tool ag -open -switch -query <args>
-  command! -nargs=* -complete=file Rg Grepper -noprompt -tool rg -open -switch -query <args>
-  " command! -nargs=* -complete=file Pt Grepper -tool pt -open -switch -query <args>
-
-  " nnoremap <leader>g <plug>(GrepperOperator)
-  " xnoremap <leader>g <plug>(GrepperOperator)
-  nnoremap ,gr :Grepper -tool rg -cword -noprompt<cr>
-  vnoremap ,gr  y:Rg "<cr>
-
-  let g:grepper           = {}
-  let g:grepper.open      = 1
-  let g:grepper.switch    = 1
-  let g:grepper.jump      = 1
-  let g:grepper.dispatch  = 0
-  let g:grepper.tools     = ['rg', 'git', 'ag', 'findstr', 'sift', 'grep']
-"}}}2
 
 Plug 'drmingdrmer/xptemplate'
 "### xptemplate {{{2
@@ -528,9 +518,12 @@ Plug 'junegunn/vim-easy-align', {'on': 'EasyAlign'}
   vnoremap <silent> <Enter> :EasyAlign<cr>
 "}}}2
 
+"required by SQLUtility.vim
+" Plug 'vim-scripts/Align'
+
 Plug 'vim-scripts/LargeFile'
 Plug 'tpope/vim-abolish', {'on': 'Subvert'}
-Plug 'tpope/vim-dispatch'
+" Plug 'tpope/vim-dispatch'
 
 Plug 'vim-scripts/vimwiki'
 "### settings for vimwiki {{{2
@@ -556,9 +549,6 @@ Plug 'vim-scripts/Visual-Mark'
   nnoremap <silent> ,p :call Vm_goto_prev_sign()<cr>
 "}}}2
 
-" Plug 'terryma/vim-expand-region'
-" Plug 'terryma/vim-multiple-cursors'
-
 " Plug 'haya14busa/incsearch.vim'
 " Plug 'haya14busa/incsearch-easymotion.vim'
 " Plug 'haya14busa/incsearch-fuzzy.vim'
@@ -566,7 +556,6 @@ Plug 'vim-scripts/Visual-Mark'
 Plug 'vim-scripts/VisIncr'
 
 " Plug 'linsong/hexman.vim'
-" Plug 'vim-scripts/DrawIt'
 
 " Completion setup
 if has('nvim')
@@ -581,8 +570,41 @@ else
   " Plug 'roxma/vim-hug-neovim-rpc'
 endif
 
-" Use release branch
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
+" Plug 'AndrewRadev/splitjoin.vim'
+
+" Plug 'liuchengxu/vim-which-key', {'on': ['WhichKey', 'WhichKey!']}
+
+" Plug 'voldikss/vim-floaterm'
+
+" Plug 'unblevable/quick-scope'
+
+Plug 'alvan/vim-closetag'
+
+if has('nvim')
+  Plug 'monaqa/dial.nvim'
+endif
+
+if has('nvim-0.5')
+  "TreeSitter 
+  Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}  
+  Plug 'nvim-treesitter/nvim-treesitter-textobjects'
+  Plug 'nvim-treesitter/playground'
+
+  " Language Server 
+  Plug 'neovim/nvim-lspconfig'
+  Plug 'kabouzeid/nvim-lspinstall'
+	Plug 'ojroques/nvim-lspfuzzy'
+
+  " Plug 'hrsh7th/nvim-compe'
+  Plug 'nvim-lua/completion-nvim'
+
+  " not sure if this plugin will make neovim slow, if yes, disable it
+  Plug 'lukas-reineke/indent-blankline.nvim'
+   
+else 
+  " Use release branch
+  Plug 'neoclide/coc.nvim', {'branch': 'release'}
+endif
 
 "}}}1
 
@@ -609,14 +631,14 @@ Plug 'epeli/slimux', {'on': 'SlimuxShellRun'} " related to tmux
 " Plug 'mhinz/vim-startify', {'on': 'Startify'}
 Plug 'mhinz/vim-startify'
 
-Plug 'rizzatti/funcoo.vim' " for Dash
-Plug 'rizzatti/dash.vim'
-"### Dash {{{2
-  let g:dash_map = {
-    \ 'cpp' : 'qt'
-    \ }
-  :nmap <silent> ,k <Plug>DashSearch
-"}}}2
+" Plug 'rizzatti/funcoo.vim' " for Dash
+" Plug 'rizzatti/dash.vim'
+" "### Dash {{{2
+"   let g:dash_map = {
+"    \ 'cpp' : 'qt'
+"    \ }
+"   " :nmap <silent> ,k <Plug>DashSearch
+" "}}}2
 
 Plug 'vim-scripts/rainbow_csv.vim', {
   \ 'on': 'RainbowDelim',
@@ -634,7 +656,10 @@ Plug 'dhruvasagar/vim-table-mode', {
 
 Plug 'vim-scripts/renamer.vim', {'on': 'Renamer'}
 Plug 'vim-scripts/vimGTD', {'for': 'gtd'}
+
 Plug 'skwp/greplace.vim', {'on': 'Gsearch'}
+" Plug 'brooth/far.vim'
+
 Plug 'vim-scripts/ViewOutput', {'on': 'VO'}
 " Plug 't9md/vim-choosewin'
 "### choosewin {{{2
@@ -660,32 +685,32 @@ Plug 'vim-scripts/ScreenShot', {'on': ['ScreenShot', 'Text2Html', 'Diff2Html']}
  "let g:VEConf_fileHotkey.openPreview = '<cr>'
 "}}}2
 
-Plug 'vim-scripts/Mark--Karkat'
-"### settings for mark.vim {{{2
-  let g:mwHistAdd = "/@"
-  let g:mwAutoLoadMarks = 0
-  let g:mwAutoSaveMarks = 0
-  nmap <Plug>IgnoreMarkSearchNext <Plug>MarkSearchNext
-  nmap <Plug>IgnoreMarkSearchPrev <Plug>MarkSearchPrev
-
-  "highlight def MarkWord7   ctermfg=Cyan      ctermbg=Black  guifg=#8CCBEA    guibg=Black
-  "highlight def MarkWord8   ctermfg=Green     ctermbg=Black  guifg=#A4E57E    guibg=Black
-  "highlight def MarkWord9   ctermfg=Yellow    ctermbg=Black  guifg=#FFDB72    guibg=Black
-  "highlight def MarkWord10  ctermfg=Red       ctermbg=Black  guifg=#FF7272    guibg=Black
-  "highlight def MarkWord11  ctermfg=Magenta   ctermbg=Black  guifg=#FFB3FF    guibg=Black
-  "highlight def MarkWord12  ctermfg=Blue      ctermbg=Black  guifg=#9999FF    guibg=Black
-
-  "highlight def MarkWord13  ctermbg=Cyan      ctermfg=White  guibg=#8CCBEA    guifg=White
-  "highlight def MarkWord14  ctermbg=Green     ctermfg=White  guibg=#A4E57E    guifg=White
-  "highlight def MarkWord15  ctermbg=Yellow    ctermfg=White  guibg=#FFDB72    guifg=White
-  "highlight def MarkWord16  ctermbg=Red       ctermfg=White  guibg=#FF7272    guifg=White
-  "highlight def MarkWord17  ctermbg=Magenta   ctermfg=White  guibg=#FFB3FF    guifg=White
-  "highlight def MarkWord18  ctermbg=Blue      ctermfg=White  guibg=#9999FF    guifg=White
-
-  if &t_Co>=256 || has("gui_running")
-    let g:mwDefaultHighlightingPalette = 'extended'
-  endif
-"}}}2
+" Plug 'vim-scripts/Mark--Karkat'
+" "### settings for mark.vim {{{2
+"   let g:mwHistAdd = "/@"
+"   let g:mwAutoLoadMarks = 0
+"   let g:mwAutoSaveMarks = 0
+"   nmap <Plug>IgnoreMarkSearchNext <Plug>MarkSearchNext
+"   nmap <Plug>IgnoreMarkSearchPrev <Plug>MarkSearchPrev
+" 
+"   "highlight def MarkWord7   ctermfg=Cyan      ctermbg=Black  guifg=#8CCBEA    guibg=Black
+"   "highlight def MarkWord8   ctermfg=Green     ctermbg=Black  guifg=#A4E57E    guibg=Black
+"   "highlight def MarkWord9   ctermfg=Yellow    ctermbg=Black  guifg=#FFDB72    guibg=Black
+"   "highlight def MarkWord10  ctermfg=Red       ctermbg=Black  guifg=#FF7272    guibg=Black
+"   "highlight def MarkWord11  ctermfg=Magenta   ctermbg=Black  guifg=#FFB3FF    guibg=Black
+"   "highlight def MarkWord12  ctermfg=Blue      ctermbg=Black  guifg=#9999FF    guibg=Black
+" 
+"   "highlight def MarkWord13  ctermbg=Cyan      ctermfg=White  guibg=#8CCBEA    guifg=White
+"   "highlight def MarkWord14  ctermbg=Green     ctermfg=White  guibg=#A4E57E    guifg=White
+"   "highlight def MarkWord15  ctermbg=Yellow    ctermfg=White  guibg=#FFDB72    guifg=White
+"   "highlight def MarkWord16  ctermbg=Red       ctermfg=White  guibg=#FF7272    guifg=White
+"   "highlight def MarkWord17  ctermbg=Magenta   ctermfg=White  guibg=#FFB3FF    guifg=White
+"   "highlight def MarkWord18  ctermbg=Blue      ctermfg=White  guibg=#9999FF    guifg=White
+" 
+"   if &t_Co>=256 || has("gui_running")
+"     let g:mwDefaultHighlightingPalette = 'extended'
+"   endif
+" "}}}2
 
 Plug 'vim-airline/vim-airline'
 "### AirLine {{{2
@@ -703,6 +728,8 @@ Plug 'vim-airline/vim-airline'
 "}}}2
 
 Plug 'vim-utils/vim-man'
+
+" can use vifm + tmux + vimdiff to replace vim-dirdiff plugin
 Plug 'will133/vim-dirdiff', {'on': 'DirDiff'}
 "### setting for DirDiff.vim {{{
 let g:DirDiffExcludes = "*.pyc,*.pye,.svn,*.svn-base,*.svn-work,*~,*.orig,*.rej,*.swf,.*.swp,.*.swo"
@@ -718,11 +745,20 @@ Plug 'szw/vim-maximizer'
 "}}}2
 
 Plug 'chrisbra/NrrwRgn'
-Plug 'junegunn/goyo.vim'
+" Plug 'junegunn/goyo.vim'
 
-Plug 'bps/vim-tshark'
+" Plug 'bps/vim-tshark'
 
 Plug 'guns/xterm-color-table.vim'
+
+Plug 't9md/vim-quickhl'
+"### settings for quickhl {{{
+nmap <Space>m <Plug>(quickhl-manual-this)
+xmap <Space>m <Plug>(quickhl-manual-this)
+nmap <Space>M <Plug>(quickhl-manual-reset)
+xmap <Space>M <Plug>(quickhl-manual-reset)
+"}}}
+
 "}}}1
 
 " Ruby {{{1
@@ -735,7 +771,7 @@ Plug 'vim-scripts/ri-browser', {'for': ['ruby', 'rails']}
 
 " Python {{{1
 Plug 'vim-scripts/python.vim', {'for': ['python',],}
-Plug 'fs111/pydoc.vim', {'for': ['python',],}
+" Plug 'fs111/pydoc.vim', {'for': ['python',],}
 Plug 'vim-scripts/python_match.vim', {'for': ['python',],}
 " }}}1
 
@@ -766,7 +802,8 @@ Plug 'tpope/vim-fugitive'
 Plug 'gregsexton/gitv', {'on': 'Gitv'}
 Plug 'junegunn/gv.vim', {'on': 'GV'}
 Plug 'vim-scripts/Gist.vim', {'on': 'Gist'}
-Plug 'airblade/vim-gitgutter'
+
+" Plug 'airblade/vim-gitgutter'
 "}}}1
 
 " C/C++ {{{1
@@ -779,7 +816,7 @@ Plug 'vim-scripts/cpp.vim', {'for': ['c', 'cpp', 'h'],}
 "" }}}1
 
 " SQL {{{1
-Plug 'vim-scripts/SQLUtilities', {'for': 'sql'}
+Plug 'vim-scripts/SQLUtilities', {'for': 'sql', 'on': 'SQLUFormatter'}
 "### setting for SQLUtilities.vim {{{
  let g:sqlutil_keyword_case = '\U'
 "}}}
@@ -838,20 +875,6 @@ call plug#end()
   call camelcasemotion#CreateMotionMappings(',')
 "}}}1
 
-"### LSP support {{{1
-
-let g:LanguageClient_serverCommands = {
-    \ 'javascript': ['/usr/local/bin/javascript-typescript-stdio'],
-    \ }
-
-"nnoremap <F5> :call LanguageClient_contextMenu()<CR>
-" Or map each action separately
-"nnoremap <silent> K :call LanguageClient#textDocument_hover()<CR>
-"nnoremap <silent> gd :call LanguageClient#textDocument_definition()<CR>
-"nnoremap <silent> <F2> :call LanguageClient#textDocument_rename()<CR>
-
-" }}}1
-
 "### deoplete settings {{{1
 " if has('nvim')
 "   let g:deoplete#enable_at_startup = 1
@@ -868,84 +891,89 @@ let g:LanguageClient_serverCommands = {
 
 "### coc.vim settings {{{1
 
-set signcolumn=yes
+if !has('nvim-0.5')
+  set signcolumn=yes
 
-" Use tab for trigger completion with characters ahead and navigate.
-" Use command ':verbose imap <tab>' to make sure tab is not mapped by other plugin.
-inoremap <silent><expr> <TAB>
-      \ pumvisible() ? "\<C-n>" :
-      \ <SID>check_back_space() ? "\<TAB>" :
-      \ coc#refresh()
-inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+  " Use tab for trigger completion with characters ahead and navigate.
+  " Use command ':verbose imap <tab>' to make sure tab is not mapped by other plugin.
+  inoremap <silent><expr> <TAB>
+       \ pumvisible() ? "\<C-n>" :
+       \ <SID>check_back_space() ? "\<TAB>" :
+       \ coc#refresh()
+  inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
 
-function! s:check_back_space() abort
-  let col = col('.') - 1
-  return !col || getline('.')[col - 1]  =~# '\s'
-endfunction
+  function! s:check_back_space() abort
+    let col = col('.') - 1
+    return !col || getline('.')[col - 1]  =~# '\s'
+  endfunction
 
-" Use <c-n> to trigger completion.
-inoremap <silent><expr> <c-n> coc#refresh()
+  " Use <c-n> to trigger completion.
+  inoremap <silent><expr> <c-n> coc#refresh()
 
-" To make <cr> select the first completion item and confirm the completion
-" and format code when no item has been selected
-inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm() : "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+  " To make <cr> select the first completion item and confirm the completion
+  " and format code when no item has been selected
+  inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm() : "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
 
-" Use `[g` and `]g` to navigate diagnostics
-nmap <silent> [g <Plug>(coc-diagnostic-prev)
-nmap <silent> ]g <Plug>(coc-diagnostic-next)
+  " Use `[g` and `]g` to navigate diagnostics
+  nmap <silent> [g <Plug>(coc-diagnostic-prev)
+  nmap <silent> ]g <Plug>(coc-diagnostic-next)
 
-" Remap keys for gotos
-nmap <silent> gd <Plug>(coc-definition)
-nmap <silent> gY <Plug>(coc-type-definition)
-nmap <silent> gi <Plug>(coc-implementation)
-nmap <silent> gr <Plug>(coc-references)
+  " Remap keys for gotos
+  nmap <silent> gd <Plug>(coc-definition)
+  nmap <silent> gY <Plug>(coc-type-definition)
+  nmap <silent> gi <Plug>(coc-implementation)
+  nmap <silent> gr <Plug>(coc-references)
 
-" Close the preview window when completion is done.
-autocmd! CompleteDone * if pumvisible() == 0 | pclose | endif
+  "imap <silent> jj <Plug>(coc-float-hide)
 
-" Highlight symbol under cursor on CursorHold
-autocmd CursorHold * silent call CocActionAsync('highlight')
+  " Close the preview window when completion is done.
+  autocmd! CompleteDone * if pumvisible() == 0 | pclose | endif
 
-" show func signature help 
-" autocmd CursorHoldI * silent call CocActionAsync('showSignatureHelp')
+  " Highlight symbol under cursor on CursorHold
+  autocmd CursorHold * silent call CocActionAsync('highlight')
 
-augroup mygroup
-  autocmd!
-  " Setup formatexpr specified filetype(s).
-  autocmd FileType typescript,json setl formatexpr=CocAction('formatSelected')
-  " Update signature help on jump placeholder
-  autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
-augroup end
+  " show func signature help 
+  " autocmd CursorHoldI * silent call CocActionAsync('showSignatureHelp')
 
-" Remap for rename current word
-nmap ;rn <Plug>(coc-rename)
+  augroup mygroup
+    autocmd!
+    " Setup formatexpr specified filetype(s).
+    autocmd FileType typescript,json setl formatexpr=CocAction('formatSelected')
+    " Update signature help on jump placeholder
+    autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
+  augroup end
 
-" Remap for format selected region
-xmap ;f  <Plug>(coc-format-selected)
-nmap ;f  <Plug>(coc-format-selected)
+  " Remap for rename current word
+  nmap ;rn <Plug>(coc-rename)
 
-" Remap for do codeAction of current line
-nmap ;ca  <Plug>(coc-codeaction)
-" Fix autofix problem of current line
-nmap ;qf  <Plug>(coc-fix-current)
+  " Remap for format selected region
+  xmap ;f  <Plug>(coc-format-selected)
+  nmap ;f  <Plug>(coc-format-selected)
 
-" Use `:Format` to format current buffer
-command! -nargs=0 Format :call CocAction('format')
+  " Remap for do codeAction of current line
+  nmap ;ca  <Plug>(coc-codeaction)
+  " Fix autofix problem of current line
+  nmap ;qf  <Plug>(coc-fix-current)
 
-" Use `:Fold` to fold current buffer
-command! -nargs=? Fold :call CocAction('fold', <f-args>)
+  " Use `:Format` to format current buffer
+  command! -nargs=0 Format :call CocAction('format')
 
-" grep word under cursor
-command! -nargs=+ -complete=custom,s:GrepArgs CocRg exe 'CocList grep '.<q-args>
+  " Use `:Fold` to fold current buffer
+  command! -nargs=? Fold :call CocAction('fold', <f-args>)
 
-function! s:GrepArgs(...)
-  let list = ['-S', '-smartcase', '-i', '-ignorecase', '-w', '-word',
-        \ '-e', '-regex', '-u', '-skip-vcs-ignores', '-t', '-extension']
-  return join(list, "\n")
-endfunction
+  " grep word under cursor
+  command! -nargs=+ -complete=custom,s:GrepArgs CocRg exe 'CocList grep '.<q-args>
 
-" Keymapping for grep word under cursor with interactive mode
-nnoremap <silent> ;cf :exe 'CocList --input='.expand('<cword>').' grep'<CR>
+  function! s:GrepArgs(...)
+    let list = ['-S', '-smartcase', '-i', '-ignorecase', '-w', '-word',
+         \ '-e', '-regex', '-u', '-skip-vcs-ignores', '-t', '-extension']
+    return join(list, "\n")
+  endfunction
+
+  " Keymapping for grep word under cursor with interactive mode
+  nnoremap <silent> ;cf :exe 'CocList --input='.expand('<cword>').' grep'<CR>
+
+endif
 
 "}}}1
 
@@ -960,6 +988,7 @@ let g:startify_bookmarks = [
   \ {'w': '~/workspace/cpt/batch_worker'},
   \ {'m': '~/workspace/cpt/ems'},
   \ {'f': '~/workspace/iot/freeboard'},
+  \ {'s': '~/workspace/cpt/sedona'},
   \ {'v': '~/.vim'} ]
 let g:startify_custom_header = [
   \ '',
@@ -975,9 +1004,437 @@ set updatetime=300
 " let g:go_fmt_options = {
 "  \ 'gofmt': '-s'
 "  \ }
-  let g:go_auto_sameids = 1
+  let g:go_auto_sameids = 0
+  let g:go_info_mode = 'guru'
   let g:go_addtags_transform = 'camelcase'
+  " don't break the <C-]> & <C-T> workflow
+	let g:go_def_mapping_enabled = 0
 "}}}1
+
+"### vifm settings {{{1
+" only define one mapping, the shortcuts on how to open the file are defined
+" in vifmrc
+map <leader>vv :Vifm<CR>
+" map <leader>vf :Vifm<CR>
+" map <leader>vv :VsplitVifm<CR>
+" map <leader>vs :SplitVifm<CR>
+" map <leader>vd :DiffVifm<CR>
+" map <leader>vt :TabVifm<CR>
+"}}}1
+
+"### vim-which-key settings {{{1
+" nnoremap <silent> <leader> :<c-u>WhichKey '['<CR>
+"}}}1
+
+"### vache {{{1
+" let g:vache_default_docset_dir = '/Users/vincent/Library/Application Support/Dash/DocSets'
+let g:vache_filetype_options = {
+  \ 'qt': ['cpp', 'qt']
+  \ }
+" nmap <silent> ,k yiw:VacheLookup " <CR>
+" vmap <silent> ,k y:VacheLookup " <CR>
+
+let g:vache_browser = "Chrome"
+"}}}1
+
+"### quick-scope {{{1
+" Trigger a highlight in the appropriate direction when pressing these keys:
+let g:qs_highlight_on_keys = ['f', 'F', 't', 'T']
+"}}}1
+
+"### Grepper {{{1
+  " command! -nargs=* -complete=file GG Grepper -tool git -open -switch -query <args>
+  " command! -nargs=* -complete=file Ag Grepper -tool ag -open -switch -query <args>
+  command! -nargs=* -complete=file Rg Grepper -noprompt -tool rg -open -switch -query <args>
+  " command! -nargs=* -complete=file Pt Grepper -tool pt -open -switch -query <args>
+
+  " nnoremap <leader>g <plug>(GrepperOperator)
+  " xnoremap <leader>g <plug>(GrepperOperator)
+  nnoremap ,gr :Grepper -tool rg -cword -noprompt<cr>
+  vnoremap ,gr  y:Rg "<cr>
+
+  let g:grepper           = {}
+  let g:grepper.open      = 1
+  let g:grepper.switch    = 1
+  let g:grepper.jump      = 1
+  let g:grepper.dispatch  = 0
+  let g:grepper.tools     = ['rg', 'git', 'ag', 'findstr', 'sift', 'grep']
+"}}}1
+
+if has('nvim-0.5')
+" ### TreeSitter {{{1
+lua <<EOF
+require'nvim-treesitter.configs'.setup {
+  highlight = {
+    enable = true,
+    custom_captures = {
+      -- Highlight the @foo.bar capture group with the "Identifier" highlight group.
+      -- ["foo.bar"] = "Identifier",
+    },
+  },
+  incremental_selection = {
+    enable = true,
+    keymaps = {
+      init_selection = "gnn",
+      node_incremental = "grn",
+      scope_incremental = "grc",
+      node_decremental = "grm",
+    },
+  },
+  indent = {
+    enable = true
+  },
+  textobjects = {
+    select = {
+      enable = true,
+
+      -- Automatically jump forward to textobj, similar to targets.vim 
+      lookahead = true,
+
+      keymaps = {
+        -- You can use the capture groups defined in textobjects.scm
+        ["am"] = "@function.outer",
+        ["im"] = "@function.inner",
+        ["ac"] = "@class.outer",
+        ["ic"] = "@class.inner",
+				["ai"] = "@conditional.outer",
+				["ii"] = "@conditional.inner",
+				["al"] = "@loop.outer",
+				["il"] = "@loop.inner",
+				["ao"] = "@parameter.outer",
+				["io"] = "@parameter.inner",
+
+        -- Or you can define your own textobjects like this
+        ["iF"] = {
+          python = "(function_definition) @function",
+          cpp = "(function_definition) @function",
+          c = "(function_definition) @function",
+          java = "(method_declaration) @function",
+        },
+      },
+    },
+		swap = {
+      enable = true,
+      swap_next = {
+        ["<leader>a"] = "@parameter.inner",
+      },
+      swap_previous = {
+        ["<leader>A"] = "@parameter.inner",
+      },
+    },
+		move = {
+      enable = true,
+      set_jumps = true, -- whether to set jumps in the jumplist
+      goto_next_start = {
+        ["]m"] = "@function.outer",
+        ["]c"] = "@class.outer",
+      },
+      goto_next_end = {
+        ["]M"] = "@function.outer",
+        ["]C"] = "@class.outer",
+      },
+      goto_previous_start = {
+        ["[m"] = "@function.outer",
+        ["[c"] = "@class.outer",
+      },
+      goto_previous_end = {
+        ["[M"] = "@function.outer",
+        ["[C"] = "@class.outer",
+      },
+    },
+  },
+}
+EOF
+
+" Tree-sitter based folding.
+" set foldmethod=expr
+" set foldexpr=nvim_treesitter#foldexpr()
+
+" }}}1
+
+" ### Language Server  {{{1
+lua <<EOF
+
+-- Use an on_attach function to only map the following keys
+-- after the language server attaches to the current buffer
+local on_attach = function(client, bufnr)
+  local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
+  local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
+
+  --Enable completion triggered by <c-x><c-o>
+  -- buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
+
+  -- Mappings.
+  local opts = { noremap=true, silent=true }
+
+  
+  -- See `:help vim.lsp.*` for documentation on any of the below functions
+  buf_set_keymap('n', 'gD', '<Cmd>lua vim.lsp.buf.declaration()<CR>', opts)
+  buf_set_keymap('n', 'gd', '<Cmd>lua vim.lsp.buf.definition()<CR>', opts)
+
+  buf_set_keymap('n', 'gi', '<Cmd>lua vim.lsp.buf.incoming_calls()<CR>', opts)
+  buf_set_keymap('n', 'go', '<Cmd>lua vim.lsp.buf.outgoing_calls()<CR>', opts)
+
+  buf_set_keymap('n', '<c-]>', '<Cmd>lua vim.lsp.buf.definition()<CR>', opts)
+  buf_set_keymap('n', 'gY', '<cmd>lua vim.lsp.buf.type_definition()<CR>', opts)
+  buf_set_keymap('n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
+  buf_set_keymap('n', 'gI', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
+  buf_set_keymap('n', '<space>,', '<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>', opts)
+  buf_set_keymap('n', '<space>.', '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>', opts)
+  buf_set_keymap('n', '<space>k', '<Cmd>lua vim.lsp.buf.hover()<CR>', opts)
+  buf_set_keymap('n', '<space>K', '<cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
+  buf_set_keymap('n', '<space>rn', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
+  buf_set_keymap('n', '<space>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
+  buf_set_keymap('n', '<space>e', '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>', opts)
+  buf_set_keymap('n', '<space>q', '<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>', opts)
+  buf_set_keymap("n", "<space>f", "<cmd>lua vim.lsp.buf.formatting()<CR>", opts)
+  buf_set_keymap("n", "<space>ws", "<cmd>lua vim.lsp.buf.workspace_symbol()<CR>", opts)
+  -- buf_set_keymap('n', '<space>wa', '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>', opts)
+  -- buf_set_keymap('n', '<space>wr', '<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>', opts)
+  buf_set_keymap('n', '<space>wl', '<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>', opts)
+
+end
+
+local function setup_servers()
+  require'lspinstall'.setup()
+  local servers = require'lspinstall'.installed_servers()
+  for _, server in pairs(servers) do
+    require'lspconfig'[server].setup{
+      on_attach = on_attach,
+      flags = {
+        debounce_text_changes = 150,
+      }
+    }
+  end
+end
+
+setup_servers()
+
+-- Automatically reload after `:LspInstall <server>` so we don't have to restart neovim
+require'lspinstall'.post_install_hook = function ()
+  setup_servers() -- reload installed servers
+  vim.cmd("bufdo e") -- this triggers the FileType autocmd that starts the server
+end
+
+-- require'lspconfig'.gopls.setup{
+--     cmd = {"gopls", "serve"},
+--     settings = {
+--       gopls = {
+--         analyses = {
+--           unusedparams = true,
+--         },
+--         staticcheck = true,
+--       },
+--     },
+--   }
+
+EOF
+
+" }}}1
+
+" ### lspfuzzy {{{1
+lua <<EOF
+	require('lspfuzzy').setup {
+		methods = 'all',         -- either 'all' or a list of LSP methods (see below)
+		jump_one = true,         -- jump immediately if there is only one location
+		fzf_preview = {          -- arguments to the FZF '--preview-window' option
+			'right:+{2}-/2,nohidden'          -- preview on the right and centered on entry
+		},
+		fzf_action = {           -- FZF actions
+			['ctrl-t'] = 'tabedit',  -- go to location in a new tab
+			['ctrl-v'] = 'vsplit',   -- go to location in a vertical split
+			['ctrl-x'] = 'split',    -- go to location in a horizontal split
+		},
+		fzf_modifier = ':~:.',   -- format FZF entries, see |filename-modifiers|
+		fzf_trim = true,         -- trim FZF entries
+	}
+EOF
+"}}}1
+
+" ### nvim-compe {{{1
+lua <<EOF
+-- 
+-- vim.o.completeopt = "menuone,noselect"
+-- 
+-- require'compe'.setup {
+--   enabled = true;
+--   autocomplete = true;
+--   debug = false;
+--   min_length = 2;
+--   preselect = 'always';
+--   throttle_time = 80;
+--   source_timeout = 200;
+--   resolve_timeout = 800;
+--   incomplete_delay = 400;
+--   max_abbr_width = 100;
+--   max_kind_width = 100;
+--   max_menu_width = 100;
+--   documentation = {
+--     border = { '', '' ,'', ' ', '', '', '', ' ' }, -- the border option is the same as `|help nvim_open_win|`
+--     winhighlight = "NormalFloat:CompeDocumentation,FloatBorder:CompeDocumentationBorder",
+--     max_width = 120,
+--     min_width = 60,
+--     max_height = math.floor(vim.o.lines * 0.3),
+--     min_height = 1,
+--   };
+-- 
+--   source = {
+--     path = true;
+--     buffer = true;
+--     calc = false;
+--     nvim_lsp = true;
+--     nvim_lua = false;
+--     vsnip = false;
+--     ultisnips = false;
+--     luasnip = false;
+--   };
+-- }
+-- 
+-- local t = function(str)
+--   return vim.api.nvim_replace_termcodes(str, true, true, true)
+-- end
+-- 
+-- local check_back_space = function()
+--     local col = vim.fn.col('.') - 1
+--     return col == 0 or vim.fn.getline('.'):sub(col, col):match('%s') ~= nil
+-- end
+-- 
+-- -- Use (s-)tab to:
+-- --- move to prev/next item in completion menuone
+-- --- jump to prev/next snippet's placeholder
+-- _G.tab_complete = function()
+--   if vim.fn.pumvisible() == 1 then
+--     return t "<C-n>"
+--   elseif vim.fn['vsnip#available'](1) == 1 then
+--     return t "<Plug>(vsnip-expand-or-jump)"
+--   elseif check_back_space() then
+--     return t "<Tab>"
+--   else
+--     return vim.fn['compe#complete']()
+--   end
+-- end
+-- _G.s_tab_complete = function()
+--   if vim.fn.pumvisible() == 1 then
+--     return t "<C-p>"
+--   elseif vim.fn['vsnip#jumpable'](-1) == 1 then
+--     return t "<Plug>(vsnip-jump-prev)"
+--   else
+--     -- If <S-Tab> is not working in your terminal, change it to <C-h>
+--     return t "<S-Tab>"
+--   end
+-- end
+-- 
+-- local opts = {expr = true, silent = true}
+-- vim.api.nvim_set_keymap("i", "<Tab>", "v:lua.tab_complete()", opts)
+-- vim.api.nvim_set_keymap("s", "<Tab>", "v:lua.tab_complete()", opts)
+-- vim.api.nvim_set_keymap("i", "<S-Tab>", "v:lua.s_tab_complete()", opts)
+-- vim.api.nvim_set_keymap("s", "<S-Tab>", "v:lua.s_tab_complete()", opts)
+
+EOF
+" inoremap <silent><expr> <C-f>     compe#scroll({ 'delta': +4 })
+" inoremap <silent><expr> <C-b>     compe#scroll({ 'delta': -4 })
+" inoremap <silent><expr> <CR>      compe#confirm('<CR>')
+ 
+" }}}1
+
+" completion.nvim {{{1
+autocmd BufEnter * lua require'completion'.on_attach()
+
+" Use <Tab> and <S-Tab> to navigate through popup menu
+inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
+inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+
+" Set completeopt to have a better completion experience
+set completeopt=menuone,noinsert,noselect
+
+" Avoid showing message extra message when using completion
+set shortmess+=c
+
+let g:completion_enable_auto_popup = 1
+
+imap <tab> <Plug>(completion_smart_tab)
+imap <s-tab> <Plug>(completion_smart_s_tab)
+
+let g:completion_confirm_key = ""
+imap <expr> <cr>  pumvisible() ? complete_info()["selected"] != "-1" ?
+                 \ "\<Plug>(completion_confirm_completion)"  : "\<c-e>\<CR>" :  "\<CR>"
+
+let g:completion_matching_smart_case = 1
+let g:completion_trigger_keyword_length = 3 " default = 1
+
+let g:completion_matching_strategy_list = ['exact', 'substring'] 
+
+let g:completion_chain_complete_list = {
+	    \ 'lua': {
+	    \    'string': [
+	    \        {'mode': '<c-p>'},
+	    \        {'mode': '<c-n>'}],
+	    \    'default': [
+	    \       {'complete_items': ['lsp', 'snippet']},
+	    \       {'mode': '<c-p>'},
+	    \       {'mode': '<c-n>'}],
+	    \  },
+	    \ 'default' : {
+	    \   'comment': [],
+	    \   'default': [
+	    \       {'complete_items': ['lsp', 'snippet']},
+	    \       {'mode': '<c-p>'},
+	    \       {'mode': '<c-n>'}]
+	    \   }
+	    \}
+
+" }}}1
+
+" vsnip {{{1
+" " Expand
+" imap <expr> <C-j>   vsnip#expandable()  ? '<Plug>(vsnip-expand)'         : '<C-j>'
+" smap <expr> <C-j>   vsnip#expandable()  ? '<Plug>(vsnip-expand)'         : '<C-j>'
+" " Expand or jump
+" imap <expr> <C-l>   vsnip#available(1)  ? '<Plug>(vsnip-expand-or-jump)' : '<C-l>'
+" smap <expr> <C-l>   vsnip#available(1)  ? '<Plug>(vsnip-expand-or-jump)' : '<C-l>'
+"}}}1
+
+" hop {{{1
+lua <<EOF
+
+  require'hop'.setup()
+
+  local opts = { noremap=true, silent=true }
+  vim.api.nvim_set_keymap("n", ";w", "<cmd>HopWordAC<cr>", opts)
+  vim.api.nvim_set_keymap("n", ";b", "<cmd>HopWordBC<cr>", opts)
+  vim.api.nvim_set_keymap("n", ";j", "<cmd>HopLineStartAC<cr>", opts)
+  vim.api.nvim_set_keymap("n", ";k", "<cmd>HopLineStartBC<cr>", opts)
+
+  vim.api.nvim_set_keymap("v", ";w", "<cmd>HopWordAC<cr>", opts)
+  vim.api.nvim_set_keymap("v", ";b", "<cmd>HopWordBC<cr>", opts)
+  vim.api.nvim_set_keymap("v", ";j", "<cmd>HopLineStartAC<cr>", opts)
+  vim.api.nvim_set_keymap("v", ";k", "<cmd>HopLineStartBC<cr>", opts)
+
+EOF
+" }}}1
+
+"### indent-blankline {{{1 
+lua <<EOF
+
+	require("indent_blankline").setup {
+			-- char = "|",
+			buftype_exclude = {"terminal"},
+      filetype_exclude = {"startify"},
+	}
+
+EOF
+" }}}1
+
+"### dial.vim {{{1
+nmap <C-a> <Plug>(dial-increment)
+nmap <C-x> <Plug>(dial-decrement)
+vmap <C-a> <Plug>(dial-increment)
+vmap <C-x> <Plug>(dial-decrement)
+vmap g<C-a> <Plug>(dial-increment-additional)
+vmap g<C-x> <Plug>(dial-decrement-additional)
+"}}}1
+
+endif
 
 " vim: ft=vim foldmethod=marker expandtab ts=2 sw=2
 
