@@ -95,7 +95,12 @@ endif
 :set wildmode=longest,full
 
 " always display the statusline
-:set laststatus=2
+if has("nvim")
+  " :set laststatus=3 " use global status
+  :set laststatus=2 " use global status
+else
+  :set laststatus=2
+endif
 
 " In shell scripts, there should be no spaces around "=".
 " progname=/usr/local/txserver
@@ -229,7 +234,7 @@ let g:vim_json_conceal = 0
     cnoremap <C-B> <left>
     cnoremap <C-F> <right>
 
-    " <C-X> as a prefix key under command mode 
+    " <C-X> as a prefix key under command mode
     " cnoremap <C-X> <Del>
 
     " key maps will make increase/decrease the width/height of window easier
@@ -350,12 +355,15 @@ let g:vim_json_conceal = 0
     imap <silent> <f5> <Esc>:w<CR>:make<CR>i
 
     map <silent> <leader>ss :syntax sync fromstart<CR>
-    
+
     if has('nvim')
       tnoremap <Esc> <C-\><C-n>
     endif
 
     nnoremap <expr> gp '`[' . strpart(getregtype(), 0, 1) . '`]'
+
+    " delete chars after cursor
+    imap <c-k> <ESC>lDa
 
 "## }}}1
 
@@ -770,7 +778,19 @@ if has("autocmd")
         autocmd FileType html setlocal ts=2
         autocmd FileType html setlocal sw=2
     augroup END
+
+    "comment it out because it cause too many git diffs
+    "" remove trailing whitespace and file end new lines during save
+    " augroup TrimTrailingWhiteSpace
+    "     au!
+    "     au BufWritePre * %s/\s\+$//e
+    "     au BufWritePre * %s/\n\+\%$//e
+    " augroup END
     "}}}4
+    
+    if exists("##TermOpen") 
+      autocmd TermOpen * setlocal nonumber norelativenumber
+    endif
 
     " syntax omnicomplete {{{2
     if has("autocmd") && exists("+omnifunc")
@@ -782,9 +802,7 @@ if has("autocmd")
       augroup END
     endif
     "}}}2
-
-    "}}}2
-
+    
 endif " has("autocmd")
 "## }}}1
 
@@ -959,10 +977,6 @@ endif " has("autocmd")
     vmap ,d2 :call BlockDiff_GetBlock2()<CR>
     "}}}2
 
-    "### visswap {{{2
-     map <silent> <unique> <c-y> <Plug>VisualPreSwap
-     map <silent> <unique> <c-t> <Plug>VisualSwap
-    "}}}2
 "## }}}1
 
 "## Xterm colors defination {{{1
@@ -1210,10 +1224,12 @@ endif " has("autocmd")
 endif
 
 " set Vim-specific sequences for RGB colors
+" GOTCHA: need to disable termguicolors when using some low version of mosh 
+" set notermguicolors
 set termguicolors
 let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
 let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
- 
+
 "## }}}1
 
 "## Experiments {{{1
@@ -1230,16 +1246,34 @@ command! -nargs=+ -complete=command TabMessage call TabMessage(<q-args>)
 
 "## Color Scheme {{{1
   " :colorscheme jellybeans
-  
+
   " :colorscheme molokai
   " let g:rehash256 = 1 "enable 256 color in terminal for molokai
 
-  let g:seoul256_background = 235 
-  colorscheme seoul256
-  " set background=dark
-  " colorscheme solarized8
-  " colorscheme desertEx
-  " colorscheme synic
+  " italic does not work under tmux, need to figure out how to fix tmux on
+  " this
+  " let g:gruvbox_italic = 1
+  let g:gruvbox_contrast_dark = 'soft'
+  set background=dark
+  colorscheme gruvbox
+  if has('nvim-0.5')
+    " let g:material_style = 'palenight'
+    " colorscheme material
+    " colorscheme nightfly
+  else
+    " let g:seoul256_background = 235
+    " colorscheme seoul256
+    " set background=dark
+    " colorscheme solarized8
+    " colorscheme desertEx
+    " colorscheme synic
+  endif
+
+  " enhance vimdiff colors
+  if &diff
+    colorscheme github
+  endif
+  au FilterWritePre * if &diff | colorscheme github | endif
 " }}}1
 
 "## MacVim Related {{{1
@@ -1255,4 +1289,3 @@ endif
 if filereadable(expand('~/.vimrc.local'))
     source ~/.vimrc.local
 endif
-

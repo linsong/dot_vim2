@@ -146,3 +146,12 @@ type `name^ interface {
 {{^	`fnname^(`params*^)` `returns?^
 ``...`
 ^`}}^}`cursor^
+
+XPT iferr " if err { return err }
+if `err^ != nil {
+	return `err^
+}
+`cursor^
+
+XPT retnil " return nil
+  return nil `cursor^
