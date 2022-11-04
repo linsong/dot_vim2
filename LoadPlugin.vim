@@ -161,8 +161,6 @@ endif
 Plug '/usr/local/opt/fzf'
 Plug 'junegunn/fzf.vim'
 
-Plug 'ibhagwan/fzf-lua', {'branch': 'main'}
-
 Plug 'vifm/vifm.vim'
 
 Plug 'mhinz/vim-grepper'
@@ -328,6 +326,8 @@ if has('nvim-0.5')
   Plug 'rcarriga/nvim-notify'
 
   " Plug 'ThePrimeagen/refactoring.nvim'
+ 
+  Plug 'ibhagwan/fzf-lua', {'branch': 'main'}
   
 else
   " Use release branch
