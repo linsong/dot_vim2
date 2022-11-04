@@ -146,6 +146,7 @@ Plug 'morhetz/gruvbox'
 if has('nvim-0.5')
   " Plug 'marko-cerovac/material.nvim'
   Plug 'bluz71/vim-nightfly-guicolors'
+  Plug 'folke/tokyonight.nvim', { 'branch': 'main' }
 endif
 " }}}1
 
@@ -156,300 +157,11 @@ endif
 " }}}1
 
 " Advanced Editing {{{1
+
 Plug '/usr/local/opt/fzf'
 Plug 'junegunn/fzf.vim'
-" Plug 'tweekmonster/fzf-filemru'
-" Plug 'pbogut/fzf-mru.vim'
-"### fzf {{{2
-  "Jump to the existing window if possible
-  let g:fzf_buffers_jump = 1
 
-  " Customize fzf colors to match your color scheme
-  let g:fzf_colors =
-  \ { 'fg':      ['fg', 'Normal'],
-    \ 'bg':      ['bg', 'Normal'],
-    \ 'hl':      ['fg', 'Comment'],
-    \ 'fg+':     ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
-    \ 'bg+':     ['bg', 'CursorLine', 'CursorColumn'],
-    \ 'hl+':     ['fg', 'Statement'],
-    \ 'info':    ['fg', 'PreProc'],
-    \ 'border':  ['fg', 'Ignore'],
-    \ 'prompt':  ['fg', 'Conditional'],
-    \ 'pointer': ['fg', 'Exception'],
-    \ 'marker':  ['fg', 'Keyword'],
-    \ 'spinner': ['fg', 'Label'],
-    \ 'header':  ['fg', 'Comment'] }
-
-	" An action can be a reference to a function that processes selected lines
-	function! s:build_quickfix_list(lines)
-		call setqflist(map(copy(a:lines), '{ "filename": v:val }'))
-		copen
-		cc
-	endfunction
-
-	let g:fzf_action = {
-		\ 'ctrl-q': function('s:build_quickfix_list'),
-		\ 'ctrl-t': 'tab split',
-		\ 'ctrl-x': 'split',
-		\ 'ctrl-v': 'vsplit' }
-
-  " Insert mode completion
-  " imap <c-x><c-f> <plug>(fzf-complete-path)
-  imap <c-x><c-j> <plug>(fzf-complete-file-ag)
-  imap <c-x><c-l> <plug>(fzf-complete-line)
-
-  let g:fzf_tags_command = 'ctags -R'
-
-if has('nvim')
-  let g:fzf_layout = { 'window': 'call FloatingFZF()' }
-	function! FloatingFZF()
-		let buf = nvim_create_buf(v:false, v:true)
-		call setbufvar(buf, '&signcolumn', 'no')
-
-		let height = &lines - 3
-		let width = float2nr(&columns - (&columns * 2 / 10))
-		let col = float2nr((&columns - width) / 2)
-
-		let opts = {
-					\ 'relative': 'editor',
-					\ 'row': 1,
-					\ 'col': col,
-					\ 'width': width,
-					\ 'height': height
-					\ }
-
-		call nvim_open_win(buf, v:true, opts)
-	endfunction
-endif
-
-  " complete input as name in current file in fuzzy way
-  " e.g.: gCC => getCurrentComponent
-  " inoremap <expr> <c-x><c-k> fzf#complete({
-  "      \ 'source': "/usr/bin/grep -o -E '\\w{5,}' " . expand('%:p') . "\| /usr/bin/sort -uf",
-  "      \ 'options': '-0 -1 -x',
-  "      \ 'left': 35})
-
-  " Replace the default dictionary completion with fzf-based fuzzy completion
-  " inoremap <expr> <c-x><c-k> fzf#vim#complete('cat /usr/share/dict/words')
-
-  " select file/path from command
-  function! s:append_dir_with_fzf(line)
-  	call fzf#run(fzf#wrap({
-  		\ 'options': ['--prompt', a:line.'> '],
-  		\ 'source': 'fd -t d',
-  		\ 'sink': {line -> feedkeys("\<esc>:".a:line.line, 'nt')}}))
-  	return ''
-  endfunction
-  cnoremap <expr> <c-x><c-d> <sid>append_dir_with_fzf(getcmdline())
-
-  function! s:get_cmd_args(...) abort
-    if a:0 > 0
-      return a:1
-    else
-      return '.'
-    endif
-  endfunction
-  command! -nargs=* -complete=dir Cd call fzf#run(fzf#wrap(
-    \ {'source': 'fd -t d '. s:get_cmd_args(<f-args>),
-    \  'sink': 'cd'}))
-
-  " Likewise, Files command with preview window
-  command! -bang -nargs=? -complete=dir FzfFiles
-     \ call fzf#vim#files(<q-args>, fzf#vim#with_preview('up:50%:hidden', '?'), <bang>0)
-
-  " Augmenting Ag command using fzf#vim#with_preview function
-  "   * fzf#vim#with_preview([[options], preview window, [toggle keys...]])
-  "     * For syntax-highlighting, Ruby and any of the following tools are required:
-  "       - Highlight: http://www.andre-simon.de/doku/highlight/en/highlight.php
-  "       - CodeRay: http://coderay.rubychan.de/
-  "       - Rouge: https://github.com/jneen/rouge
-  "
-  "   :Ag  - Start fzf with hidden preview window that can be enabled with "?" key
-  "   :Ag! - Start fzf in fullscreen and display the preview window above
-  command! -bang -nargs=* FzfAg
-    \ call fzf#vim#ag(<q-args>,
-    \                 <bang>0 ? fzf#vim#with_preview('up:70%')
-    \                         : fzf#vim#with_preview('right:50%:hidden', '?'),
-    \                 <bang>0)
-
-  command! -bang -nargs=* FzfRg
-    \ call fzf#vim#grep(
-    \   'rg --column --line-number --no-heading --color=always --smart-case '.shellescape(<q-args>), 1,
-    \   <bang>0 ? fzf#vim#with_preview('up:70%')
-    \           : fzf#vim#with_preview('right:50%:hidden', '?'),
-    \   <bang>0)
-
-
-  function! Fzf_files_with_dev_icons(command)
-    let l:fzf_files_options = '-x -m --preview="bat --color \"always\" --style numbers {2..} | head -'.&lines.'" --preview-window=up:70%:wrap:hidden --bind="?:toggle-preview,ctrl-p:preview-up,ctrl-n:preview-down,ctrl-r:jump-accept,ctrl-d:delete-char/eof" --expect=ctrl-v,ctrl-x,ctrl-t --tiebreak=end,length'
-    function! s:edit_devicon_prepended_file(items)
-      let items = a:items
-      let i = 1
-      let ln = len(items)
-      while i < ln
-        let item = items[i][4:-1]
-        let items[i] = item
-        let i += 1
-      endwhile
-      call s:Sink(items)
-    endfunction
-
-    echom a:command
-    let l:opts = fzf#wrap({})
-    let l:opts.source = a:command.' | devicon-lookup'
-    let s:Sink = l:opts['sink*']
-    let l:opts['sink*'] = function('s:edit_devicon_prepended_file')
-    let l:opts.options = l:fzf_files_options
-    let l:opts.down = '40%'
-    call fzf#run(l:opts)
-  endfunction
-  nnoremap <c-p> :call Fzf_files_with_dev_icons("fd -d 8 -t f")<CR>
-  " nnoremap <c-p> :call Fzf_files_with_dev_icons($FZF_DEFAULT_COMMAND)<CR>
-
-  function! Fzf_git_diff_files_with_dev_icons()
-    let l:fzf_files_options = '-x -m --ansi --preview "sh -c \"(git diff --color=always -- {3..} | sed 1,4d; bat --color always --style numbers {3..}) | head -'.&lines.'\"" --preview-window=up:70%:wrap:hidden --bind="?:toggle-preview,ctrl-e:preview-up,ctrl-d:preview-down,ctrl-r:jump-accept" --expect=ctrl-v,ctrl-x,ctrl-t --tiebreak=end,length '
-
-    function! s:edit_devicon_prepended_file_diff(items)
-      let items = a:items
-      let i = 1
-      let ln = len(items)
-      let l:first_diff_line_number = 0
-      while i < ln
-        let l:file_path = items[i][7:-1]
-        let items[i] = l:file_path
-        let l:first_diff_line_number = system("git diff -U0 ".l:file_path." | rg '^@@.*\+' -o | rg '[0-9]+' -o | head -1")
-        let i += 1
-      endwhile
-      call s:SinkForGitDiff(items)
-      execute l:first_diff_line_number
-    endfunction
-
-    let opts = fzf#wrap({})
-    let opts.source = 'git -c color.status=always status --short --untracked-files=all | devicon-lookup'
-    let s:SinkForGitDiff = opts['sink*']
-    let opts['sink*'] = function('s:edit_devicon_prepended_file_diff')
-    let opts.options = l:fzf_files_options
-    let opts.down = '40%'
-    call fzf#run(opts)
-  endfunction
-  nnoremap ,fc :call Fzf_git_diff_files_with_dev_icons()<CR>
-
-  function! FzfSpellSink(word)
-    exec 'normal! "_ciw'.a:word
-  endfunction
-
-  function! FzfSpell()
-    let suggestions = spellsuggest(expand("<cword>"))
-    return fzf#run({'source': suggestions, 'sink': function("FzfSpellSink"), 'down': 25})
-  endfunction
-  nnoremap <silent> z= :call FzfSpell()<CR>
-
-  " open dash docset through fzf
-  let g:dash_filetype_options = {
-      \ 'haskell': [ 'haskell' ],
-      \ 'go': [ 'go' ],
-      \ 'js': [ 'lodash', 'd3', 'moment', 'javascript' ],
-      \ 'r': [ 'r' ],
-      \ 'css': [ 'css' ],
-      \ 'less': [ 'css', 'less' ],
-      \ 'svg': [ 'svg' ],
-      \ 'cpp': [ 'cpp', 'qt' ],
-      \ 'php': [ 'php' ],
-      \ 'javascript': [ 'javascript' ],
-      \ }
-  function! DashDocFamilies()
-    let l:families = ''
-    if has_key(g:dash_filetype_options, &ft)
-      let l:options = g:dash_filetype_options[&ft]
-      if type(l:options) == 3 "options is a list
-        let l:families = join(l:options, ',')
-      endif
-    endif
-    return l:families
-  endfunction
-
-  let g:dash_chrome_tab_id = ''
-
-  function! s:do_open_docset_by_keyword(word, lucky_mode)
-    " GOTCHA: due to mac's privacy restriction, can not run chrome-cli within
-    " vimr to open doc URL in chrome. use mosquitto as a workaround:
-    " in vimr, publish the url to topic '/chrome-control/url', then in
-    " terminal, need to run following command:
-    " $ mosquitto_sub -t '/chrome-control/url' | xargs -I{} chrome-cli open "{}"
-    let l:is_vimr = has('gui_vimr')
-    if l:is_vimr
-      let l:cmd = 'mosquitto_pub -t "/chrome-control/url" -m '
-    else
-      let l:cmd = 'chrome-cli open '
-    endif
-
-    let l:families = g:DashDocFamilies()
-
-    " escape special characters
-    let l:word = substitute(a:word, '\$', '\\$', '')
-
-    if a:lucky_mode == 1
-      let l:cmd = l:cmd . ' "$(fdoc -f ' . l:families . ' -t -m ' . l:word . ')"'
-    else
-      let l:cmd = l:cmd . ' "$(fdoc -f ' . l:families . ' -t -n ' . l:word . ')"'
-    endif
-    echom l:cmd
-
-    if l:is_vimr
-      let l:foo = system(l:cmd)
-    else
-      if strlen(g:dash_chrome_tab_id) != 0
-        let l:cmd = l:cmd . ' -t ' . g:dash_chrome_tab_id
-      endif
-
-      let l:lines = systemlist(l:cmd)
-      if len(l:lines) != 0
-        let g:dash_chrome_tab_id = substitute(l:lines[0], '^Id: \(\d\+\)$', '\1', '')
-      endif
-    endif
-  endfunction
-
-  function! s:open_docset_by_keyword(word)
-    call s:do_open_docset_by_keyword(a:word, 0)
-  endfunction
-
-  function! FzfDashOpenByWord(word)
-    call s:do_open_docset_by_keyword(a:word, 1)
-  endfunction
-
-  function! FzfDash(...)
-    let l:families = g:DashDocFamilies()
-
-    let l:fzf_options = ' --prompt="' . l:families . '> " '
-    if a:0 == 1
-      let l:fzf_options = l:fzf_options . ' --query="' . a:1 . '"'
-    endif
-
-    call fzf#run({
-        \ 'source': 'fdoc -f ' . l:families,
-        \ 'sink': function('s:open_docset_by_keyword'),
-        \ 'options': l:fzf_options
-        \ })
-  endfunction
-  command! -nargs=? FzfDash call FzfDash(<f-args>)
-  nmap <silent> ,k yiw:FzfDash '" <CR>
-  nmap <silent> ,K yiw:silent call FzfDashOpenByWord('"')<CR>
-  vmap <silent> ,K y:silent call FzfDashOpenByWord('"')<CR>
-
-  noremap ,ff :FzfFiles<CR>
-  noremap ,fd :Cd<CR>
-  noremap ,fz :Z<CR>
-  noremap ,ft :Tags<CR>
-  noremap ,fl :Lines<CR>
-  " noremap ,fr :FZFMru<CR>
-  noremap ,fb :Buffers<CR>
-  noremap ,fh :History<CR>
-  noremap ,fm :BCommits<CR>
-
-  nnoremap ,fg yiw:FzfRg "
-  vnoremap ,fg  y:FzfRg "<CR>
-
-"}}}2
+Plug 'ibhagwan/fzf-lua', {'branch': 'main'}
 
 Plug 'vifm/vifm.vim'
 
@@ -563,6 +275,8 @@ Plug 'vim-scripts/VisIncr'
 " Plug 'unblevable/quick-scope'
 
 Plug 'alvan/vim-closetag'
+
+Plug 'kevinhwang91/nvim-bqf'
 
 if has('nvim-0.5')
   " TreeSitter
@@ -740,7 +454,8 @@ let g:DirDiffExcludes = "*.pyc,*.pye,.svn,*.svn-base,*.svn-work,*~,*.orig,*.rej,
 "}}}
 
 Plug 'rickhowe/diffchar.vim'
-Plug 'AndrewRadev/linediff.vim'
+Plug 'rickhowe/spotdiff.vim'
+" Plug 'AndrewRadev/linediff.vim'
 
 " choose one of below three plugins
 " Plug 'vim-scripts/ZoomWin', {'on': 'ZoomWin'}
@@ -1548,19 +1263,19 @@ require'nvim-treesitter.configs'.setup {
       set_jumps = true, -- whether to set jumps in the jumplist
       goto_next_start = {
         ["]m"] = "@function.outer",
-        ["]c"] = "@class.outer",
+        ["]k"] = "@class.outer",
       },
       goto_next_end = {
         ["]M"] = "@function.outer",
-        ["]C"] = "@class.outer",
+        ["]K"] = "@class.outer",
       },
       goto_previous_start = {
         ["[m"] = "@function.outer",
-        ["[c"] = "@class.outer",
+        ["[k"] = "@class.outer",
       },
       goto_previous_end = {
         ["[M"] = "@function.outer",
-        ["[C"] = "@class.outer",
+        ["[K"] = "@class.outer",
       },
     },
   },
@@ -1664,7 +1379,7 @@ local on_attach = function(client, bufnr)
 end
 
 -- set up nvim-cmp integration
-local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
+local capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
 
 require("mason").setup()
 require("mason-lspconfig").setup({
@@ -2184,6 +1899,10 @@ EOF
 " ### diffview {{{1
 
 lua <<EOF
+  -- change the diff style, refers to: https://github.com/sindrets/diffview.nvim/issues/35
+  local set = vim.opt -- set options
+  set.fillchars = set.fillchars + 'diff:╱'
+
   local actions = require("diffview.actions")
   require("diffview").setup({
     default_args = {    -- Default args prepended to the arg-list for the listed commands
@@ -2224,7 +1943,6 @@ lua <<EOF
 EOF
 " }}}1
 
-
 "### AirLine {{{1
   if has('macunix')
     let g:airline_powerline_fonts = 1
@@ -2240,6 +1958,378 @@ EOF
   let g:airline#parts#ffenc#skip_expected_string='utf-8[unix]'
 "}}}1
 
+"### fzf {{{1
+if has('nvim')
+
+lua <<EOF
+  local actions = require "fzf-lua.actions"
+  require'fzf-lua'.setup {
+    keymap = {
+      builtin = {
+        ["<C-h>"]    = "toggle-help",
+        ["<C-s>"]    = "toggle-fullscreen",
+        ["?"]        = "toggle-preview",
+        ["<C-n>"]    = "preview-page-down",
+        ["<C-p>"]    = "preview-page-up",
+      },
+    },
+    actions = {
+      files = {
+        ["default"]     = actions.file_edit_or_qf,
+        ["ctrl-s"]      = actions.file_split,
+        ["ctrl-v"]      = actions.file_vsplit,
+        ["ctrl-t"]      = actions.file_tabedit,
+        ["ctrl-l"]      = actions.file_sel_to_qf,
+        -- ["ctrl-l"]      = actions.file_sel_to_ll,
+      },
+      buffers = {
+        ["default"]     = actions.buf_edit,
+        ["ctrl-s"]      = actions.buf_split,
+        ["ctrl-v"]      = actions.buf_vsplit,
+        ["ctrl-t"]      = actions.buf_tabedit,
+
+        ["ctrl-l"]      = actions.file_sel_to_qf,
+        -- ["ctrl-l"]      = actions.file_sel_to_ll,
+      },
+    },
+  }
+EOF
+
+  noremap <c-p> :lua require('fzf-lua').files()<CR>
+  noremap ,ff :lua require('fzf-lua').files()<CR>
+  " noremap ,fd :Cd<CR>
+  " noremap ,fz :Z<CR>
+  noremap ,ft :lua require('fzf-lua').tags()<CR>
+  noremap ,fl :lua require('fzf-lua').blines()<CR>
+  " noremap ,fr :FZFMru<CR>
+  noremap ,fb :lua require('fzf-lua').buffers()<CR>
+  noremap ,fh :lua require('fzf-lua').oldfiles()<CR>
+  noremap ,fq :lua require('fzf-lua').quickfix()<CR>
+
+  noremap ,fm :lua require('fzf-lua').git_bcommits()<CR>
+
+  nnoremap ,fg :lua require('fzf-lua').grep_cword()<CR>
+  vnoremap ,fg :lua require('fzf-lua').grep_visual()<CR>
+  nnoremap ,fG :lua require('fzf-lua').live_grep_native()<CR>
+
+  nnoremap <space>gr :lua require('fzf-lua').lsp_references()<CR>
+  nnoremap <space>gd :lua require('fzf-lua').lsp_definitions()<CR>
+  nnoremap <space>gi :lua require('fzf-lua').lsp_incoming_calls()<CR>
+
+  nnoremap ,fC :lua require('fzf-lua').colorschemes()<CR>
+  nnoremap ,fB :lua require('fzf-lua').builtin()<CR>
+  nnoremap ,fM :lua require('fzf-lua').marks()<CR>
+  nnoremap ,fS :lua require('fzf-lua').spell_suggest()<CR>
+
+  nnoremap ,fr :lua require('fzf-lua').resume()<CR>
+
+else
+  "Jump to the existing window if possible
+  let g:fzf_buffers_jump = 1
+
+  " Customize fzf colors to match your color scheme
+  let g:fzf_colors =
+  \ { 'fg':      ['fg', 'Normal'],
+    \ 'bg':      ['bg', 'Normal'],
+    \ 'hl':      ['fg', 'Comment'],
+    \ 'fg+':     ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
+    \ 'bg+':     ['bg', 'CursorLine', 'CursorColumn'],
+    \ 'hl+':     ['fg', 'Statement'],
+    \ 'info':    ['fg', 'PreProc'],
+    \ 'border':  ['fg', 'Ignore'],
+    \ 'prompt':  ['fg', 'Conditional'],
+    \ 'pointer': ['fg', 'Exception'],
+    \ 'marker':  ['fg', 'Keyword'],
+    \ 'spinner': ['fg', 'Label'],
+    \ 'header':  ['fg', 'Comment'] }
+
+	" An action can be a reference to a function that processes selected lines
+	function! s:build_quickfix_list(lines)
+		call setqflist(map(copy(a:lines), '{ "filename": v:val }'))
+		copen
+		cc
+	endfunction
+
+	let g:fzf_action = {
+		\ 'ctrl-q': function('s:build_quickfix_list'),
+		\ 'ctrl-t': 'tab split',
+		\ 'ctrl-x': 'split',
+		\ 'ctrl-v': 'vsplit' }
+
+  " Insert mode completion
+  " imap <c-x><c-f> <plug>(fzf-complete-path)
+  imap <c-x><c-j> <plug>(fzf-complete-file-ag)
+  imap <c-x><c-l> <plug>(fzf-complete-line)
+
+  let g:fzf_tags_command = 'ctags -R'
+
+if has('nvim')
+  let g:fzf_layout = { 'window': 'call FloatingFZF()' }
+	function! FloatingFZF()
+		let buf = nvim_create_buf(v:false, v:true)
+		call setbufvar(buf, '&signcolumn', 'no')
+
+		let height = &lines - 3
+		let width = float2nr(&columns - (&columns * 2 / 10))
+		let col = float2nr((&columns - width) / 2)
+
+		let opts = {
+					\ 'relative': 'editor',
+					\ 'row': 1,
+					\ 'col': col,
+					\ 'width': width,
+					\ 'height': height
+					\ }
+
+		call nvim_open_win(buf, v:true, opts)
+	endfunction
+endif
+
+  " complete input as name in current file in fuzzy way
+  " e.g.: gCC => getCurrentComponent
+  " inoremap <expr> <c-x><c-k> fzf#complete({
+  "      \ 'source': "/usr/bin/grep -o -E '\\w{5,}' " . expand('%:p') . "\| /usr/bin/sort -uf",
+  "      \ 'options': '-0 -1 -x',
+  "      \ 'left': 35})
+
+  " Replace the default dictionary completion with fzf-based fuzzy completion
+  " inoremap <expr> <c-x><c-k> fzf#vim#complete('cat /usr/share/dict/words')
+
+  " select file/path from command
+  function! s:append_dir_with_fzf(line)
+  	call fzf#run(fzf#wrap({
+  		\ 'options': ['--prompt', a:line.'> '],
+  		\ 'source': 'fd -t d',
+  		\ 'sink': {line -> feedkeys("\<esc>:".a:line.line, 'nt')}}))
+  	return ''
+  endfunction
+  cnoremap <expr> <c-x><c-d> <sid>append_dir_with_fzf(getcmdline())
+
+  function! s:get_cmd_args(...) abort
+    if a:0 > 0
+      return a:1
+    else
+      return '.'
+    endif
+  endfunction
+  command! -nargs=* -complete=dir Cd call fzf#run(fzf#wrap(
+    \ {'source': 'fd -t d '. s:get_cmd_args(<f-args>),
+    \  'sink': 'cd'}))
+
+  " Likewise, Files command with preview window
+  command! -bang -nargs=? -complete=dir FzfFiles
+     \ call fzf#vim#files(<q-args>, fzf#vim#with_preview('up:50%:hidden', '?'), <bang>0)
+
+  " Augmenting Ag command using fzf#vim#with_preview function
+  "   * fzf#vim#with_preview([[options], preview window, [toggle keys...]])
+  "     * For syntax-highlighting, Ruby and any of the following tools are required:
+  "       - Highlight: http://www.andre-simon.de/doku/highlight/en/highlight.php
+  "       - CodeRay: http://coderay.rubychan.de/
+  "       - Rouge: https://github.com/jneen/rouge
+  "
+  "   :Ag  - Start fzf with hidden preview window that can be enabled with "?" key
+  "   :Ag! - Start fzf in fullscreen and display the preview window above
+  command! -bang -nargs=* FzfAg
+    \ call fzf#vim#ag(<q-args>,
+    \                 <bang>0 ? fzf#vim#with_preview('up:70%')
+    \                         : fzf#vim#with_preview('right:50%:hidden', '?'),
+    \                 <bang>0)
+
+  command! -bang -nargs=* FzfRg
+    \ call fzf#vim#grep(
+    \   'rg --column --line-number --no-heading --color=always --smart-case '.shellescape(<q-args>), 1,
+    \   <bang>0 ? fzf#vim#with_preview('up:70%')
+    \           : fzf#vim#with_preview('right:50%:hidden', '?'),
+    \   <bang>0)
+
+
+  function! Fzf_files_with_dev_icons(command)
+    let l:fzf_files_options = '-x -m --preview="bat --color \"always\" --style numbers {2..} | head -'.&lines.'" --preview-window=up:70%:wrap:hidden --bind="?:toggle-preview,ctrl-p:preview-up,ctrl-n:preview-down,ctrl-r:jump-accept,ctrl-d:delete-char/eof" --expect=ctrl-v,ctrl-x,ctrl-t --tiebreak=end,length'
+    function! s:edit_devicon_prepended_file(items)
+      let items = a:items
+      let i = 1
+      let ln = len(items)
+      while i < ln
+        let item = items[i][4:-1]
+        let items[i] = item
+        let i += 1
+      endwhile
+      call s:Sink(items)
+    endfunction
+
+    echom a:command
+    let l:opts = fzf#wrap({})
+    let l:opts.source = a:command.' | devicon-lookup'
+    let s:Sink = l:opts['sink*']
+    let l:opts['sink*'] = function('s:edit_devicon_prepended_file')
+    let l:opts.options = l:fzf_files_options
+    let l:opts.down = '40%'
+    call fzf#run(l:opts)
+  endfunction
+  nnoremap <c-p> :call Fzf_files_with_dev_icons("fd -d 8 -t f")<CR>
+  " nnoremap <c-p> :call Fzf_files_with_dev_icons($FZF_DEFAULT_COMMAND)<CR>
+
+  function! Fzf_git_diff_files_with_dev_icons()
+    let l:fzf_files_options = '-x -m --ansi --preview "sh -c \"(git diff --color=always -- {3..} | sed 1,4d; bat --color always --style numbers {3..}) | head -'.&lines.'\"" --preview-window=up:70%:wrap:hidden --bind="?:toggle-preview,ctrl-e:preview-up,ctrl-d:preview-down,ctrl-r:jump-accept" --expect=ctrl-v,ctrl-x,ctrl-t --tiebreak=end,length '
+
+    function! s:edit_devicon_prepended_file_diff(items)
+      let items = a:items
+      let i = 1
+      let ln = len(items)
+      let l:first_diff_line_number = 0
+      while i < ln
+        let l:file_path = items[i][7:-1]
+        let items[i] = l:file_path
+        let l:first_diff_line_number = system("git diff -U0 ".l:file_path." | rg '^@@.*\+' -o | rg '[0-9]+' -o | head -1")
+        let i += 1
+      endwhile
+      call s:SinkForGitDiff(items)
+      execute l:first_diff_line_number
+    endfunction
+
+    let opts = fzf#wrap({})
+    let opts.source = 'git -c color.status=always status --short --untracked-files=all | devicon-lookup'
+    let s:SinkForGitDiff = opts['sink*']
+    let opts['sink*'] = function('s:edit_devicon_prepended_file_diff')
+    let opts.options = l:fzf_files_options
+    let opts.down = '40%'
+    call fzf#run(opts)
+  endfunction
+  nnoremap ,fc :call Fzf_git_diff_files_with_dev_icons()<CR>
+
+  function! FzfSpellSink(word)
+    exec 'normal! "_ciw'.a:word
+  endfunction
+
+  function! FzfSpell()
+    let suggestions = spellsuggest(expand("<cword>"))
+    return fzf#run({'source': suggestions, 'sink': function("FzfSpellSink"), 'down': 25})
+  endfunction
+  nnoremap <silent> z= :call FzfSpell()<CR>
+
+  " open dash docset through fzf
+  let g:dash_filetype_options = {
+      \ 'haskell': [ 'haskell' ],
+      \ 'go': [ 'go' ],
+      \ 'js': [ 'lodash', 'd3', 'moment', 'javascript' ],
+      \ 'r': [ 'r' ],
+      \ 'css': [ 'css' ],
+      \ 'less': [ 'css', 'less' ],
+      \ 'svg': [ 'svg' ],
+      \ 'cpp': [ 'cpp', 'qt' ],
+      \ 'php': [ 'php' ],
+      \ 'javascript': [ 'javascript' ],
+      \ }
+  function! DashDocFamilies()
+    let l:families = ''
+    if has_key(g:dash_filetype_options, &ft)
+      let l:options = g:dash_filetype_options[&ft]
+      if type(l:options) == 3 "options is a list
+        let l:families = join(l:options, ',')
+      endif
+    endif
+    return l:families
+  endfunction
+
+  let g:dash_chrome_tab_id = ''
+
+  function! s:do_open_docset_by_keyword(word, lucky_mode)
+    " GOTCHA: due to mac's privacy restriction, can not run chrome-cli within
+    " vimr to open doc URL in chrome. use mosquitto as a workaround:
+    " in vimr, publish the url to topic '/chrome-control/url', then in
+    " terminal, need to run following command:
+    " $ mosquitto_sub -t '/chrome-control/url' | xargs -I{} chrome-cli open "{}"
+    let l:is_vimr = has('gui_vimr')
+    if l:is_vimr
+      let l:cmd = 'mosquitto_pub -t "/chrome-control/url" -m '
+    else
+      let l:cmd = 'chrome-cli open '
+    endif
+
+    let l:families = g:DashDocFamilies()
+
+    " escape special characters
+    let l:word = substitute(a:word, '\$', '\\$', '')
+
+    if a:lucky_mode == 1
+      let l:cmd = l:cmd . ' "$(fdoc -f ' . l:families . ' -t -m ' . l:word . ')"'
+    else
+      let l:cmd = l:cmd . ' "$(fdoc -f ' . l:families . ' -t -n ' . l:word . ')"'
+    endif
+    echom l:cmd
+
+    if l:is_vimr
+      let l:foo = system(l:cmd)
+    else
+      if strlen(g:dash_chrome_tab_id) != 0
+        let l:cmd = l:cmd . ' -t ' . g:dash_chrome_tab_id
+      endif
+
+      let l:lines = systemlist(l:cmd)
+      if len(l:lines) != 0
+        let g:dash_chrome_tab_id = substitute(l:lines[0], '^Id: \(\d\+\)$', '\1', '')
+      endif
+    endif
+  endfunction
+
+  function! s:open_docset_by_keyword(word)
+    call s:do_open_docset_by_keyword(a:word, 0)
+  endfunction
+
+  function! FzfDashOpenByWord(word)
+    call s:do_open_docset_by_keyword(a:word, 1)
+  endfunction
+
+  function! FzfDash(...)
+    let l:families = g:DashDocFamilies()
+
+    let l:fzf_options = ' --prompt="' . l:families . '> " '
+    if a:0 == 1
+      let l:fzf_options = l:fzf_options . ' --query="' . a:1 . '"'
+    endif
+
+    call fzf#run({
+        \ 'source': 'fdoc -f ' . l:families,
+        \ 'sink': function('s:open_docset_by_keyword'),
+        \ 'options': l:fzf_options
+        \ })
+  endfunction
+  command! -nargs=? FzfDash call FzfDash(<f-args>)
+  nmap <silent> ,k yiw:FzfDash '" <CR>
+  nmap <silent> ,K yiw:silent call FzfDashOpenByWord('"')<CR>
+  vmap <silent> ,K y:silent call FzfDashOpenByWord('"')<CR>
+
+	"FZF Buffer Delete
+	function! s:list_buffers()
+		redir => list
+		silent ls
+		redir END
+		return split(list, "\n")
+	endfunction
+	function! s:delete_buffers(lines)
+		execute 'bwipeout' join(map(a:lines, {_, line -> split(line)[0]}))
+	endfunction
+	command! FzfBD call fzf#run(fzf#wrap({
+		\ 'source': s:list_buffers(),
+		\ 'sink*': { lines -> s:delete_buffers(lines) },
+		\ 'options': '--multi --reverse --bind ctrl-a:select-all+accept'
+	\ }))
+
+  noremap ,ff :FzfFiles<CR>
+  noremap ,fd :Cd<CR>
+  noremap ,fz :Z<CR>
+  noremap ,ft :Tags<CR>
+  noremap ,fl :Lines<CR>
+  " noremap ,fr :FZFMru<CR>
+  noremap ,fb :Buffers<CR>
+  noremap ,fh :History<CR>
+  noremap ,fm :BCommits<CR>
+
+  nnoremap ,fg yiw:FzfRg "
+  vnoremap ,fg  y:FzfRg "<CR>
+
+endif
+"}}}1
 
 endif
 

@@ -1253,10 +1253,13 @@ command! -nargs=+ -complete=command TabMessage call TabMessage(<q-args>)
   " italic does not work under tmux, need to figure out how to fix tmux on
   " this
   " let g:gruvbox_italic = 1
-  let g:gruvbox_contrast_dark = 'soft'
-  set background=dark
-  colorscheme gruvbox
+  " let g:gruvbox_contrast_dark = 'soft'
+  " set background=dark
+  " colorscheme gruvbox
   if has('nvim-0.5')
+    " color schemes work nicely with diffview.nvim: tokyonight, molokai,
+    " github
+    colorscheme tokyonight-storm
     " let g:material_style = 'palenight'
     " colorscheme material
     " colorscheme nightfly
@@ -1267,6 +1270,7 @@ command! -nargs=+ -complete=command TabMessage call TabMessage(<q-args>)
     " colorscheme solarized8
     " colorscheme desertEx
     " colorscheme synic
+    colorscheme github
   endif
 
   " enhance vimdiff colors
